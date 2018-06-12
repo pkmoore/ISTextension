@@ -191,3 +191,14 @@ relied more heavily on built in anomalies/checkers/mutators....
 
 ### Discussion
 
+Given the level with which CrashSimulator interacts with applications, it is not
+surprising that users with significant operating systems backgrounds are better
+able to utilize the tool's more advanced features....
+
+It is encouraging to see that users with less os background had success with the
+tool.  Based on this, we believe it is likely that CrashSimulator could be
+successfully adopted by real-world teams whose members have diverse background
+skillsets.  Users that are more comfortable with the concepts CrashSimulator
+relies on can supply new testing materials as needed and other users can rely on
+CrashSimulators portable nature to use these tests against new applications
+without having to worry about their implementation details.
