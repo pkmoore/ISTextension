@@ -55,7 +55,9 @@ CrashSimlator compares to the other tools in three areas:
 Additionally, we asked our partipants to rate their own experience level in
 software development, software testing, and operating systems concepts so that
 we might determine whether or not a participant's background has an effect on
-what tools they prefer.
+what tools they prefer.  Our hope was that this information would provide
+insights into how a participants background affected their expriences with the
+tools.
 
 In this evaluation we set out to answer the following questions using both the
 qualitiative and quantitative data collected during our study.
@@ -112,7 +114,7 @@ effective......
 ## How well does CrashSimulator allow users to test the areas of applications they are interested in?
 
 The first part of testing an application is deciding on a specific feature or
-piece of functionality to evaluate.  Some appliation areas such as graphical
+piece of functionality to evaluate.  Some application areas such as graphical
 user interfaces are notoriously difficult cover depending on the tools and
 technqiues being used.  We wanted to know whether or not CrashSimulator was able
 to effectively test the areas of applications its users were interested in
@@ -127,8 +129,9 @@ backgrounds have an effect on the areas of an application they tested...
 
 Developers with a high degree of experience in software engineering tended to
 focus on testing an applications interaction with various library and operating
-system provided APIs.  Survery results indicate satisfied with CrashSimulator's
-ability to test application's interaction with file and and network APIs....
+system provided APIs.  Survery results indicate participants were satisfied with
+CrashSimulator's ability to test application's interaction with file and and
+network APIs....
 
 Developers with a lower self-reported experience in software engineering focused
 more on user interface level concerns...  Preferred AFL's ability to easily
@@ -141,6 +144,12 @@ Findings indicate that a higher level of software development experience tends
 to push participants towards testing interfaces between modules in an
 application.  This resulted in overall higher satisfaction with CrashSimulator
 amongst participants.....
+
+Users with less self-reported software engineering experience expressed some
+concern with CrashSimulator's limitations around testing the user facing aspects
+of applications.  For example, CrashSimulator requires more up front effort than
+ effort than tools like AFL when conducting simple tests such as mutating the
+ properties of an input file.....
 
 
 ## Does CrashSimulator allow its users to construct a test suite efficiently?
