@@ -21,16 +21,30 @@ This study was responsible for the identification and reporting of YYY novel
 bugs, ZZZ of which have been since been corrected.
 
 # Introduction
+Complex systems require automated testing...
 
-# Evaluation
-Our goal with this work was to gain an undestanding of how CrashSimulator's user
-exprience compared to other tools and techniques available to developers...
+Reliance on experts and human-in-the-loop strategies don't scale... [Alvaro]
 
-Because CrashSimulator is able to to test a wide domain of operations an
-appliation can peform we felt it necessary to compare it with two separte tools,
-one that test based on files and one that tests based on network activity.
-Specifically, we used AFL and Mutiny...
+Tools that require access to application source must be discounted...
 
+Testing strategies that require expert knowledge to decide what tests to create
+and run are miss the mark....
+
+In this paper we ant to show that CrashSimulator is a tool that allows
+developers to take advantage of expert knowledge to test new and existing
+applications....
+
+## Contributions
+This paper make the following contributions:
+
+1. We illustrate that CrashSimulator is useful and usable by developers with a
+   wide variety of backgrounds.
+2. We show that CrashSimulator allows these developers to find real bugs in real
+   applications.
+3. We demonstrate that CrashSimulator compares favorably against similar
+   automated testing tools.
+
+#Background
 ### AFL
 AFL is a file-based fuzzer.  It is able to take an input file, mutate its
 contents, and pass the file along to the application under test.  AFL is able to
@@ -45,6 +59,15 @@ Mutiny and CrashSimulator mean that it is a good candidate for comparison.  The
 major difference between these two that CrashSimulator can manipulate aspects of
 system calls than the messages sent across a network.  Mutiny, on the other
 hand, is limited to manipulating the content of messages only.
+
+# Evaluation
+Our goal with this work was to gain an undestanding of how CrashSimulator's user
+exprience compared to other tools and techniques available to developers...
+
+Because CrashSimulator is able to to test a wide domain of operations an
+appliation can peform we felt it necessary to compare it with two separte tools,
+one that test based on files and one that tests based on network activity.
+Specifically, we used AFL and Mutiny...
 
 ## Method
 The 20 participants in this study received instruction on the configuration and
