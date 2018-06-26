@@ -1,3 +1,27 @@
+# Thesis
+CrashSimulator has proven usable and useful in helping developers of varying
+skills levels identify novel bugs in real world software.
+
+# Abstract
+It is a waste of time to add a new tool to a project's testing processes if its
+learning curve outweighs the value of its results.  Today's developers can
+choose from a huge variety of automated testing tools with varying degrees of
+complexity and bug-finding capability.  In order to demonstrate that
+CrashSimulator is worthy consideration by developers regardless of skill level
+this work compares it to two similar tools (AFL and Mutiny) in a study of
+developer's ability to use the tools in question to find novel bugs in real
+world applications.  This study revealed that CrashSimulator is useful and
+usable for developers with diverse backgrounds, across skillsets like software
+engineering backgrounds.  Developers with a high degree of proficiency with
+operating systems concepts preferred CrashSimulator's ability to target unusual
+environmental conditions over manipulating applicaiton data inputs. Our
+participants reported that CrashSimulator's additional setup complexity was
+dramatically outweighed by its ability to find new bugs.
+This study was responsible for the identification and reporting of YYY novel
+bugs, ZZZ of which have been since been corrected.
+
+# Introduction
+
 # Evaluation
 Our goal with this work was to gain an undestanding of how CrashSimulator's user
 exprience compared to other tools and techniques available to developers...
@@ -37,7 +61,7 @@ We used 3 techniques to capture the experience of our participants as they used
 each of the tools.  For quantitative concerns we examined the time required for
 participants to carry out defined tasks relevant to the process of bug hunting.
 To do this, we asked users to track the time required to perform each step of
-the process of finding and reporting a bug. 
+the process of finding and reporting a bug.
 
 
 We also captured hard counts of bugs identified by our particpants using each of
@@ -211,3 +235,13 @@ skillsets.  Users that are more comfortable with the concepts CrashSimulator
 relies on can supply new testing materials as needed and other users can rely on
 CrashSimulators portable nature to use these tests against new applications
 without having to worry about their implementation details.
+
+
+How hard is it for users to map their code to the interesting parts of system
+    8 call sequences                                                                                                                                9
+   10 AFL and Mutiny may be popular enough that the participants have already been                                                                 11 using them
+   12                                                                                                                                              13
+   14 CrashSimulator can give much more detailed output about a bug than AFL (which                                                                15 just gives you a file that may cause a crash).  Given the output from the tool,
+   16 can the users's figure out how to patch the bug.                                                                                             17
+   18 Were developers able to localize the bug                                                                                                     19 Were they able to fix it
+   20 recognizable from trace contents or not
