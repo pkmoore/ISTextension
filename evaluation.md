@@ -1,8 +1,12 @@
 # Thesis
+*Talk about environmental differences*
 CrashSimulator has proven usable and useful in helping developers of varying
-skills levels identify novel bugs in real world software.
+skills levels identify novel bugs in real world software by simulating and
+subjecting applications to the conditions that differentiate its intended
+deployment environments.
 
 # Abstract
+*What CrashSimulator Does vs. What This Paper Does*
 It is a waste of time to add a new tool to a project's testing processes if its
 learning curve outweighs the value of its results.  Today's developers can
 choose from a huge variety of automated testing tools with varying degrees of
@@ -10,41 +14,67 @@ complexity and bug-finding capability.  In order to demonstrate that
 CrashSimulator is worthy consideration by developers regardless of skill level
 this work compares it to two similar tools (AFL and Mutiny) in a study of
 developer's ability to use the tools in question to find novel bugs in real
-world applications.  This study revealed that CrashSimulator is useful and
-usable for developers with diverse backgrounds, across skillsets like software
-engineering backgrounds.  Developers with a high degree of proficiency with
-operating systems concepts preferred CrashSimulator's ability to target unusual
+world applications.  This study revealed that CrashSimulator's strategy of
+identifying bugs visible in system call sequences is useful and usable for
+developers with diverse backgrounds, across skillsets like software engineering
+backgrounds.  Developers with a high degree of proficiency with operating
+systems concepts preferred CrashSimulator's ability to target unusual
 environmental conditions over manipulating applicaiton data inputs. Our
 participants reported that CrashSimulator's additional setup complexity was
-dramatically outweighed by its ability to find new bugs.
-This study was responsible for the identification and reporting of YYY novel
-bugs, ZZZ of which have been since been corrected.
+dramatically outweighed by its ability to find new bugs.  This study was
+responsible for the identification and reporting of YYY novel bugs, ZZZ of which
+have been since been corrected.
 
 # Introduction
 Complex systems require automated testing...
 
+The strategy for carrying out this testing must have certain properties in order
+to be successful in testing large scale, modern applications...
+
 Reliance on experts and human-in-the-loop strategies don't scale... [Alvaro]
 
-Tools that require access to application source must be discounted...
+Reliance on application source code dramatically limits the scope of what can be
+tested...
 
-Testing strategies that require expert knowledge to decide what tests to create
-and run are miss the mark....
+Even if a tool satisfies the above requirements, its usefulness is dependant on
+the quality of its output...
 
-In this paper we ant to show that CrashSimulator is a tool that allows
-developers to take advantage of expert knowledge to test new and existing
-applications....
+Tools that produce a high number of false positives are quickly deemed
+untrustworthy [CITE THAT ONE PAPER]
 
-## Contributions
-This paper make the following contributions:
+Tools that fail to identify (or worse, misidentify) the source of bugs with
+sufficient detail lead to wasted time and and effort...
+(i.e. Fuzzing appication inputs can show that a bug is present but cannot
+identify the code responsible for the bug.)
+
+A tool that can more specifically map a failure to the responsible code speed up
+the bug fixing process...
+
+At the same time,  if output is too detailed developers of varying skill levels
+may have trouble utilizing it...
+
+In this paper we want to show that CrashSimulator is able to assist developers
+of varying skill levels in identifying bugs bugs in real world applications.
+Additionally, we show that CrashSimulator provides value in mapping the presence
+of these bugs to the units of code responsibile for them allowing developers to
+fix them in a more timely manner.
+
+*I'm not sure where to roll in the information that CrashSimulator finds bugs by
+simulating the presence of environmental differences*
+
+
+## Contributions This paper make the following contributions:
 
 1. We illustrate that CrashSimulator is useful and usable by developers with a
    wide variety of backgrounds.
 2. We show that CrashSimulator allows these developers to find real bugs in real
    applications.
 3. We demonstrate that CrashSimulator compares favorably against similar
-   automated testing tools.
+   automated testing tools in the number of bugs found and in user opinion on
+   usefulness of the tools' output.
 
-#Background
+# Background
+
 ### AFL
 AFL is a file-based fuzzer.  It is able to take an input file, mutate its
 contents, and pass the file along to the application under test.  AFL is able to
@@ -59,6 +89,19 @@ Mutiny and CrashSimulator mean that it is a good candidate for comparison.  The
 major difference between these two that CrashSimulator can manipulate aspects of
 system calls than the messages sent across a network.  Mutiny, on the other
 hand, is limited to manipulating the content of messages only.
+
+
+### CrashSimulator
+CrashSimulator tests applications by simulating a variety of unusual
+conditions that can cause problems when applications are run in different
+environments.
+
+Localize bugs to a sequence of system calls....
+This is an advantage over tools that simply indicate the presence of a bug (i.e.
+this input caused a crash)
+
+Limitation -> Will users be able to identify what caused the problematic system
+call sequence -> Add this to evaluation
 
 # Evaluation
 Our goal with this work was to gain an undestanding of how CrashSimulator's user
@@ -122,6 +165,8 @@ does CrashSimulator compare to similar tools efficiency wise?
 difference in the skillsets required in order to be effective with
 CrashSimulator vs the other tools?
 
+5. Does CrashSimulator provide output that is useful in locating and fixing
+bugs?
 
 ---
 
@@ -142,6 +187,8 @@ with the majority coming from participants with a self-reported high degree of
 operating systems experience.  Participants with a moderate and low degrees of
 operating systems experience found more bugs AFL.....
 
+
+![Bugs Found by Tool and Experience Level](table1.jpeg "table1.jpeg")
 
 ### Discussion
 
@@ -231,19 +278,22 @@ had been constructed......
 A user's background can dramatically influence their user experience with a
 tool.  In answering this question we hope to ascertain whether CrashSimulator
 requires its users have significant skills in a particular area in order to be
-effective.  Table/Figure ZZZ compares our participants self-reported skillsets
+effective.  Table 2 compares our participants self-reported skillsets
 to their positive or negative experiences with CrashSimulator...
 
 
 ### Findings
 
-As can be seen in Table/Figure ZZZZ, a strong background in operating systems
+![Skill Level Compared to User Experience](table2.jpeg "table2.jpeg")
+
+As can be seen in Table 2, a strong background in operating systems
 concepts correlates with a more satisfactory user experience with
 CrashSimulator....
 
 Interestingly,  some participants that reported less background in operating
 systems had a positive experience with CrashSimulator.  These participants
 relied more heavily on built in anomalies/checkers/mutators....
+
 
 ### Discussion
 
@@ -259,12 +309,5 @@ relies on can supply new testing materials as needed and other users can rely on
 CrashSimulators portable nature to use these tests against new applications
 without having to worry about their implementation details.
 
-
-How hard is it for users to map their code to the interesting parts of system
-    8 call sequences                                                                                                                                9
-   10 AFL and Mutiny may be popular enough that the participants have already been                                                                 11 using them
-   12                                                                                                                                              13
-   14 CrashSimulator can give much more detailed output about a bug than AFL (which                                                                15 just gives you a file that may cause a crash).  Given the output from the tool,
-   16 can the users's figure out how to patch the bug.                                                                                             17
-   18 Were developers able to localize the bug                                                                                                     19 Were they able to fix it
-   20 recognizable from trace contents or not
+## Does CrashSimulator provide output that is useful in locating and fixing
+bugs?
