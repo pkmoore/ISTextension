@@ -309,5 +309,24 @@ relies on can supply new testing materials as needed and other users can rely on
 CrashSimulators portable nature to use these tests against new applications
 without having to worry about their implementation details.
 
-## Does CrashSimulator provide output that is useful in locating and fixing
-bugs?
+## Does CrashSimulator provide output that is useful in locating and fixing bugs?
+
+
+### Findings
+
+Developer feedback across the board indicated that CrashSimulator's output made
+it easier to identify bugs than the simpler crash reports provided by AFL and
+Mutiny.  This impression is backed up by the results in Table 3 that show a
+higher percentage of bugs identified with CrashSimulator were fixed than bugs
+identified with the other tools....
+
+### Discussion
+
+There are two reasons, other than output quality, that bugs found with
+CrashSimulator were more likely to be fixed -- bug "depth" and the ease with
+which a bug can be fixed.  It is possible that, because CrashSimulator focuses
+on a lesser targeted area of an application, more easily fixed, low hanging
+fruit style bugs were identified compared to the more battle tested user input
+handling codepaths that AFL and Mutiny tend to explore.  Additionally, many of
+the bugs types identifiable with CrashSimulator arise because of a minor missing
+check meaning that the fix is small and easily incorporated....
