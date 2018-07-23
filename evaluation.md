@@ -115,20 +115,10 @@ major difference between these two that CrashSimulator can manipulate aspects of
 system calls than the messages sent across a network.  Mutiny, on the other
 hand, is limited to manipulating the content of messages only.
 
-
-### CrashSimulator
-CrashSimulator tests applications by simulating a variety of unusual
-conditions that can cause problems when applications are run in different
-environments.
-
-Localize bugs to a sequence of system calls....
-This is an advantage over tools that simply indicate the presence of a bug (i.e.
-this input caused a crash)
-
+# Evaluation
 Limitation -> Will users be able to identify what caused the problematic system
 call sequence -> Add this to evaluation
 
-# Evaluation
 Our goal with this work was to gain an undestanding of how CrashSimulator's user
 exprience compared to other tools and techniques available to developers...
 
