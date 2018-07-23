@@ -116,8 +116,8 @@ system calls than the messages sent across a network.  Mutiny, on the other
 hand, is limited to manipulating the content of messages only.
 
 # Evaluation
-Limitation -> Will users be able to identify what caused the problematic system
-call sequence -> Add this to evaluation
+*Limitation -> Will users be able to identify what caused the problematic system
+call sequence -> Add this to evaluation*
 
 Our goal with this work was to gain an undestanding of how CrashSimulator's user
 exprience compared to other tools and techniques available to developers...
@@ -128,6 +128,15 @@ one that test based on files and one that tests based on network activity.
 Specifically, we used AFL and Mutiny...
 
 ## Method
+
+We gathered a group of YYYY participants from a computer science master's
+program.  These students had varying background in relation to software
+development and automated testing.  These students all received AAA hours of
+education on each of these tools.  This education focused on the tools' initial
+setup, configuration, usage, and how to interpret the tools' results.  BBB of
+the students had used AFL in previous course work.  None of the students had
+previous experience with Mutiny or CrashSimulator.
+
 The 20 participants in this study received instruction on the configuration and
 usage of the above tools as well as CrashSimulator.  We asked these users to
 test popular real-world applications with the goal of identifying new bugs and
@@ -153,13 +162,13 @@ use via surveys.  These surveys were strucured to give insight into how
 CrashSimlator compares to the other tools in three areas:
 * Usability of the tool. (i.e. set up, configuration, executing tests,
   interpretring results)
-* Extending the tool
+* Extending the tool through the creation of additional anomalies and checkers
 * How well the tool is able to test the areas of an application that they are
   interested in
 
 Additionally, we asked our partipants to rate their own experience level in
 software development, software testing, and operating systems concepts so that
-we might determine whether or not a participant's background has an effect on
+we might determine whether or not an individual's background has an effect on
 what tools they prefer.  Our hope was that this information would provide
 insights into how a participants background affected their expriences with the
 tools.
@@ -222,13 +231,17 @@ effective......
 
 ## How well does CrashSimulator allow users to test the areas of applications they are interested in?
 
-The first part of testing an application is deciding on a specific feature or
-piece of functionality to evaluate.  Some application areas such as graphical
-user interfaces are notoriously difficult cover depending on the tools and
-technqiues being used.  We wanted to know whether or not CrashSimulator was able
-to effectively test the areas of applications its users were interested in
-testing.  To answer this question we turn to the surveys our participants
-completed regarding their experience with CrashSimulator.
+Modern applications typically consist of many different parts (e.g. user
+interfaces,  back-end processing, storage, networking) that require different
+skill sets to work with.  These different application areas also require
+different strategies for testing.  For example, Some application areas such as
+graphical user interfaces are notoriously difficult cover depending on the tools
+and techniques being used.  These difficulties usually result from limitations
+in the way the testing tool interacts with the application being tested. We
+wanted to know whether or not CrashSimulator was able to effectively test the
+areas of applications its users were interested in testing.  To answer this
+question we turn to the surveys our participants completed regarding their
+experience with CrashSimulator.
 
 
 ### Findings
