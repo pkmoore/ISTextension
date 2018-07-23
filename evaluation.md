@@ -1,9 +1,8 @@
 # Thesis
-*Talk about environmental differences*
-CrashSimulator has proven usable and useful in helping developers of varying
-skills levels identify novel bugs in real world software by simulating and
-subjecting applications to the conditions that differentiate its intended
-deployment environments.
+CrashSimulator can help identify novel bugs in real world software by simulating
+and subjecting applications to the conditions that differentiate its intended
+deployment environments and can be effectively used by developers of varying
+skill levels.
 
 # Abstract
 *What CrashSimulator Does vs. What This Paper Does*
