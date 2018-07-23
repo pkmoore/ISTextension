@@ -6,23 +6,34 @@ skill levels.
 
 # Abstract
 *What CrashSimulator Does vs. What This Paper Does*
-It is a waste of time to add a new tool to a project's testing processes if its
-learning curve outweighs the value of its results.  Today's developers can
-choose from a huge variety of automated testing tools with varying degrees of
-complexity and bug-finding capability.  In order to demonstrate that
-CrashSimulator is worthy consideration by developers regardless of skill level
-this work compares it to two similar tools (AFL and Mutiny) in a study of
-developer's ability to use the tools in question to find novel bugs in real
-world applications.  This study revealed that CrashSimulator's strategy of
-identifying bugs visible in system call sequences is useful and usable for
-developers with diverse backgrounds, across skillsets like software engineering
-backgrounds.  Developers with a high degree of proficiency with operating
-systems concepts preferred CrashSimulator's ability to target unusual
-environmental conditions over manipulating applicaiton data inputs. Our
+
+The sheer scale of software applications in use today, as well as a shortage of
+developer time, necessitate usage of automated testing tools in combating bugs.
+Today's developers can choose from a huge variety of tools with varying degrees
+of complexity and bug-finding capability.  However, adopting a new tool can
+result in a great deal of wasted effort if its learning curve outweighs the
+value of its results.  In this work we introduce CrashSimulator -- a tool that
+identifies bugs resultant from unhandled an anomalous conditions present in the
+environment in which an application is executing.  CrashSimulator does this by
+recording, modifying, and replaying the results and side effects of the system
+calls an applications makes.  In order to demonstrate that CrashSimulator is
+worthy consideration by developers regardless of skill level this work compares
+it to two similar tools (AFL and Mutiny) in a study of developer's ability to
+use the tools in question to find novel bugs in real world applications.  To
+facilitate this comparison we conducted a study with ZZZ users in which
+participants were asked to use the tools in question to hunt for bugs in
+popular, real-world applications.  This study revealed that CrashSimulator's
+strategy of identifying bugs visible in system call sequences is effective and
+usable for developers with diverse backgrounds, across skillsets like software
+engineering backgrounds.  Developers with a high degree of proficiency with
+operating systems concepts preferred CrashSimulator's ability to target unusual
+environmental conditions over manipulating applicaiton data inputs.  Our
 participants reported that CrashSimulator's additional setup complexity was
 dramatically outweighed by its ability to find new bugs.  This study was
 responsible for the identification and reporting of YYY novel bugs, ZZZ of which
-have been since been corrected.
+have been since been corrected.  With wider use CrashSimulator could help
+uncover a great deal of previously unidentified bugs in new and existing
+codebases.
 
 # Introduction
 Complex systems require automated testing...
