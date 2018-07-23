@@ -69,12 +69,27 @@ Additionally, we show that CrashSimulator provides value in mapping the presence
 of these bugs to the units of code responsibile for them allowing developers to
 fix them in a more timely manner.
 
-*I'm not sure where to roll in the information that CrashSimulator finds bugs by
-simulating the presence of environmental differences*
+CrashSimulator's effectiveness comes its ability expose applications to unusual
+environmental conditions that can cause problems with an application's
+execution.  CrashSimulator's built-in set of anomalous conditions allows its
+users to define which conditions to test an application against allieviating the
+need for the expert knowledge required to set up and test an application in the
+chosen environments.
 
+CrashSimulator also allows application misbehavior to be localized to a sequence
+of system calls allowing the true source of a bug to be more quickly identified
+easing the process of correcting it.  This is an advantage over tools that
+simply indicate the presence of a bug (i.e.  this input caused a crash)
+
+To validate these claims we conducted a study with ZZZ participants consisting
+of Master's computer science students with varying backgrounds and
+specializations.  We asked these participants to test existing popular
+applications (as ranked by Debian's Popularity Contest) using each of the tools.
+From this work we collected both quantitative results in terms of numbers of
+bugs identified and qualitative results about the tools' user experince through
+surveys.
 
 ## Contributions This paper make the following contributions:
-
 1. We illustrate that CrashSimulator is useful and usable by developers with a
    wide variety of backgrounds.
 2. We show that CrashSimulator allows these developers to find real bugs in real
