@@ -1,4 +1,19 @@
 \section{Background (Optional)}
 \label{SEC:background}
 
-[I usually don't put these up front, but sometimes they are useful...]
+\subsection{AFL}
+
+AFL is a file-based fuzzer.  It is able to take an input file, mutate its
+contents, and pass the file along to the application under test.  AFL is
+able to manipulate the contents of files only while CrashSimulator is able
+to maniupluate other aspects present in the results and side effects of
+system calls.
+
+\subsection{Mutiny Fuzzer}
+
+Mutiny fuzzer is a network fuzzer operates by mutating and replaying pcap
+recordings of network activity.  The similarities between the operation of
+Mutiny and CrashSimulator mean that it is a good candidate for comparison.
+The major difference between these two that CrashSimulator can manipulate
+aspects of system calls than the messages sent across a network.  Mutiny,
+on the other hand, is limited to manipulating the content of messages only.
