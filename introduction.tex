@@ -1,18 +1,48 @@
 \section{Introduction}
 \label{SEC:introduction}
 
-Complex systems require automated testing...
+\preston{Argue that you have to have automated testing}
+Automated testing is a necessity of developing complex, modern, software
+systems.  There are simply too many moving parts to orchestrate and test
+manually.  Industry experience has borne this out --- BBB percent of
+projects hosted on GitHub employ some sort of automated testing of the code
+checked into their repositories and most won't allow code to be checked in
+until it has passed some testing regime.\preston{cite}
 
-The strategy for carrying out this testing must have certain properties in
-order to be successful in testing large scale, modern applications...
+Care must be taken in designing and carrying out this testing as there a
+real chance of introducing new inefficiencies and pain points into a
+projects development life cycle.  To this end, a few points are worthy of
+consideration. First, reliance on experts and human-in-the-loop strategies
+doesn't scale.\preston{cite Alvaro}  There simply aren't enough experts to
+go around and a developer's time is far better spent on actual development
+than manual testing.\preston{cite developer shortages}  Fortunately, well
+constructed automated testing tools allow two birds to be killed with one
+stone -- we can spare developer time for more creative tasks and we can
+take advantage of the expert knowledge encoded in the tools to temper the
+lack our shortage of human experts.
 
-Reliance on experts and human-in-the-loop strategies don't scale...
-[Alvaro]
+\preston{Discuss what properties an automated testing tool must have}
 
-Reliance on application source code dramatically limits the scope of what
-can be tested...
+Second, simply grabbing a tool of the shelf (or internet) won't do.  It
+must capable of testing the system in question, it must be usable by the
+developers that on staff, and it must produce high-quality results.
 
-Tool must be usable by the developers that you have on staff........
+\preston{Talking about source code here feels out of place but I think it
+needs to go somewhere}
+One of the major limitations of many automated testing tools is a reliance
+on the availability of a target application's source code.  Out of the top
+XXX automated testing tools (as ranked by YYYY), ZZZZ have this
+dependency.\preston{cite} While open source software has dramatically
+increased in popularity over recent years, closed source dependencies are
+still a major concern.\preston{cite}  Any tool that requires access to
+source code will have diminished capability in projects incorporating
+closed source components.
+
+In addition to a general shortage of development capacity, another limiting
+factor can be the developer's skill sets and expertise.  In order to be
+successful, a testing tool must be usable by developers working on a
+system.  If the developers lack the background necessary to deal with the
+output of a tool then the effort surrounding the tool has been wasted.
 
 Even if a tool satisfies the above requirements, its usefulness is
 dependant on the quality of its output.  Tools that produce a high number
@@ -41,6 +71,7 @@ compiled without debugging symbols.  If the developer addressing the bug is
 unfamiliar with working on disassembled code, identifying the cause of the
 bug may be difficult.
 
+\preston{Talk about how CrashSimulator has these properties}
 In this paper we want to show that CrashSimulator is able to assist
 developers of varying skill levels in identifying bugs bugs in real world
 applications.  Additionally, we show that CrashSimulator provides value in
@@ -60,6 +91,7 @@ quickly identified easing the process of correcting it.  This is an
 advantage over tools that simply indicate the presence of a bug (i.e.  this
 input caused a crash)
 
+\preston{Talk about we prove CrashSimulator has those properties}
 To validate these claims we conducted a study with ZZZ participants
 consisting of Master's computer science students with varying backgrounds
 and specializations.  We asked these participants to test existing popular
@@ -69,7 +101,7 @@ numbers of bugs identified and qualitative results about the tools' user
 experince through surveys.
 
 The main contributions in this work are as follows:
-
+\preston{Item 3 needs to be reworded}
 \begin{enumerate}
 
 \item We illustrate that CrashSimulator is useful and usable by developers
@@ -78,7 +110,6 @@ with a wide variety of backgrounds.
 \item We show that CrashSimulator allows these developers to find real bugs
 in real applications.
 
-% REWORD POINT 3 A BIT
 \item We demonstrate that CrashSimulator compares favorably against similar
 automated testing tools in the number of bugs found and in user opinion on
 usefulness of the tools' output.
