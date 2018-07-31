@@ -15,21 +15,31 @@ can be tested...
 Tool must be usable by the developers that you have on staff........
 
 Even if a tool satisfies the above requirements, its usefulness is
-dependant on the quality of its output...
+dependant on the quality of its output.  Tools that produce a high number
+of false positives are quickly deemed untrustworthy.  A study by ZZZZ as
+shown that false positive rates as low as Q\% have a dramatic, negative
+impact on developer perceptions of a tool.  \preston{cite}  A similar
+finding is supported by current psychological literature.  Individuals tend
+to over-emphasize and over-predict statistically rare negative
+events.\preston{cite}  Put another way, if a tool leads to a developer
+wasting his or her afternoon by reporting a bug that doesn't exist, the
+developer is going to mistrust the tool from then on out.
 
-Tools that produce a high number of false positives are quickly deemed
-untrustworthy [CITE THAT ONE PAPER]
-
+A useful tool must also do a good job of localizing the source of a bug.
 Tools that fail to identify (or worse, misidentify) the source of bugs with
-sufficient detail lead to wasted time and and effort...  (i.e. Fuzzing
-appication inputs can show that a bug is present but cannot identify the
-code responsible for the bug.)
+sufficient detail can also lead to wasted time and effort.  For example, a
+fuzzing tool that only interacts with an application by mutating normal
+input may eventually uncover a crash but merely reporting the presence of a
+crash-causing input doesn't get the developer very close to identifying and
+fixing the responsible block of code.
 
-A tool that can more specifically map a failure to the responsible code
-speed up the bug fixing process...
-
-At the same time,  if output is too detailed developers of varying skill
-levels may have trouble utilizing it...
+\preston{This argument feels weak to me}
+At the same time, output that is too detailed or low level can prove just
+as detrimental to the bug fixing process.  Consider the case where a tool
+reports a bug takes place during the execution of code inside a library
+compiled without debugging symbols.  If the developer addressing the bug is
+unfamiliar with working on disassembled code, identifying the cause of the
+bug may be difficult.
 
 In this paper we want to show that CrashSimulator is able to assist
 developers of varying skill levels in identifying bugs bugs in real world
