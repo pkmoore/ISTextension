@@ -3,33 +3,39 @@
     % What CrashSimulator Does vs. What This Paper Does
     The sheer scale of software applications available today, as well as a
     shortage of developer time, necessitates the use of automated testing
-    tools to find and eliminate bugs.  Today's developers can choose from a
-    huge variety of tools that offer varying degrees of complexity and
-    bug-finding capabilities.  However, adopting a new tool can result in a
-    great deal of wasted effort if its learning curve outweighs the value
-    of its results.  In this work we introduce CrashSimulator -- a tool
-    that identifies bugs created by anomalous conditions present in the
-    environment in which an application is executed.  CrashSimulator finds
-    these bugs by recording, modifying, and replaying the results and side
-    effects of the system calls made by the application. Moreover, unlike
-    most otehr toosl, CrashSimulator can be used even by novice developers
-    with little experience.  In order to demonstrate that CrashSimulator
-    can assist by developers regardless of skill level, this work compares
-    it to two similar tools (AFL and Mutiny).  To facilitate this
-    comparison we conducted a study with ZZZ users in which participants
-    were asked to use the tools in question to hunt for bugs in popular,
-    real-world applications.  This study revealed that CrashSimulator's
-    strategy of identifying bugs visible in system call sequences is
-    effective and usable for developers with diverse backgrounds, and
-    across skill sets like years of programming experience.  Developers
+    tools to find and eliminate bugs. Developers can choose from a huge
+    variety of tools based on their their varying degrees of complexity
+    and/or their bug-finding capabilities.  However, adopting a new tool
+    can result in a great deal of wasted effort if its learning curve
+    outweighs the value of its results.  In this work we introduce
+    CrashSimulator, a tool that identifies bugs created by anomalous
+    conditions associated with the environment in which the application is
+    executed.  In this way, CrashSimulator allows developers to find
+    environmental bugs regardless of their experience with the underlying
+    operating systems concepts.
+
+    In order to demonstrate this claim, we directly compare CrashSimulator
+    to two similar tools (AFL and Mutiny) in a study with ZZZ users.
+    Participants were asked to use the tools in question to hunt for bugs
+    in popular, real-world applications.  This study revealed that
+    CrashSimulator's strategy of identifying bugs visible in system call
+    sequences is effective, and that the tool can be used by developers
+    with diverse backgrounds, and across skill sets.  Though developers
     with a high degree of proficiency with operating systems concepts
     preferred CrashSimulator's ability to target unusual environmental
-    conditions over manipulating applicaiton data inputs.  Our participants
-    reported that CrashSimulator's additional setup complexity was
-    dramatically outweighed by its ability to find new bugs.  During the
-    study YYY novel bugs were identified and reported, ZZZ of which have
-    been since been corrected.  With wider use CrashSimulator could help
-    uncover a great deal of previously unidentified bugs in new and
-    existing codebases.
+    conditions over manipulating application data inputs, even subjects who
+    had little experience did not appear to be overwhelmed by the tool's
+    additional setup complexity, and agreed the extra work was dramatically
+    outweighed by the tool's ability to find new bugs.  During the study
+    YYY novel bugs were identified and reported, ZZZ of which have been
+    since been corrected.  By ensuring that even relatively novice
+    developers could use CrashSimulator, the tool is poised to help uncover
+    a great deal of previously unidentified bugs in new and existing
+    codebases.
+
+    \preston{I modified your edits a bit to avoid "new developers" in favor
+    of something closer to novice.  Maybe it's me being weird but I was
+    imagining my intro to CS student's heads exploding if I asked them to
+    figure out CrashSimulator}
 
 \end{abstract}
