@@ -1,6 +1,9 @@
 \section{Introduction}
 \label{SEC:introduction}
 
+\preston{CrashSimulator finds these bugs by recording, modifying, and replaying
+the results and side effects of the system calls made by the application.}
+
 \preston{Argue that you have to have automated testing}
 Automated testing is a necessity of developing complex, modern, software
 systems.  There are simply too many moving parts to orchestrate and test
@@ -64,14 +67,14 @@ bug may be difficult.
 In this paper we want to show that CrashSimulator is able to assist
 developers of varying skill levels in identifying bugs bugs in real world
 applications.  Additionally, we show that CrashSimulator provides value in
-mapping the presence of these bugs to the units of code responsibile for
+mapping the presence of these bugs to the units of code responsible for
 them allowing developers to fix them in a more timely manner.
 
 CrashSimulator's effectiveness comes its ability expose applications to
 unusual environmental conditions that can cause problems with an
 application's execution.  CrashSimulator's built-in set of anomalous
 conditions allows its users to define which conditions to test an
-application against allieviating the need for the expert knowledge required
+application against alleviating the need for the expert knowledge required
 to set up and test an application in the chosen environments.
 
 CrashSimulator also allows application misbehavior to be localized to a
