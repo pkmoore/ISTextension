@@ -3,22 +3,66 @@
 
 \subsection{CrashSimulator}
 
-CrashSimulator finds these bugs by recording, modifying, and replaying
-the results and side effects of the system calls made by the application.
+CrashSimulator finds bugs in applications by exposing them to weird
+environmental conditions that developers may not have anticipated.  This is
+accomplished by encoding the environmental conditions as a set of
+modifications made to the results an side effects of system calls made by
+the application.
+
+CrashSimulator injects these anomalies by recording, modifying, and
+replaying the results and side effects of the system calls made by the
+application.
+
+This process allows experts to construct "tests" that developers can use to
+evaluate their applications without their having to understand the
+operating system complexities underlying the environmental conditions
+simulated by the test.
+
+CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
+complex replay situations.
+
+CrashSimulator's supervisor attaches to the processes being replayed at
+strategic points in time in order to manipulate system call behavior.
+
+CrashSimulator observes whether or not the application responds to the
+modified system call behavior and classifies the application's behavior as
+maybe correct or definitely wrong.
+
+CrashSimulator is able to test closed source applications.
+
+CrashSimulator was able to find many new bugs in widely deployed
+applications.
+
 
 \subsection{AFL}
 
-AFL is a file-based fuzzer.  It is able to take an input file, mutate its
-contents, and pass the file along to the application under test.  AFL is
-able to manipulate the contents of files only while CrashSimulator is able
-to maniupluate other aspects present in the results and side effects of
-system calls.
+AFL (American Fuzzy Lop) is a file-based fuzzer that tests an application
+by mutating the contents of a candidate file provided by the user.
+
+AFL improves on similar tools by providing a set of C compiler
+customizations that add instrumentation code to the application being
+tested at compile time.  This instrumentation allows AFL to tune its
+mutations to more thoroughly exercise the application's code paths.
+
+AFL's goal is to make the application crash, most commonly by triggering an
+application state where memory is corrupted.
+
+AFL is intended for testing application written in C on Linux.
+
+AFL offers an experimental mode for testing closed source applications by
+running them under a virtual machine hypervisor.
+
+AFL is responsible for the discovery of many novel bugs in major open
+source applications.
 
 \subsection{Mutiny Fuzzer}
 
-Mutiny fuzzer is a network fuzzer operates by mutating and replaying pcap
-recordings of network activity.  The similarities between the operation of
-Mutiny and CrashSimulator mean that it is a good candidate for comparison.
-The major difference between these two that CrashSimulator can manipulate
-aspects of system calls than the messages sent across a network.  Mutiny,
-on the other hand, is limited to manipulating the content of messages only.
+At a high level, mutiny has an architecture similar to CrashSimulator
+
+Mutiny operates on recordings of valid network communication.
+
+Mutiny mutates these recordings using various strategies provided by
+mutator plugins.
+
+Mutiny replays this traffic and monitors how the application responds to
+the injected mutations.
