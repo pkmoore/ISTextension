@@ -1,40 +1,36 @@
 \section{Introduction}
 \label{SEC:introduction}
 
-\preston{CrashSimulator finds these bugs by recording, modifying, and replaying
-the results and side effects of the system calls made by the application.}
+\preston{CrashSimulator finds these bugs by recording, modifying, and
+replaying the results and side effects of the system calls made by the
+application.}
 
-\preston{Argue that you have to have automated testing}
-Automated testing is a necessity of developing complex, modern, software
-systems.  There are simply too many moving parts to orchestrate and test
-manually.  Industry experience has borne this out --- BBB percent of
-projects hosted on GitHub employ some sort of automated testing of the code
-checked into their repositories and most won't allow code to be checked in
-until it has passed some testing regime.\preston{cite}
+\preston{Argue that you have to have automated testing} Automated testing
+is a necessary step in developing complex, modern, software systems.  There
+are simply too many moving parts to orchestrate and test manually.
+Industry experience has borne this out --- BBB percent of projects hosted
+on GitHub employ some sort of automated testing on code checked into their
+repositories and most won't allow code to be checked in until it has passed
+some testing regime.\preston{cite}
 
-Care must be taken in designing and carrying out this testing as there a
-real chance of introducing new inefficiencies and pain points into a
-projects development life cycle.  To this end, a few points are worthy of
-consideration. First, reliance on experts and human-in-the-loop strategies
-doesn't scale.\preston{cite Alvaro}  There simply aren't enough experts to
-go around and a developer's time is far better spent on actual development
-than manual testing.\preston{cite developer shortages}  Fortunately, well
-constructed automated testing tools allow two birds to be killed with one
-stone -- we can spare developer time for more creative tasks and we can
-take advantage of the expert knowledge encoded in the tools to temper the
-lack our shortage of human experts.
+Yet, designing and carrying out this testing must be done carefully it
+presents a real chance of introducing new inefficiencies and pain points
+into a projects development life cycle.  To this end, there are five
+critical variables to consider.  First, reliance on experts and
+human-in-the-loop strategies doesn't scale.\preston{cite Alvaro}  There are
+simply not enough experts to go around, and a developer's time is far
+better spent doing actual development than manual testing.\preston{cite
+developer shortages}  Fortunately, by using well constructed automated
+testing tools, project teams can kill two birds with one proverbial stone;
+such tools can free up developer time for more creative tasks while taking
+advantage of the expert knowledge encoded in the tools to temper the
+shortage of human experts.
 
 \preston{Discuss what properties an automated testing tool must have}
 
 Second, simply grabbing a tool of the shelf (or internet) won't do.  It
 must capable of testing the system in question, it must be usable by the
 developers that on staff, and it must produce high-quality results.
-
-In addition to a general shortage of development capacity, another limiting
-factor can be the developer's skill sets and expertise.  In order to be
-successful, a testing tool must be usable by developers working on a
-system.  If the developers lack the background necessary to deal with the
-output of a tool then the effort surrounding the tool has been wasted.
 
 Even if a tool satisfies the above requirements, its usefulness is
 dependant on the quality of its output.  Tools that produce a high number
