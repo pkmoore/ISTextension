@@ -69,25 +69,31 @@ on out.
 % unfamiliar with working on disassembled code, identifying the cause of the
 % bug may be difficult.
 
-\preston{Talk about how CrashSimulator has these properties}
-In this paper show that CrashSimulator can to assist
-developers of varying skill levels in identifying bugs in real world
-applications.  Additionally, we show that CrashSimulator provides value in
-mapping the presence of these bugs to the units of code responsible for
-them allowing developers to fix them in a more timely manner.
+\preston{not sure how to word this given that this might be the second
+paper}
 
-The tool's effectiveness comes from its ability to expose applications to
-unusual environmental conditions that can affect
-execution.  CrashSimulator's built-in set of anomalous
-conditions allows its users to define which conditions to test an
-application against, thus alleviating the need to have an expert
-knowledgeable enough
-to set up and test an application in a chosen environment.
-It also allows application misbehavior to be localized to a
-sequence of system calls allowing the true source of a bug to be more
+In this paper we evaluate CrashSimulator, a tool that tests applications by
+exposing them to unusual environmental conditions encoded as modifications
+to the results and side effects of system calls made by an application
+being tested.  Our goal is to show that CrashSimulator meets the above
+criteria and compares favorably against similar tools.  The tool's
+effectiveness comes from its ability to expose applications to unusual
+environmental conditions that can affect execution.  CrashSimulator's
+built-in set of anomalous conditions allows its users to define which
+conditions to test an application against, thus alleviating the need to
+have an expert knowledgeable enough to set up and test an application in a
+chosen environment.  It also allows application misbehavior to be localized
+to a sequence of system calls allowing the true source of a bug to be more
 quickly identified and easing the process of correcting it.  This is an
 advantage over tools that simply indicate the presence of a bug (i.e.  this
-input caused a crash)
+input caused a crash).  CrashSimulator has a low false positive rate and it
+is able to clearly convey to its developers the presence of a bug.  As a
+result, CrashSimulator allows developers of varying skill levels to
+identify bugs in real world applications with a high degree of confidence.
+Additionally, we show that CrashSimulator provides value in mapping the
+presence of these bugs to the units of code responsible for them allowing
+developers to fix them in a more timely manner.
+
 
 \preston{Talk about we prove CrashSimulator has those properties}
 To validate these claims we conducted a study with ZZZ participants
@@ -102,14 +108,14 @@ The main contributions in this work are as follows:
 \preston{Item 3 needs to be reworded}
 \begin{enumerate}
 
-\item We illustrate that CrashSimulator is useful and usable by developers
-with a wide variety of backgrounds.
+\item We illustrate that CrashSimulator's powerful system call manipulation
+    capabilities and existing corpus of environmental anomalies makes it
+        useful to developers with varying degrees of expertise.
 
 \item We show that CrashSimulator allows these developers to find real bugs
 in real applications.
 
 \item We demonstrate that CrashSimulator compares favorably against similar
-automated testing tools in the number of bugs found and in user opinion on
-usefulness of the tools' output.
+automated testing tools in the number of bugs found.
 
 \end{enumerate}
