@@ -24,44 +24,31 @@ modifying, and replaying the results and side effects of the system calls
 made by the application.  This process allows experts to construct "tests"
 that developers can use to evaluate their applications without their having
 to understand the operating system complexities underlying the
-environmental conditions simulated by the test.
+environmental conditions simulated by the test. This approach has proven
+successful in finding new bugs in many widely deployed applications.
 
-CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
-complex replay situations.
-
-CrashSimulator's supervisor attaches to the processes being replayed at
-strategic points in time in order to manipulate system call behavior.
-
-CrashSimulator observes whether or not the application responds to the
-modified system call behavior and classifies the application's behavior as
-maybe correct or definitely wrong.
-
-CrashSimulator is able to test closed source applications.
-
-CrashSimulator was able to find many new bugs in widely deployed
-applications.
 
 
 \subsection{AFL}
 
 AFL (American Fuzzy Lop) is a file-based fuzzer that tests an application
-by mutating the contents of a candidate file provided by the user.
+by mutating the contents of a candidate file provided by the user.  It
+offers two improvements the naive approach of simply passing random data to
+an application through a file.  First, AFL bases its mutations on a valid
+file for the application.  This increases the chance that the mutated file
+will make deeper into processing code improving coverage.  Second, AFL
+provides a set of C compiler customizations that add instrumentation code
+to the application being tested at compile time.  This instrumentation
+allows AFL to tune its mutations to more thoroughly exercise the
+application's code paths.  The intention when testing with AFL is to
+generate an input file that makes the application crash.  Once a
+crash-causing file is discovered, users must manually analyze the file and
+application in order to ascertain the cause of the crash and fix it.
+Though there is some support for testing closed source applications through
+a hypervisor AFL, is intended to test applications written in C on Linux
+and has an impressive track record in terms of bugs discovered in major
+applications that meet this criteria.
 
-AFL improves on similar tools by providing a set of C compiler
-customizations that add instrumentation code to the application being
-tested at compile time.  This instrumentation allows AFL to tune its
-mutations to more thoroughly exercise the application's code paths.
-
-AFL's goal is to make the application crash, most commonly by triggering an
-application state where memory is corrupted.
-
-AFL is intended for testing application written in C on Linux.
-
-AFL offers an experimental mode for testing closed source applications by
-running them under a virtual machine hypervisor.
-
-AFL is responsible for the discovery of many novel bugs in major open
-source applications.
 
 \subsection{Mutiny Fuzzer}
 
