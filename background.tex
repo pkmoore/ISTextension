@@ -19,16 +19,12 @@ CrashSimulator finds bugs in applications by exposing them to weird
 environmental conditions that developers may not have anticipated.  This is
 accomplished by encoding the environmental conditions as a set of
 modifications made to the results an side effects of system calls made by
-the application.
-
-CrashSimulator injects these anomalies by recording, modifying, and
-replaying the results and side effects of the system calls made by the
-application.
-
-This process allows experts to construct "tests" that developers can use to
-evaluate their applications without their having to understand the
-operating system complexities underlying the environmental conditions
-simulated by the test.
+the application.  CrashSimulator injects these anomalies by recording,
+modifying, and replaying the results and side effects of the system calls
+made by the application.  This process allows experts to construct "tests"
+that developers can use to evaluate their applications without their having
+to understand the operating system complexities underlying the
+environmental conditions simulated by the test.
 
 CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
 complex replay situations.
