@@ -1,13 +1,359 @@
-\section{Architecture}
+\section{Architecture and Approach Details}
 \label{SEC:architecture}
 
-[This is how the system actually works.  Go in depth with the design, but 
-don't describe implementation details (most of the time).  That usually
-goes in a separate impl section.  So, explain the commonalities if someone 
-implement it on a different OS w/ a different language, using different
-file formats, etc.]
+CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
+complex replay situations.
 
-[Diagrams are useful here.  This is usually 2-3 pages and can also have 
-multiple sections]
+CrashSimulator's supervisor attaches to the processes being replayed at
+strategic points in time in order to manipulate system call behavior.
+
+CrashSimulator observes whether or not the application responds to the
+modified system call behavior and classifies the application's behavior as
+maybe correct or definitely wrong.
+
+CrashSimulator is able to test closed source applications.
 
 
+
+ % \label{sec:approach}
+ %     \begin{figure}[t]
+ %         \center{}
+ %         \fbox{\includegraphics[scale=.5]{Architecture}}
+ %         \caption{High level view of CrashSimulator's Architecture.}
+ %         \label{figure:architecture}
+ %     \end{figure}
+
+In order to understand CrashSimulator's operation it is necessary to have a
+more detailed understanding of how its components fit together and what
+steps are required to use it in testing an application.
+Figure~\ref{figure:architecture} illustrates the steps required to gather
+the anomaly information CrashSimulator requires, how that information is to
+be transformed into mutated traces and what output CrashSimulator yields
+once its replay and analysis process completes.
+
+\subsection{Anomaly Identification} \label{subsec:anomalyidentification}
+
+%Section II.A, first paragraph, the tenses are messed up here. In the first
+%sentence, "we identified" is entirely out-of-place.  This part should be
+%describing what practitioners do to use the tool, so "we identified",
+%"This work utilized", etc, are not appropriate.  I think this came in
+%because you moved text here that was describing our evaluation.  Keep the
+%parts that describe how someone can find anomalies, and change the tenses.
+
+The first step in CrashSimulator's testing process is identifying an
+environmental anomaly to test an application against.  This can be
+accomplished either manually or by examining results of other applications
+running in the target environment with existing tools.  For example, this
+work utilized the results of both NetCheck~\cite{Zhuang_NSDI_2014} and
+CheckAPI~\cite{rasley2015detecting}, as well as manual analysis, to develop
+the set of anomalies used in our evaluation.  NetCheck, which can be
+thought of as a precursor to CrashSimulator, is a tool that can determine
+the cause of a failure in a networked application, without any specific
+knowledge of the application or its language. It is readily able to
+identify a wide variety of anomalous behaviors related to network
+communication between one or more hosts.  CheckAPI performs a similar
+function by comparing the behavior of an API implementation to a reference
+model.
+
+Another source of anomalies is the public bug trackers of projects
+available on the web.  If the presence of a bug is indicated by a series of
+system calls, then a checker can be constructed to identify it during
+execution. This is ideal when determining whether or not an application is
+vulnerable to a widely publicized bug.  Similarly, bugs can be taken from
+similar projects in order to expand a project's set of available anomalies.
+
+In selecting anomalies for use it is important to understand that they can
+be as subtle as a single configuration flag being set differently under
+specific circumstances.  For example, in BSD and OS X sockets returned by
+the {\tt accept()} system call inherit the values of the {\tt O\_NONBLOCK}
+and {\tt O\_ASYNC} flags from their parent socket.  In Linux, these values
+are not inherited.  As a result, the correct behavior is to always
+explicitly set these flags to the appropriate values on child sockets.
+This environmental difference presented itself as a bug in the socket
+implementation of Python 3.2.  Python took advantage of non-blocking
+sockets in order to implement timeout capabilities for sockets.  Because
+Python did not specifically set the {\tt O\_NONBLOCK} flag on the child
+sockets underlying its socket object abstraction, it was possible that,
+depending on the environment, the Python socket object would report the
+socket as either blocking or non-blocking while the actual underlying
+socket was configured for the opposite behavior.
+
+Anomalies can also be found around more complex operations.  Moving files
+around in a filesystem is an extremely common operation that, on face
+value, seems to fairly simplistic to carry out.  In reality, things become
+complex quickly once a few implementation details are taken into account:
+namely limitations in Linux's {\tt rename()} system call and the way
+Linux's directory hierarchy can abstract away complicated device
+configurations.
+
+Trivial cases of moving a file (i.e. those where the source and destination
+are on the same device) are accomplished using the {\tt rename()} system
+call.  In cases where the source and destination are not on the same device
+this system call fails and the application must handle the operation
+manually. This means that \emph{any} application that moves files around on
+a Linux system must be able to deal with the situation where some part of
+the directory structure may physically reside on a different device.
+During our evaluation, we modeled what it takes to move a file correctly
+using the GNU Coreutils {\tt mv} command as our ``gold standard.''  We
+found many applications do not handle the above situation correctly
+including the {\tt shutils} module from the Python 2.7.9 standard library.
+It did not correctly preserve timestamps across the move, it did not
+correctly apply extended file attributes to the destination file after the
+move, and it did not verify the file's inode number between initially
+examining the source file and when the copy was initiated (a common cause
+of race conditions).  Failing to perform these operations exposes
+applications relying on {\tt shutils} to misordered processing, data loss,
+or security issues.
+
+\subsection{Converting Anomalies to System Call Sequences}
+
+%  This paragraph should cover the "describe manual effort" feedback
+Once a new anomaly has been identified, it is distilled into a sequence of
+system calls that respond to the anomaly.  This process involves examining
+the system call traces in order to identify a series of calls indicative of
+an appropriate (or inappropriate) response to a specified anomaly.  This
+analysis should identify two things: 1) any mutations that may need to be
+made to the trace to simulate the anomalous environment (i.e. what
+modifications must be made to system call return values and program state
+during replay), and 2) a checker to examine the application's response to
+further trace operations in order to determine whether it is responding
+appropriately.  Much like the effort involved in constructing a unit test
+to check for correct behavior in a piece of code, this process involves an
+initial outlay of user skill and effort that will be paid back as it is
+used repeatedly over time to test many different applications.
+
+%With this information in mind, a developer can construct the simple
+%mutation, for example:  ``make the {\tt open()} call return -1 with {\tt
+%errno} set to {\tt ENOENT}'', and use CrashSimulator to apply it to any
+%application that makes the specified calls, {\tt open ()} in this case.
+%Using these mutated traces can allow CrashSimulator to perform a universal
+%test for whether or not an application correctly checks {\tt open()}'s
+%return value.
+
+As a more concrete example of the above, consider an anomaly
+involving unusual file types we will later address in our evaluation of
+CrashSimulator.  This anomaly appears when a call to {\tt stat()} or a similar system
+call returns a structure with a {\tt st\_mode} member containing an unexpected
+value. Consider the line of {\tt strace} output representing a call to {\tt
+  fstat()}:
+\begin{quote}
+  {\tt 8936  fstat64(3, \{st\_dev=makedev(0, 40), st\_ino=54993216, st\_mode=S\_IFREG ...\}) = 0}
+\end{quote}
+The third member of the returned structure indicates that the file is a
+regular file by showing that {\tt st\_mode} flag is set in the {\tt st\_mode}
+member.  CrashSimulator can mutate this  line to the following:
+
+\begin{quote}
+  {\tt 8936  fstat64(3, \{st\_dev=makedev(0, 40), st\_ino=54993216, st\_mode=S\_IFCHR ...\}) = 0}
+\end{quote}
+
+The trace containing this modified line can then be replayed in order to
+test how the application responds when a file that is expected to be
+regular is actually a character device. In our evaluation we further
+explore the behavior of applications as they encounter other possible valid
+values of {\tt st\_mode} in the course of testing.
+
+%CrashSimulator can use the outputs of this analysis either as mutations to
+%be applied to a system call trace of the application under test or as
+%input to a ``checker'' that determines whether an application has
+%performed a required set of actions. When a ``checker'' is required, the
+%sequence of system calls is encoded as a finite automaton that, when
+%provided with as input the system calls made during the course of a replay
+%execution, can decide whether or the pattern of system calls is present.
+%If the analysis reveals that anomalous conditions need to be injected into
+%a replay execution this is facilitated by modifying the to-be-replayed
+%system call trace from the application under test.
+
+Similar analysis is used to derive a checker from a set of system calls
+involved in an anomaly.  In some cases, the checker is very simple and in
+others it is more complex.  In many situations CrashSimulator's default
+checker can be employed to determine whether the application has noticed
+the anomaly and whether it may be making an effort to handle it (See
+example in \S~\ref{sec-file-type-bugs}).  From the other direction, the
+system can employ more specific checkers in a replay execution to determine
+whether the application handled all the edge cases.  We employed this
+technique in our evaluation of CrashSimulator's ability to find bugs
+related to moving files across devices (\S~\ref{sec-complex}).
+ 
+\subsection{Trace Recording and Anomaly Injection}
+
+The trace into which anomalies will be injected is generated by recording
+the application being tested as it executes in some environment where the
+chosen anomaly isn't present.
+
+Once this trace has been generated, CrashSimulator's replay-based approach
+makes it easy to inject anomalies into an execution by introducing the
+features of the anomaly into the trace.  Because replaying the modified
+trace faithfully follows the described system call behavior, the
+application is exposed to the anomalous conditions that were injected.  For
+example, suppose an anomaly causes a call to {\tt read()} to fail with
+return value of -1 and {\tt errno} set to {\tt EINVAL}.  Exposing an
+application to this situation only requires editing the system call trace,
+such that the line describing this read call reflects the above values.
+
+Our implementation of CrashSimulator uses {\tt strace} to accomplish the
+above.  {\tt Strace} is a good fit for this purpose because it provides a
+ready-build way to record an application's system call activity as well as
+a user-friendly representation of the inputs, outputs, and side effects of
+each system call an application makes.  This means CrashSimulator's user
+can easily modify an {\tt strace} recording using a text editor in order to
+express an anomaly in terms of system call results and side effects.  These
+modifications can typically be automated (and were for the anomalies used
+in our evaluation).
+
+
+%Consider the example of an anomaly identified in a web server application.
+%This behavior can distilled down to a series of system calls indicitive of
+%the anomaly.  If this behavior is present in other network-reliant
+%applications it too can be identified by looking for the same series of
+%system calls.  This series of system calls can then be transformed into a
+%computational model as described above.  As another example, consider the
+%bugs in Python's shutils that were discussed earlier.  In the case of the
+%``race condition'' bug, the series of system calls indicative of its
+%presence is an application using stat() to check a file, open() to open
+%it, and a series of read() and write() calls to copy its contents to the
+%destination without a call to fstat() that to confirm that the file was
+%not modified after the initial call to stat().
+
+
+\subsection{Analyzing an Execution}
+
+CrashSimulator's replay process consists of launching the application under
+test as a child process and interceeding in its execution at appropriate
+times in order to simulate the results and side effects of any system call
+the application might make.  The trace is mutated to reflect the chosen
+anomaly, ensuring the process will reveal the anomaly to the application.
+After the replayed execution concludes, CrashSimulator is able to use the
+ending state of the checker to report whether or not the anomalous
+situation was handled appropriately.  CrashSimulator can use two types of
+checkers, which each serve a slightly different purpose.
+
+%The up front effort
+%in this process only needs to be done once. One of CrashSimulator's major
+%advantges over application-specific test suites is that checkers and, if
+%necessary, any associated system call trace mutations can be accumulated and
+%used to test any application CrashSimulator's user is interested in.
+
+%In the case of the Python
+%shutils race condition, the faulty behavior can be identified using a simple
+%python script that calls shutils.move() to move a file between directories
+%located on different storage devices.  CrashSimulator is able to identify
+%the bad behavior by replaying a system call trace taken of an execution of
+%the Python interpreter while it executes the script in question.
+
+%For example, a set of bugs that will be
+%discussed later were found by modifying a rename() system call to return a
+%result indicating that the application is attempting to move a file across
+%disks -- an operation the system call cannot perform.  In a well behaved
+%application, this will trigger an alternative execution path wherein the
+%file is manually copied by the application.  In a buggy application either
+%this case will be handled incorrectly (i.e. the appliation will fail to
+%perform all of the steps required to properly copy a file across devices, a
+%situation caught by well-constructed anomaly models) or will not be handled
+%at all, that is, the application will fail eventually because it did not
+%recognize that the call to rename was not successful.
+
+%I feel like this is important to include but am having trouble figuring out
+%where to put it.
+
+\paragraph{The Default Checker}
+
+When CrashSimulator injects anomalous behavior into a replay execution it is
+expected that the application under test will deal with this
+anomaly in some way. For example, applications
+can be expected to behave differently when
+the structure returned by a call to {\tt stat()} indicates the target file
+is a symlink, rather than a regular file.
+When there are numerous ways an
+application could correctly handle a given anomaly, CrashSimulator 
+can use a generic ``default checker''.  This default checker
+is based on the assumption that an application's efforts to deal with the anomaly
+will result in it executing different program paths (and therefore different
+system calls) than were executed when the system call trace
+was recorded.  If the application being replayed does not
+alter its behavior to deal with the anomaly, it has not
+correctly handled this flaw --- a failing result.  Alternatively, if the
+application does deviate,
+it is likely that the application is taking some action
+to handle the injected condition --- an indication of possibly correct
+behavior.
+
+This approach is often sufficient to classify application behavior. % because in reality, 
+%a test can only tell us if
+%an application performs a specific bad behavior in a specific situation.  A
+%test cannot prove that an application is bug free in the same situation. 
+As
+with traditional tests, CrashSimulator does not tell us that an application is
+bug free in a given situation; instead, it asserts that an application
+has incorrectly handled a given situation.
+
+
+\paragraph{More Specific Checkers}
+
+CrashSimulator also accepts more specific checkers that evaluate whether or
+not an application has performed a required operation.  These checkers
+monitor a replay execution for a specific system call sequence (with the
+correct parameters, return values, and state modifications) that indicates
+the application has carried out the operation in question.  To
+facilitate the creation of these more specific checkers our
+implementation of CrashSimulator provides an object-based Python interface
+over the system calls made during a replay execution.
+Whenever a system call is handled in the course of a replay
+execution, a callback passes the associated inputs, outputs, and side effects to the user's
+chosen checker.  The checkers we implemented in order to evaluate
+CrashSimulator
+use a model that accepts particular system
+call sequences indicative of correct (or incorrect) response
+to the anomaly.  Whether CrashSimulator
+ultimately accepts a given replay execution is determined by the ending
+states of the checkers monitoring the execution.
+Users are unrestricted in terms of what strategy they use to implement a
+checker.  CrashSimulator simply presents the stream of system calls as described
+above for consumtion by a checker.  Once a user has a idea of the system call
+sequence they need to check for, the actual construction of a checker is
+simple.  The effort and amount of code involved is similar to that of a small
+unit test.
+%    \subsection{CrashSimulator Architecture}
+%        
+%    At a high level CrashSimulator is organized into two primary modules. The
+%    first is responsible for monitoring a given execution, determining
+%    when to inject anomalous behavior, and if the
+%    application responded correctly.  The second module
+%    is responsible for managing the execution of the application under test such
+%    that it precisely follows a previously recorded system call trace -- a
+%    process we refer to as ``replaying'' a system call trace.
+%
+%    %The first step in CrashSimulator's work flow is to identify anomalous behavior in an arbitrary application.
+%    %Currently, this step is accomplished through manual bug hunting and through examination of diagnostic output from
+%    %NetCheck and CheckAPI. CrashSimulator's user examines the system call behavior that resulted in this bad behavior
+%    %and constructs a model that defines what triggers the anomalous behavior and the subsequent ``bad'' system call
+%    %behavior (\emph{Do we need to say something about future work doing this step automatically here?}.
+%    %CrashSimulator's first module operates by using this model to analyzed the system call behavior of the application
+%    %under test(e.g. order, parameters, side effects, return values).
+%        
+%    Both modules make use of the {\tt ptrace} facilities built into modern
+%    versions of the Linux kernel.  A ``replay''
+%    is achieved by intercepting key system calls made by the application,
+%    preventing the call from being carried out by the kernel (by
+%    converting it to a call to {\tt getpid()}), identifying the matching system
+%    call from a previously recorded trace, and replicating the return value
+%    and side effects. In doing so, the application believes that the system call it
+%    made actually took place. We have found that emulating the post conditions
+%    of a system call results in faithful replays of a
+%    previous execution in most cases.
+%
+%    CrashSimulator is fully self contained and operates without user
+%    intervention during its analysis process. At this point, the tool 
+%    itself is available as a virtual machine appliance that is compatible with the
+%    \emph{Virtual Box} virtual machine hosting software.  The decision to
+%    distribute CrashSimulator in this manner is based on three points.  First, this
+%    distribution method ensures that all of CrashSimulator's dependences are
+%    installed and configured appropriately.  Second, it provides an
+%    environment for taking system call traces that is known to be complete
+%    tool-wise and compatible.  Finally, and most importantly,
+%    this method provides an environment that is known to be compatible with the
+%    details of CrashSimulator's system call replay techniques.
+%
+%    CrashSimulator's source code is available and, while other environments may
+%    be untested, it should function correctly on any platform that meets the
+%    criteria described above.
