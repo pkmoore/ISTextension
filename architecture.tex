@@ -1,27 +1,12 @@
-\section{Architecture and Approach Details}
-\label{SEC:architecture}
+\section{Approach Details}
+\label{SEC:approach}
 
-CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
-complex replay situations.
-
-CrashSimulator's supervisor attaches to the processes being replayed at
-strategic points in time in order to manipulate system call behavior.
-
-CrashSimulator observes whether or not the application responds to the
-modified system call behavior and classifies the application's behavior as
-maybe correct or definitely wrong.
-
-CrashSimulator is able to test closed source applications.
-
-
-
- % \label{sec:approach}
- %     \begin{figure}[t]
- %         \center{}
- %         \fbox{\includegraphics[scale=.5]{Architecture}}
- %         \caption{High level view of CrashSimulator's Architecture.}
- %         \label{figure:architecture}
- %     \end{figure}
+\begin{figure}[t]
+  \center{}
+  \fbox{\includegraphics[scale=.5]{approach}}
+  \caption{Diagram illustrating CrashSimulator's approach}
+  \label{figure:approach}
+\end{figure}
 
 In order to understand CrashSimulator's operation it is necessary to have a
 more detailed understanding of how its components fit together and what
@@ -30,15 +15,6 @@ Figure~\ref{figure:architecture} illustrates the steps required to gather
 the anomaly information CrashSimulator requires, how that information is to
 be transformed into mutated traces and what output CrashSimulator yields
 once its replay and analysis process completes.
-
-\subsection{Anomaly Identification} \label{subsec:anomalyidentification}
-
-%Section II.A, first paragraph, the tenses are messed up here. In the first
-%sentence, "we identified" is entirely out-of-place.  This part should be
-%describing what practitioners do to use the tool, so "we identified",
-%"This work utilized", etc, are not appropriate.  I think this came in
-%because you moved text here that was describing our evaluation.  Keep the
-%parts that describe how someone can find anomalies, and change the tenses.
 
 The first step in CrashSimulator's testing process is identifying an
 environmental anomaly to test an application against.  This can be
@@ -54,6 +30,32 @@ identify a wide variety of anomalous behaviors related to network
 communication between one or more hosts.  CheckAPI performs a similar
 function by comparing the behavior of an API implementation to a reference
 model.
+
+
+CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
+complex replay situations.
+
+CrashSimulator's supervisor attaches to the processes being replayed at
+strategic points in time in order to manipulate system call behavior.
+
+CrashSimulator observes whether or not the application responds to the
+modified system call behavior and classifies the application's behavior as
+maybe correct or definitely wrong.
+
+CrashSimulator is able to test closed source applications.
+
+
+
+
+
+\subsection{Anomaly Identification} \label{subsec:anomalyidentification}
+
+%Section II.A, first paragraph, the tenses are messed up here. In the first
+%sentence, "we identified" is entirely out-of-place.  This part should be
+%describing what practitioners do to use the tool, so "we identified",
+%"This work utilized", etc, are not appropriate.  I think this came in
+%because you moved text here that was describing our evaluation.  Keep the
+%parts that describe how someone can find anomalies, and change the tenses.
 
 Another source of anomalies is the public bug trackers of projects
 available on the web.  If the presence of a bug is indicated by a series of
@@ -357,3 +359,6 @@ unit test.
 %    CrashSimulator's source code is available and, while other environments may
 %    be untested, it should function correctly on any platform that meets the
 %    criteria described above.
+
+\section{Architecture}
+\label{SEC:architecture}
