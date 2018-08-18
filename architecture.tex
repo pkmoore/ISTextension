@@ -16,6 +16,8 @@ the anomaly information CrashSimulator requires, how that information is to
 be transformed into mutated traces and what output CrashSimulator yields
 once its replay and analysis process completes.
 
+\subsection{Anomaly Identification} \label{subsec:anomalyidentification}
+
 The first step in CrashSimulator's testing process is identifying an
 environmental anomaly to test an application against.  This can be
 accomplished either manually or by examining results of other applications
@@ -32,23 +34,11 @@ function by comparing the behavior of an API implementation to a reference
 model.
 
 
-CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
-complex replay situations.
-
-CrashSimulator's supervisor attaches to the processes being replayed at
-strategic points in time in order to manipulate system call behavior.
-
-CrashSimulator observes whether or not the application responds to the
-modified system call behavior and classifies the application's behavior as
-maybe correct or definitely wrong.
-
-CrashSimulator is able to test closed source applications.
 
 
 
 
 
-\subsection{Anomaly Identification} \label{subsec:anomalyidentification}
 
 %Section II.A, first paragraph, the tenses are messed up here. In the first
 %sentence, "we identified" is entirely out-of-place.  This part should be
@@ -362,3 +352,15 @@ unit test.
 
 \section{Architecture}
 \label{SEC:architecture}
+
+CrashSimulator uses Mozilla's rr record-and-replay debugger to handle
+complex replay situations.
+
+CrashSimulator's supervisor attaches to the processes being replayed at
+strategic points in time in order to manipulate system call behavior.
+
+CrashSimulator observes whether or not the application responds to the
+modified system call behavior and classifies the application's behavior as
+maybe correct or definitely wrong.
+
+CrashSimulator is able to test closed source applications.
