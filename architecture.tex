@@ -66,6 +66,14 @@ namely limitations in Linux's {\tt rename()} system call and the way
 Linux's directory hierarchy can abstract away complicated device
 configurations.
 
+\preston{This example might need to be changed.  One of the pieces of
+feedback we received from reviewers was that some of our bugs could be
+detected without replaying and injecting.  That is, they could be
+identified by analyzing a dead strace recording from an application.  This
+example will be much stronger if we inject rename() = -1 EXDEV and then
+look for this pattern in the application's response once we have that
+machinery in place.}
+
 Trivial cases of moving a file (i.e. those where the source and destination
 are on the same device) are accomplished using the {\tt rename()} system
 call.  In cases where the source and destination are not on the same device
