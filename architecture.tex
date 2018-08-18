@@ -33,26 +33,14 @@ communication between one or more hosts.  CheckAPI performs a similar
 function by comparing the behavior of an API implementation to a reference
 model.
 
-
-
-
-
-
-
-
-%Section II.A, first paragraph, the tenses are messed up here. In the first
-%sentence, "we identified" is entirely out-of-place.  This part should be
-%describing what practitioners do to use the tool, so "we identified",
-%"This work utilized", etc, are not appropriate.  I think this came in
-%because you moved text here that was describing our evaluation.  Keep the
-%parts that describe how someone can find anomalies, and change the tenses.
-
 Another source of anomalies is the public bug trackers of projects
-available on the web.  If the presence of a bug is indicated by a series of
-system calls, then a checker can be constructed to identify it during
-execution. This is ideal when determining whether or not an application is
-vulnerable to a widely publicized bug.  Similarly, bugs can be taken from
-similar projects in order to expand a project's set of available anomalies.
+available on the web.  If the presence of a bug is indicated by the results
+and side effects of a series of system calls then CrashSimulator can be
+used to inject these same results and side effects at appropriate times in
+other applications.  This is ideal when determining whether or not an
+application is vulnerable to a widely publicized bug.  Similarly, bugs can
+be taken from similar projects in order to expand a project's set of
+available anomalies.
 
 In selecting anomalies for use it is important to understand that they can
 be as subtle as a single configuration flag being set differently under
