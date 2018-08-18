@@ -158,15 +158,20 @@ return value of -1 and {\tt errno} set to {\tt EINVAL}.  Exposing an
 application to this situation only requires editing the system call trace,
 such that the line describing this read call reflects the above values.
 
-Our implementation of CrashSimulator uses {\tt strace} to accomplish the
-above.  {\tt Strace} is a good fit for this purpose because it provides a
-ready-build way to record an application's system call activity as well as
-a user-friendly representation of the inputs, outputs, and side effects of
-each system call an application makes.  This means CrashSimulator's user
-can easily modify an {\tt strace} recording using a text editor in order to
-express an anomaly in terms of system call results and side effects.  These
-modifications can typically be automated (and were for the anomalies used
-in our evaluation).
+Our implementation of CrashSimulator uses a combination of {\tt rr}, a
+record-and-replay debugger, and our own CrashSimulator process supervisor
+to accomplish the above.  We rely on {\tt rr's} trace recording to format
+to store the information necessary to perform the bulk of uninteresting
+replay and {\tt strace}-style output to describe user facing system call
+sequences that will be mutated during testing.  {\tt Strace} is a good fit
+for this purpose because it provides a familiar way to describe an
+application's system call activity in terms of a user-friendly
+representation of the inputs, outputs, and side effects of each system call
+an application makes.  This means CrashSimulator's user can easily modify
+an {\tt strace} recording using a text editor in order to express an
+anomaly in terms of system call results and side effects.  These
+modifications can typically be automated with the help of a "mutator"
+script (and were for the anomalies used in our evaluation).
 
 
 %Consider the example of an anomaly identified in a web server application.
