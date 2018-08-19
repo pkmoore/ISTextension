@@ -12,3 +12,328 @@ still a major concern.\preston{cite}  Any tool that requires access to
 source code will have diminished capability in projects incorporating
 closed source components.
 
+In building and testing CrashSimulator, we examined a number of previous
+studies in bug detection, data mining, and testing protocols. This section
+summaries a few earlier initiatives in these areas.
+
+\iffalse
+While there is a vast literature on test
+generation~\cite{ammann2008introduction, mcminn2004search,
+  puasuareanu2009survey, dias2007survey}, much less work
+has focused on issues of portability and testing whether software
+behaves consistently in different environments.  Prior work on
+CheckAPI~\cite{rasley2015detecting} and
+NetCheck~\cite{Zhuang_NSDI_2014} begins to fill this gap and this paper
+builds upon those results.
+%
+%\paragraph{Detecting Environmental Bugs.}
+%
+%NetCheck; CheckAPI; stub injection; detecting machine specific bugs
+%(e.g. numeric/memory limitations); testing error handlers; \dots
+
+
+Crash reproduction by test case mutation~\cite{DBLP:conf/sigsoft/XuanXM15}.
+
+\fi
+
+
+\noindent {\bf Static analysis. } Tools based on static analysis
+techniques, such as abstract interpretation, model checking, and symbolic
+execution have been used to successfully detect bugs related to incorrect
+API usage. Examples include SLAM~\cite{Ball_adecade,
+Ball:2002:SLP:503272.503274} and, more recently,
+CORRAL~\cite{DBLP:conf/sigsoft/LalQ14} for conformance checking of Windows
+device drivers against the Windows kernel API,
+FindBugs~\cite{DBLP:conf/oopsla/HovemeyerP04} for detecting API usage bugs
+in Java programs, FiSC~\cite{Musuvathi04modelchecking} for finding bugs in
+TCP implementations, and the Explode
+system~\cite{Yang:2006:ELG:1298455.1298469} for detecting crash recovery
+bugs in file system implementations. Unlike CrashSimulator, these
+approaches depend on the availability of source or byte code, and are
+typically more prone to false alarms. On the other hand, static analysis
+can provide stronger soundness guarantees.  Static analysis has also been
+used to detect portability issues related to changes between different
+versions of external components on which a program
+depends~\cite{silakov2010improving, javacompliance-www}. Like
+CrashSimulator, these address the application's interactions with its
+environment, but CrashSimulator focuses on testing the application's
+response to anomalies, rather than on proving that the environments behave
+as expected.
+
+\iffalse
+\noindent
+{\bf Specification and run-time verification.}  Substantial work has
+been done in validating API and protocol behaviors, e.g., finding
+faults in the Linux TCP implementation,
+SSH2 and RCP~\cite{Udrea:2008}, BGP
+configuration~\cite{Feamster:2005}, and identifying network
+vulnerabilities~\cite{ritchey-sp00}. 
+\fi
+
+\noindent
+{\bf API protocol mining.}
+There has been extensive work on mining source code to learn API protocols
+and use them to detect common usage violations such as missing method calls
+(see, e.g.,~\cite{mariani2007compatibility,
+DBLP:journals/ase/WasylkowskiZ11, DBLP:conf/icse/PradelJAG12,
+DBLP:journals/tosem/MonperrusM13, DBLP:conf/icse/JamrozikSZ16}). These
+techniques primarily target object component interactions, rather than
+system calls to generate test suites. However, the techniques explored in
+these works could be used to mine system call patterns in source code in
+order to find checkers that identify incorrect responses to environmental
+anomalies. So far, we have specified these checkers manually for
+CrashSimulator.
+
+\noindent
+{\bf Tracing and log mining.} 
+Similar to API protocol mining, there has been substantive work on using
+log files to detect anomalies~\cite{pinpoint,
+jiang_abnormal_trace_detection_icac_2005, xu2009detecting, lou2010mining2}
+and aid program understanding~\cite{yuan2010sherlog,
+beschastnikh_synoptic_fse_2011, csight_icse_2014}.
+CheckAPI~\cite{rasley2015detecting} and NetCheck~\cite{Zhuang_NSDI_2014}
+use system call traces to diagnose an application's violations of
+cross-platform portability.  In contrast to this work, CrashSimulator uses
+system call traces for a different purpose: mutating and replaying traces
+to test responses to known environmental anomalies before an application is
+deployed.
+
+
+\noindent
+{\bf Portability.}
+Wrappers are commonly used to enable cross-platform portability of
+APIs~\cite{bartolomeicompliance}. System call interposition is one
+technique to automatically generate such
+wrappers~\cite{Guo:2011:CUS:2002181.2002202} and has also been used to
+detect and prevent security
+violations~\cite{Hofmeyr:1998:IDU:1298081.1298084,
+Acharya:2000:MUP:1251306.1251307}.  CrashSimulator's goals are
+complementary, as it exploits environmental anomalies discovered in
+testing, or found by analyzing other applications.
+
+Other works that target complementary classes of portability problems
+include the detection of configuration-related bugs~\cite{skoll:icse:2004,
+Yilmaz:issta:2004, Fouche:issta:2009, Kastner12, Nguyen14} and
+cross-browser incompatibilities for web
+applications~\cite{DBLP:conf/icsm/ChoudharyVO10, silakov2010improving,
+DBLP:conf/icse/Choudhary11, Mesbah:2011:ACC:1985793.1985870,
+DBLP:conf/icst/DallmeierP0MZ14}.
+
+
+\noindent
+{\bf Testing exception handling and conformance.}
+A few researchers have developed testing techniques aimed at checking
+whether programs respond appropriately to anomalous situations.  For
+example, Fu et al. introduced data flow testing techniques that require
+tests that cover paths from points at which exceptions are thrown to points
+at which they are handled in Java code. The purpose is to discover whether
+programs respond correctly to exceptional situations anticipated by the
+programmer~\cite{DBLP:journals/tse/FuMRW05}.  Koopman and DeVale developed
+a system to detect bugs in error handling code related to calls to POSIX
+functions~\cite{Koopman00theexception}.
+
+Other approaches to conformance checking of POSIX operations use model
+based testing~\cite{Dadeau:2008:CSM:1433121.1433137,Farchi02}.
+
+Unlike these approaches, CrashSimulator does not exclusively target error
+handling code or anomalies that only involve individual system calls.
+However, such testing techniques can help identify anomalies that can be
+added to our repository.
+
+
+%\noindent
+%{\bf Runtime verification:}
+%Runtime verification (RV) 
+%techniques~\cite{DBLP:conf/rv/2010, Liu:2007:WCC:1973430.1973449, Lu_ASPLOS_2006,
+%Archer:2007:ICT:1236360.1236382, Verbowski_OSDI_2006, Tucek_SOSP_2007,
+%Park_ASPLOS_2009,DBLP:journals/jlp/LeuckerS09}
+%can detect violations of properties on specific executions
+%but do not show that the software satisfies the specification for every
+%possible input or on every possible execution.
+%Many of these techniques find general violations of 
+%properties, such as atomicity~\cite{Park_ASPLOS_2009, Verbowski_OSDI_2006}.
+%Other RV techniques enable checking program-specific requirements 
+%usually specified with formal languages, such as automata or logic
+%formalisms~\cite{DBLP:conf/vmcai/BarringerGHS04, DBLP:conf/kbse/GiannakopoulouH01}.
+%
+%Many RV approaches instrument code to capture relevant
+%events or application state and insert executable 
+%assertions~\cite{Orso:2002:GSC:566172.566182, DBLP:conf/icse/ClauseO11,
+%DBLP:books/sp/Liblit2007, Jin:2010:ISS:1932682.1869481, Barnett01spyingon, 
+%DBLP:journals/jss/BarnettS03}.
+%However, inserting pre- and post-conditions obscures the fact that the
+%specification can be treated as a parallel construct to the
+%implementation~\cite{Barnett01spyingon, DBLP:journals/jss/BarnettS03}.
+%Instead, an architecture can be used for runtime verification of .NET
+%components by running the model and the implementation side-by-side,
+%comparing results at method boundaries~\cite{Barnett01spyingon,
+%DBLP:journals/jss/BarnettS03}.
+%CheckAPI does not require application instrumentation, assuming a tracing
+%mechanism exists in the API~\cite{strace, Cappos_CCS_10}.
+
+%Like CheckAPI, 
+%several other (runtime and static) checking techniques
+%allow the use of languages more familiar to 
+%programmers. 
+%The WiDS checker allows using a scripting language to specify properties of a
+%distributed system~\cite{Liu:2007:WCC:1973430.1973449}.
+%Contracts written in a C-like language can specify components for use
+%in TinyOS applications~\cite{Archer:2007:ICT:1236360.1236382}.
+%CheckAPI allows
+%programmers to choose the language for PSI construction or simply to
+%use an existing implementation. Lastly, work on deterministic 
+%replay~\cite{Viennot13} enables record-replay techniques on multi-core
+%systems and could help improve CheckAPI-MT performance.
+
+
+\iffalse
+\noindent
+{\bf Application-specific fault detection.}
+Pip~\cite{reynolds2006pip} and Coctail~\cite{xue2012using} are distributed
+frameworks that enable developers to construct application-specific models,
+which have proven effective at finding detailed application flaws. However,
+to utilize these methods, a knowledge of the nature of the failures needs
+to be acquired, and the specific system properties must be specified.
+NetCheck diagnoses application failures without application-specific
+models.  Khanna~\cite{khanna2007automated} identifies the source of
+failures using a rule base of allowed state transition paths.
+%However, it requires specialized human-generated rules for each
+%application. 
+CrashSimulator leverages NetCheck's approach to simulate identified
+anomalies in network behavior, file system behavior, etc. to test
+applications other than the ones on which the anomalies were originally
+discovered.
+\fi
+
+
+%% The following is old stuff -- not sure how much should be integrated
+%% into the above.
+\begin{comment}
+\subsection{Existing Techniques}
+
+Existing tools can be roughly divided into two categories, black-box
+and white-box, based on the techniques they use to perform their
+testing. Black-box tools simply manipulate the inputs of the
+application under test and observe the resultant outputs. White-box
+tools, on the other hand, perform complex analysis of the application's
+source code in order to reason about what inputs are likely to produce
+interesting outputs. Each of these methodologies have their own
+advantages and disadvantages.
+
+White-box testing tools typically rely on a similar set of techniques,
+including constraint solving of branch statements in an application's
+code and symbolic execution of an application's code in order to
+generate inputs that optimally exercise the application's code paths.
+These techniques, while powerful, are not without their downsides.
+First, both techniques are computationally-expensive. Furthermore,
+symbolic execution can not always accurately represent actual execution
+and so there may be deviations in results. Similarly, efficiently
+solving a series of constraints in order to exercise a particular code
+path can be can be difficult to guarantee that a particular set of
+generated inputs will exercise the intended code path in many
+circumstances due to external dependencies that the tool cannot
+analyze. For example, a white-box testing tool cannot reliably generate
+inputs that are guaranteed to exercise a code path that relies on an
+operating system resource being available.  Finally, white-box tools
+typically require that an application's source code be available which
+is not always the case. Even advanced white-box tools that analyze an
+application's machine code can be stymied in situations where an
+application's executable has been packed or encrypted.
+
+The alternative, black-box tools, have their own set of issues. They do
+not have an understanding of what an application is actually doing
+during execution which means they are only able to submit inputs and
+observe outputs.  The upside of this technique is simplicity. Black-box
+tools do not need the capability to understand and analyze an
+application's code which reduces their complexity immensely. Also,
+their testing process, mutating inputs and observing outputs, is
+computationally inexpensive. The downside of simplicity is that they
+cannot craft inputs with any sort of intelligence. This means that a
+great deal of time can be spent mutating inputs without much success in
+terms of bug identification. Also, they cannot identify specifically
+the source of faults in an application. They can only signal that a
+fault has occurred at some point during a test run.  Furthermore, like
+white-box tools, these tools fail to take into account the environment
+in which the application is running.  \subsection{White-box Tools}
+
+White-box testing has been an area of intense interest in recent
+writing. Microsoft's SAGE and Bell Labs' DART are two examples of
+such tools that take different approaches to the same overall
+white-box technique.
+
+\subsubsection{DART}
+
+DART is a white-box testing tool that supports testing of
+applications written in the C programming language. It is
+capable of generating a test harness for an application's
+functions by through static analysis of the application's
+source code. This harness is then used for two phases of
+testing. First, it performs random testing and observes the
+application's behavior. Based on this random testing and
+symbolic execution of the application's source code, DART
+generates a series of inputs that will be used in the second
+phase of testing.  These inputs are designed to direct the
+application down specific execution paths, observing the
+programs behavior and reporting faults as they are identified.
+DART operates on the assumption that the functions being
+evaluated have no side-effects and that the application is able
+to interact appropriately with its environment.  More
+information can be found in \textbf{\emph{PAPER TITLE HERE}}
+
+\subsubsection{SAGE}
+
+SAGE differs from many other white-box testing tools in that it
+analyzes a compiled application's machine code rather than the
+application's uncompiled source code. This allows SAGE to
+operate on applications that were compiled from a variety of
+programming languages. It first runs the application under test
+with a set of well formed inputs and records an
+instruction-level trace of the application's execution. Next,
+it analyzes this trace in order to identify constraints that
+guard different paths of execution. SAGE then solves these
+constraints and, based on these solutions, generates inputs
+that are able to exercise specific paths of execution.
+
+\subsection{Black-box tools}
+
+
+\subsection{Trace Analysis Tools}
+
+Much of CrashSimulator's work on system call trace analysis is
+based on previous work on NetCheck and CheckAPI
+
+\subsubsection{NetCheck}
+
+This implementation of CrashSimulator relies of NetCheck for
+system call trace analysis. NetCheck uses two strategies to
+identify potential fault areas from system call trace. The
+first is a model based simulation of the system calls relevant
+to network communication from the input trace. System calls are
+organized according to a POSIX socket API dependency graph and
+prioritized based on the order in which the system calls should
+be made in an ideal scenario.  For example, a client
+application should not be making a \emph{connect} system call
+before it has set up its socket with the appropriate
+\emph{socket} system call.  The model assumes that all system
+calls are atomic and that they cannot happen simultaneously.
+This allows a definite global order to be created.
+
+Once a global ordering is in place each system call is
+evaluated based on the previous system calls. Return values and
+parameters passed in are taken into account. If the system call
+is feasible it is accepted and the next system call is
+evaluated. If the system call is not feasible given the current
+system call context it is rejected and logged. In addition,
+system calls that return a value indicating some sort of
+network failure are recorded. After all system calls have been
+evaluated a NetCheck attempts to diagnose the source of any
+errors encountered. It is this diagnosis that CrashSimulator
+uses when deciding where and how to mutate the ``ideal run''
+system call trace it is operating on.
+
+\subsubsection{CheckAPI}
+
+% TODO: Expand this
+\textbf{\emph{This needs to be expanded}}
+CheckAPI attempts to identify
+\end{comment}
