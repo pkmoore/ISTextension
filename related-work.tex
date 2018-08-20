@@ -3,14 +3,14 @@
 
 \subsection{Source Code Analyzing Tools}
 
-One of the major limitations of many automated testing tools is a reliance
-on the availability of a target application's source code.  Out of the top
-XXX automated testing tools (as ranked by YYYY), ZZZZ have this
-dependency.\preston{cite} While open source software has dramatically
-increased in popularity over recent years, closed source dependencies are
-still a major concern.\preston{cite}  Any tool that requires access to
-source code will have diminished capability in projects incorporating
-closed source components.
+% One of the major limitations of many automated testing tools is a reliance
+% on the availability of a target application's source code.  Out of the top
+% XXX automated testing tools (as ranked by YYYY), ZZZZ have this
+% dependency.\preston{cite} While open source software has dramatically
+% increased in popularity over recent years, closed source dependencies are
+% still a major concern.\preston{cite}  Any tool that requires access to
+% source code will have diminished capability in projects incorporating
+% closed source components.
 
 In building and testing CrashSimulator, we examined a number of previous
 studies in bug detection, data mining, and testing protocols. This section
@@ -37,11 +37,12 @@ Crash reproduction by test case mutation~\cite{DBLP:conf/sigsoft/XuanXM15}.
 \fi
 
 
-\noindent {\bf Static analysis. } Tools based on static analysis
-techniques, such as abstract interpretation, model checking, and symbolic
-execution have been used to successfully detect bugs related to incorrect
-API usage. Examples include SLAM~\cite{Ball_adecade,
-Ball:2002:SLP:503272.503274} and, more recently,
+\noindent 
+{\bf Static analysis. }
+Tools based on static analysis techniques, such as abstract interpretation,
+model checking, and symbolic execution have been used to successfully
+detect bugs related to incorrect API usage. Examples include
+SLAM~\cite{Ball_adecade, Ball:2002:SLP:503272.503274} and, more recently,
 CORRAL~\cite{DBLP:conf/sigsoft/LalQ14} for conformance checking of Windows
 device drivers against the Windows kernel API,
 FindBugs~\cite{DBLP:conf/oopsla/HovemeyerP04} for detecting API usage bugs
@@ -62,12 +63,11 @@ as expected.
 
 \iffalse
 \noindent
-{\bf Specification and run-time verification.}  Substantial work has
-been done in validating API and protocol behaviors, e.g., finding
-faults in the Linux TCP implementation,
-SSH2 and RCP~\cite{Udrea:2008}, BGP
-configuration~\cite{Feamster:2005}, and identifying network
-vulnerabilities~\cite{ritchey-sp00}. 
+{\bf Specification and run-time verification.}
+Substantial work has been done in validating API and protocol behaviors,
+e.g., finding faults in the Linux TCP implementation, SSH2 and
+RCP~\cite{Udrea:2008}, BGP configuration~\cite{Feamster:2005}, and
+identifying network vulnerabilities~\cite{ritchey-sp00}. 
 \fi
 
 \noindent
