@@ -16,18 +16,21 @@ application.}
 
 \preston{Argue that you have to have automated testing} Automated testing
 is a necessary step in developing complex, modern, software systems.  There
-are simply too many moving parts to orchestrate and test manually.
+are simply too many moving parts to orchestrate for developers to test
+product manually.
 Industry experience has borne this out --- BBB percent of projects hosted
 on GitHub employ some sort of automated testing on code checked into their
 repositories and most won't allow code to be checked in until it has passed
 some testing regime.\preston{cite}
 
-Yet, designing and carrying out this testing must be done carefully it
+Yet, designing and carrying out this testing must be done carefully as it
 presents a real chance of introducing new inefficiencies and pain points
-into a projects development life cycle.  To this end, there are four
-critical variables to consider.  First, reliance on experts and
-human-in-the-loop strategies doesn't scale.\preston{cite Alvaro}  There are
-simply not enough experts to go around, and a developer's time is far
+into a project's development life cycle.  Therefore, there are four
+critical variables that need to be considered.
+First, reliance on experts and
+human-in-the-loop strategies do not scale.\preston{cite Alvaro}  There are
+simply not enough testing experts to go around,
+and a developer's time is far
 better spent doing actual development than manual testing.\preston{cite
 developer shortages}  Fortunately, by using well constructed automated
 testing tools, project teams can kill two birds with one proverbial stone;
@@ -37,19 +40,18 @@ shortage of human experts.
 
 \preston{Discuss what properties an automated testing tool must have}
 
-The second point is that one can not simply grab a tool off the shelf (or
-internet).  The selected tool must capable of testing the system in
-question, be usable by the developers that on staff, and it must produce
-high-quality results.  Related to this is a third consideration: in
+The second point is that one can not simply grab any tool off the shelf (or
+internet).  Any selected tool must capable of testing the system in
+question, be usable by the developers on staff, and produce
+high-quality results.  Related to this is a fourth consideration: in
 addition to a general shortage of development capacity, one must consider
-each developer’s skill set and expertise. In order to be successful, a
-testing tool must be usable by all developers working on a system. If the
-developers lack the background necessary to deal with the output of a tool
+each developer's skill sets and expertise will vary.
+In order to be successful, a
+testing tool must be usable by all developers working on a system. If
+lack of the necessary background means a developer can not 
+deal with a tool's output,
 then any effort in learning how to implement the tool or  evaluate its
-results is wasted.
-
-\preston{I moved the stuff about source code to related work as a category
-of tools.  I'll have to expand on that later}
+results will be wasted.
 
 The fourth and final variable is the quality of the tool's output.  Tools
 that produce a high number of false positives are quickly deemed
@@ -59,7 +61,7 @@ as Q\% have a dramatic, negative impact on developer perceptions of a tool.
 literature.  Individuals tend to over-emphasize and over-predict
 statistically rare negative events.\preston{cite}  Put another way, if a
 tool leads to a developer wasting his or her afternoon by reporting a bug
-that doesn't exist, the developer is going to mistrust the tool from then
+that doesn't exist, the developer is going to mistrust that tool from then
 on out.
 
 % A useful tool must also do a good job of localizing the source of a bug.
@@ -82,30 +84,27 @@ on out.
 paper}
 
 In this paper we evaluate CrashSimulator, a tool that tests applications by
-exposing them to unusual environmental conditions encoded as modifications
-to the results and side effects of system calls made by an application
-being tested.  Our goal is to show that CrashSimulator meets the above
-criteria and compares favorably against similar tools.  The tool's
-effectiveness comes from its ability to expose applications to unusual
-environmental conditions that can affect execution.  CrashSimulator's
+exposing them to unusual environmental conditions 
+that could be found in a deployment environment.  The conditions are
+encoded as modifications to the results and side effects of system calls
+made by the tested application.
+Our goal in this is to show that CrashSimulator meets the above
+criteria and compares favorably against similar tools, particularly in
+terms of its usability.  CrashSimulator's
 built-in set of anomalous conditions allows its users to define which
 conditions to test an application against, thus alleviating the need to
 have an expert knowledgeable enough to set up and test an application in a
-chosen environment.  It also allows application misbehavior to be localized
-to a sequence of system calls allowing the true source of a bug to be more
-quickly identified and easing the process of correcting it.  This is an
-advantage over tools that simply indicate the presence of a bug (i.e.  this
-input caused a crash).  CrashSimulator has a low false positive rate and it
-is able to clearly convey to its developers the presence of a bug.  As a
-result, CrashSimulator allows developers of varying skill levels to
+chosen environment.  Because it also allows
+application misbehavior to be localized
+to a sequence of system calls the true source of a bug can be more
+quickly identified,
+and because of its low false positive rate and it
+is a tool that does not waste developer's precious time.
+Best of all, CrashSimulator allows developers of varying skill levels to
 identify bugs in real world applications with a high degree of confidence.
-Additionally, we show that CrashSimulator provides value in mapping the
-presence of these bugs to the units of code responsible for them allowing
-developers to fix them in a more timely manner.
 
 \preston{Talk more about what sorts of questions we asked for the qualitative
 answers.}
-\preston{Talk about we prove CrashSimulator has those properties}
 To validate these claims we conducted a study with ZZZ participants
 consisting of Master's computer science students with varying backgrounds
 and specializations.  We asked these participants to test existing popular
