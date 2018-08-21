@@ -1,85 +1,16 @@
 \section{Evaluation}
 \label{SEC:evaluation}
 
- % Limitation -> Will users be able to identify what caused the problematic
-% system call sequence -> Add this to evaluation*
-
-Our goal with this work was to gain an undestanding of how CrashSimulator's
-user exprience compared to other tools and techniques available to
-developers...
-
-Because CrashSimulator is able to to test a wide domain of operations an
-appliation can peform we felt it necessary to compare it with two separte
-tools, one that test based on files and one that tests based on network
-activity.  Specifically, we used AFL and Mutiny...
-
-
-\subsection{Method}
-
-We gathered a group of YYYY participants from a computer science master's
-program.  These students had varying background in relation to software
-development and automated testing.  These students all received AAA hours
-of education on each of these tools.  This education focused on the tools'
-initial setup, configuration, usage, and how to interpret the tools'
-results.  BBB of the students had used AFL in previous course work.  None
-of the students had previous experience with Mutiny or CrashSimulator.
-
-The 20 participants in this study received instruction on the configuration
-and usage of the above tools as well as CrashSimulator.  We asked these
-users to test popular real-world applications with the goal of identifying
-new bugs and reporting them to the application's developers.  In performing
-this task our participants had to correctly set up and configure each of
-the tools, execute a testing process, evaluate the results, and produce
-sufficient proof of validity for each bug that a convincing case for fixing
-it can be made.  Each of these steps is an opportunity for gaining insight
-into how CrashSimulator stacks up against other tools.
-
-We used 3 techniques to capture the experience of our participants as they
-used each of the tools.  For quantitative concerns we examined the time
-required for participants to carry out defined tasks relevant to the
-process of bug hunting.  To do this, we asked users to track the time
-required to perform each step of the process of finding and reporting a
-bug.
-
-
-We also captured hard counts of bugs identified by our particpants using
-each of the tools.  The specifics of these bugs will be discussed in more
-detail......
-
-For Qualititative concerns we gathered participant impressions on the tools
-in use via surveys.  These surveys were strucured to give insight into how
-CrashSimlator compares to the other tools in three areas:
-
-\begin{itemize}
-
-\item Usability of the tool. (i.e. set up, configuration, executing tests,
-interpretring results)
-
-\item Extending the tool through the creation of additional
-anomalies and checkers
-
-\item How well the tool is able to test the areas of an application
-that they are interested in
-
-\end{itemize}
-
-Additionally, we asked our partipants to rate their own experience level in
-software development, software testing, and operating systems concepts so
-that we might determine whether or not an individual's background has an
-effect on what tools they prefer.  Our hope was that this information would
-provide insights into how a participants background affected their
-expriences with the tools.
-
 In this evaluation we set out to answer the following questions using both
-the qualitiative and quantitative data collected during our study.
+the qualitative and quantitative data collected during our study.
 
 \begin{enumerate}
 
 \item Are users able to effectively find bugs using CrashSimulator?  How
 does CrashSimulator compare to other tools in this area?
 
-\item How well does CrashSimulator allow users to test the areas of
-applications they are interested in?  Are other tools able to better
+\item Does CrashSimulator allow users to test the areas of
+applications in which they are interested?  Are other tools better able to
 evaluate these areas?
 
 \item Does CrashSimulator allow its users to construct a test suite
@@ -95,22 +26,101 @@ fixing bugs?
 
 \end{enumerate}
 
+\subsection{Study Design}
+
+\preston{This is where the study design will go once I've come nailed it
+down}
+
+ % Limitation -> Will users be able to identify what caused the problematic
+% system call sequence -> Add this to evaluation*
+
+Our goal with this work was to gain an understanding of
+how CrashSimulator's
+user experience compares to that of other tools and techniques available to
+developers.  Because CrashSimulator is able to to test a wide domain
+of operations that an
+application can perform, we felt it necessary to compare
+it with two separate
+tools, one in which the test was based on files and one for which the tests
+were based on network
+activity.  Specifically, we used AFL and Mutiny...
+
+
+\subsection{Method}
+
+We gathered a group of YYYY participants from a computer science master's
+program.  These students had varying backgrounds in relation to software
+development and automated testing.  All received AAA hours
+of education on each of these tools.  This education focused on the tools'
+initial setup, configuration, usage, and how to interpret the tools'
+results.  BBB of the students had used AFL in previous course work.  None
+of the students had previous experience with Mutiny or CrashSimulator.
+
+% Talk about the challenges around getting a bug fixed,  finding teh source,
+% convincing maintainers to take a look, all that.
+We asked our participants
+to test popular real-world applications with the goal of identifying
+new bugs and reporting them to the application's developers.  In performing
+this task our participants had to correctly set up and configure each of
+the tools, execute a testing process, evaluate the results, and produce
+sufficient proof of validity for each bug that a convincing case
+could be made for fixing
+it.  Each of these steps is an opportunity to for gain insight
+into how CrashSimulator stacks up against other tools.
+
+We used three techniques to capture the
+experience of our participants as they
+used tool.  First, we examined the time required for participants to carry
+out defined tasks relevant to the process of bug hunting. This provided a
+quantitative measure that was determined by the time
+required for participants to
+perform each step of the process of finding and reporting a
+bug.
+We also captured hard counts of the number of bugs identified by our
+participants using each of the tools.
+The specifics of these bugs will be discussed in more
+detail......
+
+For Qualitative concerns, we used surveys to gather participant impressions
+on the tools.
+These surveys were structured to give insight into how
+CrashSimulator compares to the other tools in three areas:
+
+\begin{itemize}
+
+\item Usability of the tool. (i.e. set up, configuration, executing tests,
+interpretring results)
+
+\item Extendability of the tool through the creation of additional
+anomalies
+
+\item Effectiveness of the tool in its ability to test specific areas of
+interest in an application.
+
+\end{itemize}
+
+Additionally, we asked our participants to rate their own experience level in
+software development, software testing, and operating systems concepts so
+that we might determine whether or not an individual's background has an
+effect on what tools they prefer.
 
 \subsection{Are users able to effectively find bugs using CrashSimulator?}
 
-For any testing tool or technique the primary concern is whether or not it
-is useful for finding bugs.  To evaluate this concern in CrashSimulator's
-case we need to answer whether or not CrashSimulator's users are able to
+For any of the testing tools used the primary concern is whether or not it
+can find bugs.  To evaluate this concern in the case of CrashSimulator,
+case we need to answer users are able to
 effectively find bugs using the tool....
 
 
 \subsubsection{Findings}
 
-Table 1 contains counts of bugs identified broken down by the tool used to
-identify them and self reported developer experience level with Operating
-Systems concepts. A total of !!!!15!!!! bugs were found using
-CrashSimulator with the majority coming from participants with a
-self-reported high degree of operating systems experience.  Participants
+Table 1 contains counts of bugs identified during the study
+broken down by the tool used to
+identify them, as well as developer's self reported developer experience
+level with operating
+system concepts. A total of !!!!15!!!! bugs were found using
+CrashSimulator, with the majority reported by participants with a
+self-reported high degree of operating system experience.  Participants
 with a moderate and low degrees of operating systems experience found more
 bugs AFL.....
 
@@ -127,9 +137,9 @@ bugs AFL.....
 The above results indicate that, when it comes to using CrashSimulator,
 having experience with operating systems concepts is very beneficial...
 That said, users with a self-reported low degree of experience with OS
-concepts were able to identify bugs using CrashSimulator's built in corpus
-of anomalies and checkers...  Table 2 illustrates which of these checkers
-were most effective......
+concepts were still able to identify bugs using CrashSimulator's built in
+corpus of anomalies and checkers...
+Table 2 illustrates which of these checkers were most effective......
 
 
 \subsubsection{Discussion on Specific Bugs}
@@ -138,18 +148,20 @@ were most effective......
 
 
 \subsection{How well does CrashSimulator allow users to test the areas of
-applications they are interested in?}
+applications in which they are interested?}
 
 Modern applications typically consist of many different parts (e.g. user
-interfaces,  back-end processing, storage, networking) that require
-different skill sets to work with.  These different application areas also
-require different strategies for testing.  For example, Some application
-areas such as graphical user interfaces are notoriously difficult cover
+interfaces,  back-end processing, storage, networking) and may require
+different skill sets to operate effectively.  These different application
+areas also
+require disparate testing strategies.  For example, some application
+areas such as graphical user interfaces, are notoriously difficult to cover
 depending on the tools and techniques being used.  These difficulties
 usually result from limitations in the way the testing tool interacts with
-the application being tested. We wanted to know whether or not
-CrashSimulator was able to effectively test the areas of applications its
-users were interested in testing.  To answer this question we turn to the
+the application. We wanted to know whether or not
+CrashSimulator was able to effectively test the specific areas of
+applications its
+users needed to evaluate.  To answer this question, we turn to the
 surveys our participants completed regarding their experience with
 CrashSimulator.
 
@@ -157,15 +169,15 @@ CrashSimulator.
 \subsubsection{Findings}
 
 The results from our surveys indicate that our participants self-reported
-backgrounds have an effect on the areas of an application they tested...
+backgrounds have an effect on what areas of an application they tested...
 
 Developers with a high degree of experience in software engineering tended
-to focus on testing an applications interaction with various library and
+to focus on testing an application's interaction with various library and
 operating system provided APIs.  Survery results indicate participants were
 satisfied with CrashSimulator's ability to test application's interaction
 with file and and network APIs....
 
-Developers with a lower self-reported experience in software engineering
+Developers with lower self-reported experience
 focused more on user interface level concerns...  Preferred AFL's ability
 to easily supply a file to be processed to an application....
 
