@@ -49,7 +49,7 @@ CrashSimulator be configured to identify the environmental bug in question.
 Once this is done, any application can be tested for the bug using
 CrashSimulator with no added effort.  CrashSimulator can be configured to
 test a suite of bugs accumulated from a set of applications running in a
-variety of environments.  This is somewhat analagous to CrashSimulator
+variety of environments.  This is somewhat analogous to CrashSimulator
 automatically creating unit tests for all environments in which an
 application could run.  Each of these ``tests'' consists of rules for
 mutating system call behavior to give the application the illusion that it
@@ -71,9 +71,7 @@ it such that the anomalous conditions are represented.  CrashSimulator uses
 these modified system call traces to control a replay execution of the
 application in which these conditions will be encountered.
 
-This paper makes the following contributions:
-
-This paper also introduces a proof of concept implementation of
+In the course of this work we built a proof of concept version of
 CrashSimulator's technique that was able to find bugs, both known and
 unknown, in popular Linux applications as ranked by Debian's popularity
 contest~\cite{DebPopCon}.  These bugs were found by exposing the
@@ -82,19 +80,6 @@ configurations, file types, and network delays.  When the applications in
 question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total, 84
 bugs were identified.
-
-\preston{CrashSimulator finds these bugs by recording, modifying, and
-replaying the results and side effects of the system calls made by the
-application.}
-
-\preston{Argue that you have to have automated testing} Automated testing
-is a necessary step in developing complex, modern, software systems.  There
-are simply too many moving parts to orchestrate for developers to test
-product manually.
-Industry experience has borne this out --- BBB percent of projects hosted
-on GitHub employ some sort of automated testing on code checked into their
-repositories and most won't allow code to be checked in until it has passed
-some testing regime.\preston{cite}
 
 Yet, designing and carrying out this testing must be done carefully as it
 presents a real chance of introducing new inefficiencies and pain points
@@ -140,28 +125,7 @@ on out.
 \preston{not sure how to word this given that this might be the second
 paper}
 
-In this paper we evaluate CrashSimulator, a tool that tests applications by
-exposing them to unusual environmental conditions
-that could be found in a deployment environment.  The conditions are
-encoded as modifications to the results and side effects of system calls
-made by the tested application.
-Our goal in this is to show that CrashSimulator meets the above
-criteria and compares favorably against similar tools, particularly in
-terms of its usability.  CrashSimulator's
-built-in set of anomalous conditions allows its users to define which
-conditions to test an application against, thus alleviating the need to
-have an expert knowledgeable enough to set up and test an application in a
-chosen environment.  Because it also allows
-application misbehavior to be localized
-to a sequence of system calls the true source of a bug can be more
-quickly identified,
-and because of its low false positive rate and it
-is a tool that does not waste developer's precious time.
-Best of all, CrashSimulator allows developers of varying skill levels to
-identify bugs in real world applications with a high degree of confidence.
 
-\preston{Talk more about what sorts of questions we asked for the qualitative
-answers.}
 To validate these claims we conducted a study with ZZZ participants
 consisting of Master's computer science students with varying backgrounds
 and specializations.  We asked these participants to test existing popular
@@ -171,11 +135,9 @@ numbers of bugs identified, and qualitative results about the tools' user
 experience through surveys.
 
 The main contributions in this work are as follows:
-\preston{We probably need another contribution that talks about a qualitative
-concern.  How many people quit?
-We can bring in my own observations of how easy the tool was to work
-with.}
+
 \begin{enumerate}
+
 \item{It proves the importance of the interaction between an application
 and its environment in creating potential flaws upon deployment.}
 
@@ -188,10 +150,13 @@ deployment to that environment.}
 interactions between an application and its environment as a model that
 can be later used to check for correct behavior.}
 
-\item We show that CrashSimulator allows these developers to find real bugs
-in real applications.
+\item{It shows that CrashSimulator allows these developers to find real bugs
+in real applications.}
 
-\item We demonstrate that CrashSimulator compares favorably against similar
-automated testing tools in the number of bugs found.
+\item{It provides proof that CrashSimulator compares favorably against similar
+automated testing tools in the number of bugs found.}
+
+\item{It submits favorable opinion results taken from study participant survey
+data.
 
 \end{enumerate}
