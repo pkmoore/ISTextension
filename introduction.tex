@@ -73,20 +73,6 @@ application in which these conditions will be encountered.
 
 This paper makes the following contributions:
 
-\begin{enumerate}
-\item{It proves the importance of the interaction between an application
-and its environment in creating potential flaws upon deployment.}
-
-\item{It proposes the idea that by manipulating these interactions through
-the use of system calls, the responses of an application to any given
-environment can be accurately simulated without an actual
-deployment to that environment.}
-
-\item{It offers an approach for encoding an appropriate flow of
-interactions between an application and its environment as a model that
-can be later used to check for correct behavior.}
-\end{enumerate}
-
 This paper also introduces a proof of concept implementation of
 CrashSimulator's technique that was able to find bugs, both known and
 unknown, in popular Linux applications as ranked by Debian's popularity
@@ -190,10 +176,17 @@ concern.  How many people quit?
 We can bring in my own observations of how easy the tool was to work
 with.}
 \begin{enumerate}
+\item{It proves the importance of the interaction between an application
+and its environment in creating potential flaws upon deployment.}
 
-\item We illustrate that CrashSimulator's powerful system call manipulation
-capabilities and existing corpus of environmental anomalies makes it
-useful to developers with varying degrees of expertise.
+\item{It proposes the idea that by manipulating these interactions through
+the use of system calls, the responses of an application to any given
+environment can be accurately simulated without an actual
+deployment to that environment.}
+
+\item{It offers an approach for encoding an appropriate flow of
+interactions between an application and its environment as a model that
+can be later used to check for correct behavior.}
 
 \item We show that CrashSimulator allows these developers to find real bugs
 in real applications.
