@@ -81,60 +81,24 @@ question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total, 84
 bugs were identified.
 
-Yet, designing and carrying out this testing must be done carefully as it
-presents a real chance of introducing new inefficiencies and pain points
-into a project's development life cycle.  Therefore, there are four
-critical variables that need to be considered.
-First, reliance on experts and
-human-in-the-loop strategies do not scale.\preston{cite Alvaro}  There are
-simply not enough testing experts to go around,
-and a developer's time is far
-better spent doing actual development than manual testing.\preston{cite
-developer shortages}  Fortunately, by using well constructed automated
-testing tools, project teams can kill two birds with one proverbial stone;
-such tools can free up developer time for more creative tasks while taking
-advantage of the expert knowledge encoded in the tools to temper the
-shortage of human experts.
+In addition to these quantitative results, this paper presents the results
+of a user study conducted with the goal of determining how CrashSimulator
+performs in the hands of developers as they test real world applications.
+This study involved ZZZ participants consisting of Master's computer
+science students with varying backgrounds and specializations.  These
+participants were asked to test existing popular applications (as ranked by
+Debian's Popularity Contest) using CrashSimulator, AFL, and Mutiny.  This
+survey yielded results in the form of numbers of bugs identified and
+qualitative results about the tools' user experience through surveys.
+These results show that developers are able to find new bugs with
+CrashSimulator, many of which would not have been found with the other
+tools due to its unique testing approach.  Additionally, survey
+participants report that CrashSimulator allows them to find bugs they would
+not have been about to find otherwise due to a self-reported lack of
+experience with operating systems concepts.
 
-\preston{Discuss what properties an automated testing tool must have}
-
-The second point is that one can not simply grab any tool off the shelf (or
-internet).  Any selected tool must capable of testing the system in
-question, be usable by the developers on staff, and produce
-high-quality results.  Related to this is a fourth consideration: in
-addition to a general shortage of development capacity, one must consider
-each developer's skill sets and expertise will vary.
-In order to be successful, a
-testing tool must be usable by all developers working on a system. If
-lack of the necessary background means a developer can not
-deal with a tool's output,
-then any effort in learning how to implement the tool or  evaluate its
-results will be wasted.
-
-The fourth and final variable is the quality of the tool's output.  Tools
-that produce a high number of false positives are quickly deemed
-untrustworthy.  A study by ZZZZ has shown that false positive rates as low
-as Q\% have a dramatic, negative impact on developer perceptions of a tool.
-\preston{cite}  A similar finding is supported by current psychological
-literature.  Individuals tend to over-emphasize and over-predict
-statistically rare negative events.\preston{cite}  Put another way, if a
-tool leads to a developer wasting his or her afternoon by reporting a bug
-that doesn't exist, the developer is going to mistrust that tool from then
-on out.
-
-\preston{not sure how to word this given that this might be the second
-paper}
-
-
-To validate these claims we conducted a study with ZZZ participants
-consisting of Master's computer science students with varying backgrounds
-and specializations.  We asked these participants to test existing popular
-applications (as ranked by Debian's Popularity Contest) using each of the
-tools.  From this work we collected both quantitative results in terms of
-numbers of bugs identified, and qualitative results about the tools' user
-experience through surveys.
-
-The main contributions in this work are as follows:
+With both sets of result in mind, the main contributions in this work are
+as follows:
 
 \begin{enumerate}
 
@@ -150,13 +114,13 @@ deployment to that environment.}
 interactions between an application and its environment as a model that
 can be later used to check for correct behavior.}
 
-\item{It shows that CrashSimulator allows these developers to find real bugs
-in real applications.}
+\item{It shows that CrashSimulator allows these developers to find real
+bugs in real applications.}
 
-\item{It provides proof that CrashSimulator compares favorably against similar
-automated testing tools in the number of bugs found.}
+\item{It provides proof that CrashSimulator compares favorably against
+similar automated testing tools in the number and type of bugs found.}
 
-\item{It submits favorable opinion results taken from study participant survey
-data.
+\item{It submits favorable opinion results taken from study participant
+survey data.}
 
 \end{enumerate}
