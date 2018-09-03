@@ -1,33 +1,78 @@
 \section{Background}
 \label{SEC:background}
 
-\subsection{Criteria}
+\section{What Is An Environment?}
 
-\preston{Not surehow to introduce this sections so I'm just going straight
-into it until I get a better idea.} CrashSimulator's system call based
-technique its user to replicate anomalous environmental conditions in a
-wide variety of operating systems domains.  In future sections this paper
-how we used CrashSimulator to test applications' responses to environmental
-anomalies that could be expressed through file system and network related
-system calls.  We decided to compare CrashSimulator against two existing
-testing tools, one that is file based (AFL) and another that performs
-network oriented testing.
+Before looking at how environments differ, it is important to clearly
+define what an environment is.  An application's environment is the
+collection of all resources external to the application with which the
+application communicates.  These external resources can be thought of as
+providing implicit inputs to the program that affect its flow of execution.
 
-\subsection{CrashSimulator}
+There are many examples of ways in which environments differ, even in
+situations where they implement a ``standard interface'', such as Java or
+POSIX.
 
-CrashSimulator finds bugs in applications by exposing them to weird
-environmental conditions that developers may not have anticipated.  This is
-accomplished by encoding the environmental conditions as a set of
-modifications made to the results an side effects of system calls made by
-the application.  CrashSimulator injects these anomalies by recording,
-modifying, and replaying the results and side effects of the system calls
-made by the application.  This process allows experts to construct "tests"
-that developers can use to evaluate their applications without their having
-to understand the operating system complexities underlying the
-environmental conditions simulated by the test. This approach has proven
-successful in finding new bugs in many widely deployed applications.
+\begin{itemize}
 
+\item {\bf Operating Systems.}  A commonly observed difference is that many
+applications behave in different ways due to the varying ways in which the
+operating systems implement system calls.  For example, on Linux it is
+possible to remove an open file while this is not allowed on Windows
+systems~\cite{UnlinkStandard}.  An application written without this
+difference in mind could fail should if it relies on one implementation or
+the other.
 
+\item {\bf File Systems.}  The exact file system used will also have a
+substantial impact on the behavior of a system, independent of the
+operating system.  The popular Ext4 file system on Linux is case sensitive,
+so that ``a'' and ``A'' are different files, while OS X's HFS+ file system
+is case insensitive so those file names would refer to the same file.
+Different file systems have varying limits or behaviors for other items,
+including file name length (popularized due to the 8.3 limitations of the
+FAT file system), maximum file length, number of directory entries, depth
+of directories supported, which leads to errors when programs are not
+written to take these issues into account~\cite{EXT4Layout, AppleHFS}.
+
+\item {\bf Network.}  Aspects of the network environment also have a
+substantial impact on the behavior of application.  This can be either
+local things or remote network behaviors.  For example, POSIX operating
+systems support the notion of limiting the kernel buffer set aside for a
+socket.  However, popular operating systems (Windows, Linux, and Mac)
+implement this quite differently.  For example, in Linux, if a UDP datagram
+larger than the specified buffer size is received it will be dropped.  In
+Windows, however, UDP datagrams larger than the specified buffer size are
+received but system calls that retrieve data from the buffer they are
+stored in will only return a number of bytes less than or equal to the
+buffer size at one time~\cite{Zhuang_NSDI_2014}.
+
+\item {\bf Processor.}  The processor can also make a substantial
+difference in the behavior of an application.  This is very frequently
+evidenced through the variety of different floating point behaviors on
+different processors~\cite{ArbitraryPrecision}.  However, this is not the
+only difference.  Bugs in processors are fairly common and cause variance.
+There are also intended differences that occur from varying interpretations
+of how to execute complex instructions~\cite{Microarch}.
+
+\end{itemize}
+
+In this work, we focus on operating system, file system, and network
+environmental issues which are the bulk of environmental issues that
+applications struggle with today. Specifically, we are concerned with
+issues from the above sources that are visible in the results and side
+effects of the system calls an application makes.  We leave processor-based
+environmental differences and differences not visible in system call
+activity for future efforts.
+
+\subsection{Tool Comparison}
+
+CrashSimulator's system call based technique its user to replicate
+anomalous environmental conditions in a wide variety of operating systems
+domains.  In future sections this paper how we used CrashSimulator to test
+applications' responses to environmental anomalies that could be expressed
+through file system and network related system calls.  We decided to
+compare CrashSimulator against two existing testing tools, one that is file
+based (AFL) and another that performs network oriented testing.
 
 \subsection{AFL}
 
