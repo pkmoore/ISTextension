@@ -1,6 +1,540 @@
 \section{Evaluation}
 \label{SEC:evaluation}
 
+\preston{This is the start of the bug finding evaluation}
+
+To be able to evaluate how CrashSimulator performs, a series of tests were
+conducted using a prototype written in a mix of Python 2 (5060 LOC) and C
+(2585 LOC)\footnote{ Line count numbers are according to
+SLOCCOUNT~\cite{SLOCCOUNT}}.  For a test environment, we chose a virtual
+install of Ubuntu Linux 15.04 with a 32 bit kernel on i686 hardware.  We
+ran the tests on a 1.7 gHz core i7 system with 8GB of RAM. Our
+implementation used {\tt ptrace} to interpose on the running program and
+interject anomalous behavior into its execution.  We did not handle
+threaded programs and disabled ASLR, as well as the kernel's vDSO to make
+replay easier.  As far as we are aware, none of these choices influenced
+the types of bugs that CrashSimulator can find. However, the lack of
+support for threaded programs obviously influences the programs we can
+test.  To our knowledge, the only major negative impact these design
+choices had was that the use of {\tt ptrace} slowed our prototype's
+performance (which will be discussed later).  On the positive side, it
+simplified construction of the prototype. Given appropriate information,
+our implementation of CrashSimulator can test for anomalies that exist in
+other platforms and environments as well.
+
+With the prototype in hand,  we set out to answer the following questions:
+
+\begin{enumerate}
+
+\item{Do environmental bugs exist in widely used applications and can
+      CrashSimulator find them? (Subsection~\ref{sec-env-bugs})}
+
+\item{Can CrashSimulator identify anomalies that require complex checkers?
+      (Subsection~\ref{sec-complex})}
+
+\item{What sorts of errors does CrashSimulator make?
+      (Subsection~\ref{sec-sorts-errors})} \item{Is CrashSimulator able to
+      execute tests in a performant manner? (Subsection~\ref{sec-perf})}
+
+\end{enumerate}
+
+
+\subsection{Do environmental bugs  exist in widely used applications and
+can CrashSimulator find them?} \label{sec-env-bugs}
+
+Our first question looks at the broad issue of whether the types of bugs
+identified by CrashSimulator would be found in popular applications.  After
+all, if such bugs do not exist in practice, then there is no need for a
+tool like CrashSimulator.  To test for the existence of these bugs in real
+programs, we chose two simple anomalies that we could test for in a large
+array of programs.  One is a file system anomaly and the other a network
+anomaly, but both use common API calls, and thus had the potential to
+appear in many programs.  Applications selected were either ones deemed
+``popular'' by Debian's Popularity Contest~\cite{DebPopCon}, or were from
+GNU Coreutils.
+
+\subsubsection{Unexpected File Types}
+\label{sec-file-type-bugs}
+Providing unexpected types of files to
+applications.
+
+The first anomaly investigated occurs when an application has to retrieve
+and process data from a file.  Linux supports several ``special'' file
+types apart from the standard ``regular'' file type.  These include
+directories, symbolic links, character devices, block devices, sockets, and
+First-In-First-Out (FIFO) pipes.  While these special files can be operated
+on using the same system calls as regular files (such as {\tt read()} and
+{\tt write()}), they behave in very different ways.  For example, {\tt
+/dev/urandom} is a character device that produces an infinite amount of
+pseudo-random data when read.  If an application that reads the full
+contents of a file before processing it is provided {\tt /dev/urandom}, it
+will fill memory or disk and may crash the system~\cite{YumAptEndless}.
+Correct execution in these situations often requires that applications
+examine the files in order to ensure they are of an appropriate type.
+
+{\bf Method.}  Identifying these bugs involves changing an application's
+execution trace to induce its response to an unexpected file type.  For
+example, the {\tt sed} application, which modifies the contents of a text
+file according to a provided command string, could be provided a symbolic
+link, a directory, or a character device instead.  CrashSimulator
+accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
+or {\tt lstat()} that an application makes to examine the file, and then
+changing the trace to simulate that the regular file {\tt sed} is expected
+is actually one of the special file types.  If the application responds to
+this injected information then there is the possibility that the special
+file will be handled correctly.  On the other hand, if there is no
+alteration in the behavior of the application,  then the condition is not
+being handled correctly.
+
+{\bf Findings.}
+Simulating these anomalies for each type of file
+gave the results shown in Table~\ref{table:unexpectedtypes}.
+
+For each application, CrashSimulator was invoked multiple times, modifying
+the trace to simulate each of the non-standard file type anomalies.  Some
+of the applications opened multiple files; in these cases each anomaly was
+simulated for each of the file arguments to the application.
+Table~\ref{table:unexpectedtypes} shows the values that CrashSimulator
+inserts into the return value of the {\tt stat()}-like call, corresponding
+to different file type anomalies.  A result of ``Initial Value'' indicates
+that this is the file type the application was provided when the replayed
+execution trace was recorded -- that is, a file of the type the application
+was expecting.  A result of ``Recognizes'' indicates that the application
+identified that it was being provided with an unexpected file type and its
+execution diverged, indicating that it was potentially handling the
+unexpected file type correctly.  A result of ``Fail'' indicates that the
+application failed to recognize the presence of the unusual file type
+because execution never diverged from the trace being replayed.  We
+manually examined a subset of the listed application behaviors simulated by
+CrashSimulator and verified they were consistent with the actual behavior
+on the given file type.
+
+\begin{table*}[t]
+    \scriptsize{}
+    \begin{tabular}{l  l  |  l  l  l  l  l  l  l}
+    \toprule{}
+        Application & Condition Tested           & IFREG        & IFDIR        & IFCHR     & IFBLK    & FIFO      & IFLNK    & IFSOCK\\
+\hline
+        {\tt Aspell}      & Dictionary File            & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
+        {\tt Aspell}      & File being checked         & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
+        {\tt gnu-gpg}     & secring.gpg                & Initial Value  & Fail           & Fail        & Fail       & Fail        & Fail       & Fail\\
+        {\tt vim}         & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes* & Recognizes & Fail\\
+        {\tt nano}        & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Fail        & Fail       & Fail\\
+        {\tt sed}         & File being edited          & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
+        {\tt df}          & /proc                      & Fail           & Initial Value  & Fail        & Fail       & Fail        & Fail       & Fail\\
+        {\tt wc}          & File being checked         & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
+        {\tt du}          & Directory being checked    & Recognizes     & Initial Value  & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
+        {\tt install}     & File being installed       & Initial Value  & Recognizes     & Fail       & Fail      & Fail       & Recognizes & Fail\\
+        {\tt fmt}         & File being formatted       & Initial Value  & Fail          & Recognizes  & Fail      & Fail       & Fail      & Fail\\
+        {\tt od}          & File being dumped          & Initial Value  & Fail          & Recognizes  & Fail      & Fail       & Fail      & Fail\\
+        {\tt ptx}         & File being read            & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
+        {\tt comm}        & Second file being compared & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
+        {\tt pr}          & File being read            & Initial Value  & Fail           & Fail        & Fail       & Fail        & Fail       & Fail\\
+\hline
+        {\tt readlink}    & Link being evaluated       & \textbf{No file checks performed} & & & & & & \\
+        {\tt unlink}      & File being unlinked        & \textbf{No file checks performed} & & & & & & \\
+    \bottomrule{}
+    \end{tabular}
+    \caption{Applications tested for their handling of unexpected file types.}
+    \label{table:unexpectedtypes}
+\end{table*}
+
+The frequency of failed executions in our results indicate that many
+applications make the assumption that they will only be used to process
+regular files.  When this assumption does not hold, execution results
+are hard to predict.  In many cases a denial of
+service condition occurs in the form of the application ``hanging,'' as it
+attempts to incorrectly process the file.  This may happen harmlessly, such
+as if an application blocks forever waiting for a {\tt read()}
+call to retrieve non-existent data from an empty FIFO, or harmfully, as
+happens when an application attempts to read in and process an
+``infinitely large'' file, eventually filling available memory or disk
+space~\cite{Cappos_CCS_08}.
+
+Of particular interest is the behavior we see in the last two applications
+listed in Table~\ref{table:unexpectedtypes}.  Each applications correctly
+recognized when an unexpected file type was encountered.  This is because
+these applications are simply ``dumb'' wrappers around the system calls
+with which they share a name. Essentially, they just hand the specified
+file to their corresponding system call and, in the case of an error, use
+{\tt perror()} to print the correct localized error message.  In short,
+these applications pass their error handling responsibilities to the
+kernel.
+
+\begin{table}[t]
+    \scriptsize{}
+    \begin{tabular}{l  l  l  l  l  l  l  l  l}
+    \toprule{}
+        Application         & IFDIR                     & IFCHR       & IFBLK                & FIFO \\
+\hline
+        {\tt wc}            & Error: Is a Directory     & hangs       & slowly process file  & Hangs\\
+        {\tt install}       & Error: Omitting Directory & Fills disk  & slowly copies file   & Hangs\\
+        {\tt fmt}           & No output                 & hangs       & garbage output       & Hangs\\
+        {\tt od}            & Error: read error         & hangs       & No output            & Hangs\\
+        {\tt ptx}           & Error: Is a Directory     & fills disk  & garbage output       & Hangs\\
+        {\tt comm}          & Error: Is a Directory     & hangs       & garbage output       & Hangs\\
+        {\tt pr}            & Error: Is a Directory     & hangs       & garbage output       & Hangs\\
+\hline
+    \bottomrule{}
+    \end{tabular}
+    \caption{Responses of a sample of coreutils applications when exposed to
+      anomalous conditions.  The IFCHR file used was the infinite-length {\tt
+        /dev/urandom}.}
+    \label{table:applicationresponses}
+\end{table}
+
+
+In order to confirm the accuracy of CrashSimulator's assessment we manually
+exposed a subset of the Coreutils applications we tested to the unusual
+file types to get an idea of how they would respond.
+Table~\ref{table:applicationresponses} contains the results of this
+assessment.  CrashSimulator's evaluation of an application and the results
+of its real world behavior can be paired up in a few different ways.  One
+possibility is that CrashSimulator asserts that the application will fail
+and the application fails in practice.  This is the case when we evaluated
+the response of  {\tt install} when it was provided a character device
+rather than a regular file. CrashSimulator predicted failure and the
+application ended up filling the disk of the machine it was run on.  The
+opposite can also occur.  That is, CrashSimulator reports that the
+application detected the anomalous condition and the application manages to
+do so in practice.  This occurred when we evaluated {\tt wc}'s response to
+being run on a directory.
+
+Sometimes CrashSimulator and the application's response disagree.  This
+happened when we evaluated {\tt ptx}'s response to being run against an
+infinite-sized character device.  CrashSimulator reported that {\tt ptx}
+had correctly responded to the anomaly but in reality, {\tt ptx} filled the
+disk of the the test machine.  As will be discussed later, correcting this
+error is easily accomplished by improving the checker used in this
+assessment -- an effort similar to updating a unit test when it is shown to
+be incomplete.  Overall, the results of this ``real world'' analysis
+support the claim that CrashSimulator can identify real bugs with damaging
+consequences.
+
+\subsubsection{Slowloris attack} Delaying network applications for extended
+periods.
+
+
+The second anomaly we examined involves an application's behavior when it
+attempts to communicate over a network with extremely long (on the order of
+minutes) response times.  At a low level, applications retrieve data from a
+network socket by waiting for data to be available and then reading it.  A
+key aspect of this approach is handling the situation where communication
+takes too long and should time out.
+
+{\bf Method.} CrashSimulator can detect whether an application is
+vulnerable to this attack by modifying the trace so it simulates large
+amounts of time elapsing between network operations.  In this approach,
+CrashSimulator determines whether or not the application makes any effort
+to configure its network communications with a timeout value. This is done
+by examining the presence or absence of {\tt setsockopt()}, {\tt poll()}
+and {\tt select()} calls as well as the timeout values that may or may not
+have been passed to them. Applications that do not set the timeout are
+subject to the operating system-defined protocol timeout value (19 minutes
+on Linux).  Note that by properly manipulating the results of all
+time-returning calls, CrashSimulator can simulate an execution where close
+to the maximum timeout value occurs without actually spending any time
+waiting.
+
+
+We use CrashSimulator to analyze  network applications and libraries that
+are among the most popular on Debian's ratings~\cite{DebPopCon}.
+
+\begin{table}[t]
+  \scriptsize{}
+  \begin{tabular}{l | l}
+    \toprule{}
+    {\bf Application}              & {\bf Analysis Result}\\
+    {\tt wget}                     & Overly long timeout supplied to {\tt select()} \\
+    {\tt ftp}                      & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt telnet}                   & {\tt select()} specifies no timeout \\
+    {\tt urllib http}              & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt urllib ftp}               & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt ftplib}                   & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt httplib}                  & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt requests}                 & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt urllib3}                  & No {\tt poll()} or {\tt select()}, no timeout set \\
+    {\tt python-websocket-client}  & No {\tt poll()} or {\tt select()}, no timeout set \\
+    \bottomrule{}
+  \end{tabular}
+  \caption{Applications tested for their handling of extremely slow response
+    times from the host with which they are communicating }
+  \label{table:slowloris}
+\end{table}
+
+
+{\bf Findings.} As Table~\ref{table:slowloris} shows, all of these
+applications were vulnerable to this sort of anomaly, with timeouts taking
+hours or even days in some cases.  What's more, in the vast majority of
+cases, the problem occurs because the application makes no effort to
+specify a timeout value.  This means an attacker can transmit one byte of
+data per timeout period (per Linux's value of 19 minutes for TCP sockets),
+allowing them to keep the application alive instead of quitting.
+
+
+This attack technique has been effectively exploited in the wild.  The {\tt
+slowloris} tool allows a single attacking host to successfully deny service
+to a vulnerable web server with minimal bandwidth usage by simply
+introducing delays between the headers sent to the victim by an attacking
+HTTP client.  Because many web servers at the time allowed large timeouts
+between messages from the clients, one web client could effectively tie up
+the resources of a web server for a long period of time.
+This can cause a slow buildup of unending or long lived jobs consuming
+resources and causing detrimental system behavior~\cite{Slowloris}.
+Similar attacks can be used to indefinitely delay security updates to
+clients, leaving them vulnerable to compromise~\cite{Cappos_TR_08}.
+
+{\bf Concluding Thoughts} The results of the above analysis show that
+CrashSimulator is readily able to identify novel bugs in widely used
+applications.  This includes widely used tools, security-focused
+applications like {\tt gnu-gpg}, and a host of popular network
+applications.  This is because CrashSimulator focuses on identifying bugs
+that result from anomalous conditions present in an application's
+environment, and provides a mechanism capable of testing a wide array of
+applications in a repeatable, principled manner.
+
+\subsection{Anomalies That Require Complex Checkers}
+\label{sec-complex}
+
+Having seen that CrashSimulator can detect many bugs with fairly simple
+anomaly injections and checks, we wanted to test if CrashSimulator could
+identify the more complex types of flaws that cross many system calls.  To
+do this, we returned to the filesystem anomaly discussed in
+section~\ref{subsec:anomalyidentification}.  This situation adds additional
+complexity that libraries and applications frequently get
+wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
+
+{\bf Method.}  To identify the correct steps for moving a file,
+we examined several libraries and found that {\tt mv} seemed
+to handle cases that other tools failed to consider.  Following this, we
+used the trace of {\tt mv} as a template and created instructions to modify
+the trace to simulate the anomalies for which this program tests.
+The resulting anomalies that could be detected were as follows:
+
+\paragraph{Source Replaced}
+
+An application should make an effort to ensure that the file being copied
+is not replaced between the time it is initially examined and the time it
+is opened for copying.  Otherwise it could have been replaced by a file of
+a different type, such as a character device.  To test whether applications
+are robust to anomalies involving source file replacement, we developed a
+checker that monitors whether a series of safety checks are performed and
+applied it to traces that simulated a cross-device move.  Failing to
+perform these checks often results in corruption of the
+file~\cite{PythonShutilBug}.
+
+\paragraph{Preserve Xattrs}
+
+Extended file attributes are used by modern operating systems to store
+descriptive information about a file that cannot be held by normal
+filesystem fields.  For example, an operating system can use extended file
+attributes to record whether or not a file was downloaded from the Internet
+-- important security information that warn users if they are about to open
+a potentially unsafe file.  Apple's Gatekeeper relies on extended file
+attributes to prevent the execution of applications downloaded from
+untrusted developers without explicit user action~\cite{AppleCodeSigning}.
+When copying a file, an application should retrieve extended file
+attributes from the source file and, later, apply them to the destination
+file.
+
+In this case, CrashSimulator used a checker that watches for the
+application to make system calls that read the extended file attributes
+from the source file (i.e. {\tt getxattr()}, {\tt lgetxattr()}, or {\tt
+fgetxattr()}) followed by system calls that re-apply the attributes to the
+destination file (i.e. {\tt setxattr()}, {\tt lsetxattr()}, or {\tt
+fsetxattr()}).
+
+\paragraph{Preserve Timestamps}
+
+In order to truly copy a file from one device to another an application
+needs to ensure that its metadata (such as the creation, modification, and
+access times) are preserved in the destination file.
+
+In this case, the checker monitors whether when replaying a trace modified
+to simulate cross-device move, the application applies the appropriate
+timestamps to the destination file as part of moving a file across devices
+by monitoring for a system call from the {\tt stat()} family to retrieve
+the timestamps and system call from the {\tt utime()} family to apply the
+retrieved timestamps to the destination file.  Failure to preserve
+timestamps has obvious implications in records-keeping and archival
+situations as well as any situation where a chronological record of file
+manipulations is important.  This can cause odd behavior in Makefiles,
+archival programs, and similar software~\cite{NautilusTimestamps,
+SudoTimestamp}.
+
+\paragraph{Copying Devices}
+
+It is also important to check if a move would attempt to copy a special
+character file like {\tt /dev/urandom} across disks.  As was discussed in
+the previous section, many applications fail to examine the nature of a
+file before operating on it.  So the file must be moved by creating a new
+device of the same type at the destination, instead of reading from a
+potentially infinite device.  In our experience, applications that fail to
+perform this check end up completely filling a disk or exhausting available
+memory -- sometimes causing the system to become unresponsive.
+
+ \begin{table}[t]
+    \scriptsize{}
+    \begin{tabular}{l p{1cm} p{1cm} p{1.2cm} p{1cm}}
+    \toprule{}
+        Application     & Source Replaced & Preserve Xattrs & Preserve Timestamps & Copying Devices\\
+\hline
+        {\tt mv}              & Correct             & Correct         & Correct             & Correct\\
+        {\tt mmv}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & Correct\\
+        {\tt install}         & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt perl File::Copy} & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt shutils}         & {\bf Corrupt}	& {\bf Sec. Flaw} 	& Correct             & Correct\\
+        {\tt rust}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt boost::copyfile} & {\bf Corrupt}	      & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+    \bottomrule{}
+    \end{tabular}
+    \caption{Applications and libraries analyzed to determine whether or not
+      they are able to correctly move a file from one device to another.
+Incorrect entries are either missing the needed check or were ineffective.}
+    \label{table:crossdevice}
+\end{table}
+
+{\bf Findings.} As can be seen from the results in
+Table~\ref{table:crossdevice}, each of the applications tested fails to
+perform one or more of the steps required to successfully complete a
+cross-device move.  This is an unfortunate situation because a failure to
+perform any one of these steps can result in negative outcomes for the
+system as a whole.
+
+Our results indicate that CrashSimulator is able to identify whether
+complex operations are performed correctly in anomalous situations in an
+array of popular programs.  This includes the standard libraries for the
+programming languages Python, Perl, and Rust, along with other widely used
+software.  This is true even when many libraries have correct behavior in
+some cases, but not others.  CrashSimulator is effective at finding the
+anomalous behaviors in these cases.
+
+
+\subsection{What sorts of errors does CrashSimulator make?}
+\label{sec-sorts-errors}
+
+The primary source of false positives in CrashSimulator is an application
+using a different sequence of system calls to implement a given operation
+than a checker was anticipating. CrashSimulator's approach allows these
+situations to be easily corrected, once identified through analysis of the
+incorrect test results.  This is similar to the circumstance where an
+application's test suite is missing a test, necessitating action by the
+developer to construct the missing test.
+
+For example, consider GNOME's {\tt glib} file handling facilities.  When an
+application makes use of these facilities to move a file across storage
+devices the library itself correctly handles the behaviors described above
+for a ``correct'' file move operation.  When we used CrashSimulator with
+the checkers described above to analyze a minimal application that used
+{\tt glib} for a cross-device move, we got reports stating that the
+application {\em did not} respond correctly to the anomaly.  By manually
+examining a system call trace, we found that, while {\tt glib} correctly
+performs the required behaviors, it does so using alternative system call
+sequences.  Rather than using a sequence of {\tt read()} and {\tt write()}
+calls, as our checker expected, {\tt glib} creates a pipe and uses the {\tt
+splice()} system call to copy the contents out of the source file, through
+the pipe and into the destination file.
+
+Fortunately, as soon as false positives like this are discovered,
+CrashSimulator's checkers can be modified to deal with alternative
+approaches to handling an anomaly.  This approach is viable because there
+are a finite number of system calls, and a given operation can be mapped to
+a manageable subset of system calls.  Given the above example around moving
+files, consider the mapping from high level ``operation'' to the set of
+system calls that can implement it in Table~\ref{table:stepsandcalls}.
+Each of the steps in the operation map to a small number of system calls
+and, in most cases, only one of these system calls is necessary.  In
+situations where two system call sequences can correctly implement the same
+operation, CrashSimulator simply runs two checkers in parallel and accepts
+the execution if either one ends in an accepting condition.
+
+\begin{table}[t]
+    \scriptsize{}
+    \begin{tabular}{l | l }
+    \toprule{}
+	    {\bf Operation}                                               & {\bf Potential System calls}\\
+      Examine source file                                     & stat64(), lstat64(), fstat64()\\
+      Examine destination file                                & stat64(), lstat64(), fstat64()\\
+      Open source file                                        & open()\\
+      Read contents of source file                            & read(), splice() with a pipe\\
+	    List source file's & \\ ~~~~~extended file attributes             & listxattr(), llistxattr(), flistxattr()\\
+      %Read contents of source file's extended file attributes & getxattr(), lgetxattr(), fgetxattr()\\
+	    Read contents of source file's                    & \\
+	    ~~~~~~~extended file attributes & getxattr(), lgetxattr(), fgetxattr() \\
+      Open destination file                                   & open(), optionally unlink() the file first\\
+      Write contents to destination file                      & write(), splice() with a pipe\\
+	    Apply extended file attributes to & \\ ~~~~~destination file      & setxattr(), lsetxattr(), fsetxattr()\\
+	    Apply proper timestamps to & \\ ~~~~~destination file             & utimens(), futimens()\\
+	    Apply proper permissions & \\ ~~~~~to destination file            & chmod(), open() with a modeline specified\\
+      Close the source file                                   & close()\\
+      Close the destination file                              & close()\\
+    \bottomrule{}
+    \end{tabular}
+    \caption{Each step of a successful cross-disk file move operation mapped to
+      the system call or calls that can implement it}
+    \label{table:stepsandcalls}
+\end{table}
+
+\subsection{Is CrashSimulator able to execute tests efficiently?}
+\label{sec-perf}
+
+
+One key attribute of successful testing tools is that they are able to
+complete their tests in a timely manner.  If a tool takes too long to
+complete its tasks, users will be less likely to run it reducing its
+usefulness dramatically. To this end, the performance of CrashSimulator was
+evaluated in order to determine whether or not it was able to complete its
+test executions in an acceptable time frame.
+
+{\bf Method.} Each of the following evaluations examines the completion
+times for executions of the specified application in both
+native and replay execution modes.
+
+
+    \begin{figure}[t]
+        \center{}
+        \includegraphics[scale=.5]{performance.png}
+        \caption{\emph{This shows the run time difference between the
+native program and CrashSimulator in seconds. The dashed line indicates equal
+performance. }}
+         \label{figure:performance}
+
+    \end{figure}
+
+
+{\bf Findings.} Overall, the performance of our CrashSimulator is usually
+about an order of magnitude slower than executing the original program
+natively.  This is largely due to performance problems in our (unoptimized)
+prototype, primarily our utilization of {\tt ptrace}.  Tracing the program
+with {\tt ptrace} adds up to a factor of 5x in overhead.  (This could be
+removed with more efficient mechanisms like {\tt eBPF} or a loadable kernel
+module.)  In addition, starting up the Python interpreter increases the
+startup time of our prototype.
+
+Though the performance of our prototype was slower than desired, with a
+more optimized implementation, CrashSimulator could be much more efficient.
+In fact, CrashSimulator will be more efficient than running the program
+natively in many cases, since CrashSimulator only replays the system calls.
+This means that CrashSimulator does not need to actually perform the calls
+which avoids the system call overheads, such as I/O.  Note that this
+already occurs for the {\tt du} program, because CrashSimulator need not
+actually perform any disk I/O.
+
+Note also that natively testing the timeout of networked applications (not
+shown) would take an extended period of time, at least as long as the
+allowed timeout value.  CrashSimulator avoids this cost by simulating the
+fact that time has progressed for future system calls.
+
+Overall, these results indicate that CrashSimulator is able to replay
+executions in a performant manner.  Figure~\ref{figure:performance} shows
+that the majority of the above executions ran in less than one second.
+When replaying longer-running executions the initial CrashSimulator's start
+up time will be less of a concern and the slowdown compared to a native
+execution will depend on how many I/O operations the replay execution is
+able to avoid.
+
+\preston{This is the start of the survey-based evaluation}
+
 In this evaluation we set out to answer the following questions using both
 the qualitative and quantitative data collected during our study.
 
@@ -30,9 +564,6 @@ fixing bugs?
 
 \preston{This is where the study design will go once I've come nailed it
 down}
-
- % Limitation -> Will users be able to identify what caused the problematic
-% system call sequence -> Add this to evaluation*
 
 Our goal with this work was to gain an understanding of
 how CrashSimulator's
