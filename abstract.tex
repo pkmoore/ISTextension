@@ -16,8 +16,12 @@ the application is deployed.
 The tool replays system call traces recorded from the application under
 test as a means to monitor and control execution. During replay,
 CrashSimulator modifies system call return values and program states to
-simulate an anomalous environment. Next, a checker determines whether
-the application is responding to the anomaly appropriately. This
+simulate an anomalous environment.  CrashSimulator makes a determination
+about the correctness of the application's behavior as follows: if the
+application changes its system call behavior, it might be handling the
+anomaly correctly.  If it does not modify its behavior, it is not
+responding to the error -- a result indicative of a bug.
+This
 process allows CrashSimulator to use incorrect behavior identified in
 one application running in one environment to determine whether other
 applications would make the same mistake in that environment. By
