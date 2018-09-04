@@ -1,7 +1,5 @@
-\section{Background}
+\section{what is an Environment?}
 \label{SEC:background}
-
-\section{What Is An Environment?}
 
 Before looking at how environments differ, it is important to clearly
 define what an environment is.  An application's environment is the
@@ -63,46 +61,3 @@ issues from the above sources that are visible in the results and side
 effects of the system calls an application makes.  We leave processor-based
 environmental differences and differences not visible in system call
 activity for future efforts.
-
-\subsection{Tool Comparison}
-
-CrashSimulator's system call based technique its user to replicate
-anomalous environmental conditions in a wide variety of operating systems
-domains.  In future sections this paper how we used CrashSimulator to test
-applications' responses to environmental anomalies that could be expressed
-through file system and network related system calls.  We decided to
-compare CrashSimulator against two existing testing tools, one that is file
-based (AFL) and another that performs network oriented testing.
-
-\subsection{AFL}
-
-AFL (American Fuzzy Lop) is a file-based fuzzer that tests an application
-by mutating the contents of a candidate file provided by the user.  It
-offers two improvements the naive approach of simply passing random data to
-an application through a file.  First, AFL bases its mutations on a valid
-file for the application.  This increases the chance that the mutated file
-will make deeper into processing code improving coverage.  Second, AFL
-provides a set of C compiler customizations that add instrumentation code
-to the application being tested at compile time.  This instrumentation
-allows AFL to tune its mutations to more thoroughly exercise the
-application's code paths.  The intention when testing with AFL is to
-generate an input file that makes the application crash.  Once a
-crash-causing file is discovered, users must manually analyze the file and
-application in order to ascertain the cause of the crash and fix it.
-Though there is some support for testing closed source applications through
-a hypervisor AFL, is intended to test applications written in C on Linux
-and has an impressive track record in terms of bugs discovered in major
-applications that meet this criteria.
-
-
-\subsection{Mutiny Fuzzer}
-
-At a high level, mutiny has an architecture similar to CrashSimulator
-
-Mutiny operates on recordings of valid network communication.
-
-Mutiny mutates these recordings using various strategies provided by
-mutator plugins.
-
-Mutiny replays this traffic and monitors how the application responds to
-the injected mutations.

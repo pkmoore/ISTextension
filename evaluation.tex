@@ -565,17 +565,52 @@ fixing bugs?
 \preston{This is where the study design will go once I've come nailed it
 down}
 
-Our goal with this work was to gain an understanding of
-how CrashSimulator's
-user experience compares to that of other tools and techniques available to
-developers.  Because CrashSimulator is able to to test a wide domain
-of operations that an
-application can perform, we felt it necessary to compare
-it with two separate
-tools, one in which the test was based on files and one for which the tests
-were based on network
-activity.  Specifically, we used AFL and Mutiny...
+\subsection{Selected Tools for Comparison}
 
+CrashSimulator's system call based technique its user to replicate
+anomalous environmental conditions in a wide variety of operating systems
+domains.  In future sections this paper how we used CrashSimulator to test
+applications' responses to environmental anomalies that could be expressed
+through file system and network related system calls.  In light of this it
+is appropriate to compare
+CrashSimulator against two existing testing tools, one that is
+file based (AFL) and another that performs network oriented testing
+(Mutiny).
+
+\begin{itemize}
+\item{AFL}
+
+AFL (American Fuzzy Lop) is a file-based fuzzer that tests an application
+by mutating the contents of a candidate file provided by the user.  It
+offers two improvements the naive approach of simply passing random data to
+an application through a file.  First, AFL bases its mutations on a valid
+file for the application.  This increases the chance that the mutated file
+will make deeper into processing code improving coverage.  Second, AFL
+provides a set of C compiler customizations that add instrumentation code
+to the application being tested at compile time.  This instrumentation
+allows AFL to tune its mutations to more thoroughly exercise the
+application's code paths.  The intention when testing with AFL is to
+generate an input file that makes the application crash.  Once a
+crash-causing file is discovered, users must manually analyze the file and
+application in order to ascertain the cause of the crash and fix it.
+Though there is some support for testing closed source applications through
+a hypervisor AFL, is intended to test applications written in C on Linux
+and has an impressive track record in terms of bugs discovered in major
+applications that meet this criteria.
+
+\item{Mutiny Fuzzer}
+
+At a high level, mutiny has an architecture similar to CrashSimulator.  Its
+primary method of interacting with an application is mutating and
+replaying previously captured {\tt pcap} recordings of network
+activity.  The specific mutations to be made are encoded as mutator
+plugins that are enabled and disabled by the tool's user.  Mutiny
+monitors and takes action based on the application's behavior
+during replay of a mutated recording.  For example, Mutiny can
+alter the data being communicated to the target host when a
+particular network error is encountered.
+
+\end{itemize}
 
 \subsection{Method}
 
