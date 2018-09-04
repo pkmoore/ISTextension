@@ -1,39 +1,50 @@
 \section{Evaluation}
 \label{SEC:evaluation}
 
-\preston{This is the start of the bug finding evaluation}
-
 To be able to evaluate how CrashSimulator performs, a series of tests were
-conducted using a prototype written in a mix of Python 2 (5060 LOC) and C
-(2585 LOC)\footnote{ Line count numbers are according to
-SLOCCOUNT~\cite{SLOCCOUNT}}.  For a test environment, we chose a virtual
-install of Ubuntu Linux 15.04 with a 32 bit kernel on i686 hardware.  We
-ran the tests on a 1.7 gHz core i7 system with 8GB of RAM. Our
-implementation used {\tt ptrace} to interpose on the running program and
-interject anomalous behavior into its execution.  We did not handle
-threaded programs and disabled ASLR, as well as the kernel's vDSO to make
-replay easier.  As far as we are aware, none of these choices influenced
-the types of bugs that CrashSimulator can find. However, the lack of
-support for threaded programs obviously influences the programs we can
-test.  To our knowledge, the only major negative impact these design
-choices had was that the use of {\tt ptrace} slowed our prototype's
-performance (which will be discussed later).  On the positive side, it
-simplified construction of the prototype. Given appropriate information,
-our implementation of CrashSimulator can test for anomalies that exist in
-other platforms and environments as well.
+conducted using a prototype build on {\tt rr} version 5.2.0 running on a
+32-bit Linux kernel running distributed with  Ubuntu 16.04 LTS.  Our
+modifications to {\tt rr} were carried out in C++ and the CrashSimulator
+supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
+line C extension that allows it to interact with processes using the {\tt
+Ptrace} API.  This version of CrashSimulator is available as a Docker
+container and, due to some operating system configuration being necessary,
+is most easily installed in this fashion.  For a test environment, we chose
+a vmware virtual machine running the above.  We ran the tests on a 1.7 gHz
+core i7 system with 8GB of RAM. Our implementation used {\tt ptrace} to
+interpose on the running program and interject anomalous behavior into its
+execution.  To our knowledge, the only major negative impact these design
+choices had was that the use of {\tt ptrace} and Python slowed our
+prototype's performance.  On the positive side, it simplified construction
+of the prototype.  As will be discussed later, much of this performance
+degradation is offset by the highly asynchronous fashion in which our
+prototype can execute tests. Given appropriate information, our
+implementation of CrashSimulator can test for anomalies that exist in other
+platforms and environments as well.
 
-With the prototype in hand,  we set out to answer the following questions:
+This prototype was evaluated in two phases.  The goal of the first phase
+was to prove that CrashSimulator's technique worked in the real world and
+that it was sufficiently performant.  This phase consisted of
+the tool's developers using it to find bugs in popular open
+source applications.  The purpose of the second phase was to ascertain
+whether or not CrashSimulator was usable by the wider developer community
+and how its capabilities stacked up against other well known automated
+testing tools.
+
+\subsection{Phase 1}
+
+In order to achieve the goals of the first phase of this evaluation, we set
+out to answer the following questions:
 
 \begin{enumerate}
 
 \item{Do environmental bugs exist in widely used applications and can
       CrashSimulator find them? (Subsection~\ref{sec-env-bugs})}
 
-\item{Can CrashSimulator identify anomalies that require complex checkers?
-      (Subsection~\ref{sec-complex})}
-
 \item{What sorts of errors does CrashSimulator make?
-      (Subsection~\ref{sec-sorts-errors})} \item{Is CrashSimulator able to
+      (Subsection~\ref{sec-sorts-errors})} 
+
+\item{Is CrashSimulator able to
       execute tests in a performant manner? (Subsection~\ref{sec-perf})}
 
 \end{enumerate}
@@ -293,123 +304,6 @@ that result from anomalous conditions present in an application's
 environment, and provides a mechanism capable of testing a wide array of
 applications in a repeatable, principled manner.
 
-\subsection{Anomalies That Require Complex Checkers}
-\label{sec-complex}
-
-Having seen that CrashSimulator can detect many bugs with fairly simple
-anomaly injections and checks, we wanted to test if CrashSimulator could
-identify the more complex types of flaws that cross many system calls.  To
-do this, we returned to the filesystem anomaly discussed in
-section~\ref{subsec:anomalyidentification}.  This situation adds additional
-complexity that libraries and applications frequently get
-wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
-
-{\bf Method.}  To identify the correct steps for moving a file,
-we examined several libraries and found that {\tt mv} seemed
-to handle cases that other tools failed to consider.  Following this, we
-used the trace of {\tt mv} as a template and created instructions to modify
-the trace to simulate the anomalies for which this program tests.
-The resulting anomalies that could be detected were as follows:
-
-\paragraph{Source Replaced}
-
-An application should make an effort to ensure that the file being copied
-is not replaced between the time it is initially examined and the time it
-is opened for copying.  Otherwise it could have been replaced by a file of
-a different type, such as a character device.  To test whether applications
-are robust to anomalies involving source file replacement, we developed a
-checker that monitors whether a series of safety checks are performed and
-applied it to traces that simulated a cross-device move.  Failing to
-perform these checks often results in corruption of the
-file~\cite{PythonShutilBug}.
-
-\paragraph{Preserve Xattrs}
-
-Extended file attributes are used by modern operating systems to store
-descriptive information about a file that cannot be held by normal
-filesystem fields.  For example, an operating system can use extended file
-attributes to record whether or not a file was downloaded from the Internet
--- important security information that warn users if they are about to open
-a potentially unsafe file.  Apple's Gatekeeper relies on extended file
-attributes to prevent the execution of applications downloaded from
-untrusted developers without explicit user action~\cite{AppleCodeSigning}.
-When copying a file, an application should retrieve extended file
-attributes from the source file and, later, apply them to the destination
-file.
-
-In this case, CrashSimulator used a checker that watches for the
-application to make system calls that read the extended file attributes
-from the source file (i.e. {\tt getxattr()}, {\tt lgetxattr()}, or {\tt
-fgetxattr()}) followed by system calls that re-apply the attributes to the
-destination file (i.e. {\tt setxattr()}, {\tt lsetxattr()}, or {\tt
-fsetxattr()}).
-
-\paragraph{Preserve Timestamps}
-
-In order to truly copy a file from one device to another an application
-needs to ensure that its metadata (such as the creation, modification, and
-access times) are preserved in the destination file.
-
-In this case, the checker monitors whether when replaying a trace modified
-to simulate cross-device move, the application applies the appropriate
-timestamps to the destination file as part of moving a file across devices
-by monitoring for a system call from the {\tt stat()} family to retrieve
-the timestamps and system call from the {\tt utime()} family to apply the
-retrieved timestamps to the destination file.  Failure to preserve
-timestamps has obvious implications in records-keeping and archival
-situations as well as any situation where a chronological record of file
-manipulations is important.  This can cause odd behavior in Makefiles,
-archival programs, and similar software~\cite{NautilusTimestamps,
-SudoTimestamp}.
-
-\paragraph{Copying Devices}
-
-It is also important to check if a move would attempt to copy a special
-character file like {\tt /dev/urandom} across disks.  As was discussed in
-the previous section, many applications fail to examine the nature of a
-file before operating on it.  So the file must be moved by creating a new
-device of the same type at the destination, instead of reading from a
-potentially infinite device.  In our experience, applications that fail to
-perform this check end up completely filling a disk or exhausting available
-memory -- sometimes causing the system to become unresponsive.
-
- \begin{table}[t]
-    \scriptsize{}
-    \begin{tabular}{l p{1cm} p{1cm} p{1.2cm} p{1cm}}
-    \toprule{}
-        Application     & Source Replaced & Preserve Xattrs & Preserve Timestamps & Copying Devices\\
-\hline
-        {\tt mv}              & Correct             & Correct         & Correct             & Correct\\
-        {\tt mmv}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & Correct\\
-        {\tt install}         & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-        {\tt perl File::Copy} & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-        {\tt shutils}         & {\bf Corrupt}	& {\bf Sec. Flaw} 	& Correct             & Correct\\
-        {\tt rust}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-        {\tt boost::copyfile} & {\bf Corrupt}	      & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-    \bottomrule{}
-    \end{tabular}
-    \caption{Applications and libraries analyzed to determine whether or not
-      they are able to correctly move a file from one device to another.
-Incorrect entries are either missing the needed check or were ineffective.}
-    \label{table:crossdevice}
-\end{table}
-
-{\bf Findings.} As can be seen from the results in
-Table~\ref{table:crossdevice}, each of the applications tested fails to
-perform one or more of the steps required to successfully complete a
-cross-device move.  This is an unfortunate situation because a failure to
-perform any one of these steps can result in negative outcomes for the
-system as a whole.
-
-Our results indicate that CrashSimulator is able to identify whether
-complex operations are performed correctly in anomalous situations in an
-array of popular programs.  This includes the standard libraries for the
-programming languages Python, Perl, and Rust, along with other widely used
-software.  This is true even when many libraries have correct behavior in
-some cases, but not others.  CrashSimulator is effective at finding the
-anomalous behaviors in these cases.
-
-
 \subsection{What sorts of errors does CrashSimulator make?}
 \label{sec-sorts-errors}
 
@@ -493,10 +387,13 @@ native and replay execution modes.
 
     \begin{figure}[t]
         \center{}
-        \includegraphics[scale=.5]{performance.png}
+        \fbox{\includegraphics[scale=.75]{performance.png}}
         \caption{\emph{This shows the run time difference between the
-native program and CrashSimulator in seconds. The dashed line indicates equal
-performance. }}
+native program and CrashSimulator in seconds.  Each dot indicates an
+        execution.  The X axis shows time values for native executions, and
+        executions under CrashSimulator with 0, 5, 10, and 100 tests
+        performed respectively.
+}}
          \label{figure:performance}
 
     \end{figure}
@@ -505,20 +402,20 @@ performance. }}
 {\bf Findings.} Overall, the performance of our CrashSimulator is usually
 about an order of magnitude slower than executing the original program
 natively.  This is largely due to performance problems in our (unoptimized)
-prototype, primarily our utilization of {\tt ptrace}.  Tracing the program
+prototype, primarily our utilization of python and {\tt ptrace} once
+process sets have been liberated from {\tt rr}.  Tracing the program
 with {\tt ptrace} adds up to a factor of 5x in overhead.  (This could be
 removed with more efficient mechanisms like {\tt eBPF} or a loadable kernel
 module.)  In addition, starting up the Python interpreter increases the
-startup time of our prototype.
+startup time of our prototype's supervisor.
 
-Though the performance of our prototype was slower than desired, with a
-more optimized implementation, CrashSimulator could be much more efficient.
-In fact, CrashSimulator will be more efficient than running the program
-natively in many cases, since CrashSimulator only replays the system calls.
-This means that CrashSimulator does not need to actually perform the calls
-which avoids the system call overheads, such as I/O.  Note that this
-already occurs for the {\tt du} program, because CrashSimulator need not
-actually perform any disk I/O.
+Though aspects of our performance were less performant than desired, its
+ability to execute many test throughout the course of one replay and the
+lack of blocking while waiting for test completion somewhat makes up for
+this slowness. In some cases CrashSimulator will be more efficient than
+running the program natively since {\tt rr's} replay does not require
+actual execution of most system calls.  This means that CrashSimulator
+avoids the system call overheads, such as I/O.
 
 Note also that natively testing the timeout of networked applications (not
 shown) would take an extended period of time, at least as long as the
@@ -527,16 +424,19 @@ fact that time has progressed for future system calls.
 
 Overall, these results indicate that CrashSimulator is able to replay
 executions in a performant manner.  Figure~\ref{figure:performance} shows
-that the majority of the above executions ran in less than one second.
-When replaying longer-running executions the initial CrashSimulator's start
-up time will be less of a concern and the slowdown compared to a native
-execution will depend on how many I/O operations the replay execution is
-able to avoid.
+that the majority of the above executions completed around an order of
+magnitude slower than their native counterparts.  CrashSimulator's
+asynchronous testing means that enabling additional tests does not
+significantly degrade performance as long as multiprocessing resources are
+available on the system.
 
-\preston{This is the start of the survey-based evaluation}
 
-In this evaluation we set out to answer the following questions using both
-the qualitative and quantitative data collected during our study.
+\subsection{Phase 2}
+
+Satisfied that CrashSimulator's technique can reliably identify bugs in
+real world applications, we turned our focus toward determining how well it
+could be used by the larger developer community.  To accomplish this we
+conducted a user study in hopes of answering the following questions:
 
 \begin{enumerate}
 
