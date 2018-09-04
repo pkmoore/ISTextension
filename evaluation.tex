@@ -675,29 +675,53 @@ tests such as mutating the properties of an input file.
 efficiently?}
 
 Constructing a test suite using CrashSimulator involves identifying new
-anomalies to be tested for and creating the mutators and checkers required
-to test an application's response to it.  There is no direct comparison to
-this process in AFL...  Mutiny allows users to specify which messages
-should be mutated and replayed....
+anomalies to be tested for and creating the mutators required
+to test an application's response to it.  The effort and skill involved in
+this process is similar to that involved in writing a unit test or
+integration test using a modern testing framework.  However, unlike a unit
+test or integration test, a CrashSimuator test can be used against multiple
+applications without concern for dependencies like the language they were
+written in or the libraries they depend on.  This is one of
+CrashSimulator's key advantages.
 
 
 \subsubsection{Findings}
 
+
 Developers reported a high degree of satisfaction with regard to the speed
 of setup for AFL.  Participants felt like CrashSimulator required an
-overall higher intitialy outlay of effort before testing could begin.
+overall higher initial outlay of effort before testing could begin.
 Additionally, they indicated that expanding a CrashSimulator test suite by
 implementing new checkers and mutators was more difficult that either
 expanding the scope of fuzzing with AFL or instructing Mutiny to mutate
 different messages from a recorded network session.  Participants felt that
 CrashSimulator allowed for more specific testing and were pleased with the
 ability of CrashSimulator tests to be used across multiple applications
-with minimal additional effort once they had been constructed......
+with minimal additional effort once they had been constructed.
+
+Participants that wanted to dive deeply into a smaller set of applications
+preferred CrashSimulator and Mutiny to AFL.  There was a great deal of
+positive feedback around CrashSimulator's ability to use a mutator to apply
+an anomaly to multiple eligible system call sequences throughout an
+execution.  This meant a single test could be constructed to cover similar
+operations throughout an application's code base shrinking the size of the
+required test suite in the process.
+
+Participants that preferred to test a wide variety of applications quickly
+were inclined to reach first for AFL.  Survey results indicated that this
+was due to the AFL's ease of use and lack of configuration.  This allowed
+participants to quickly start testing an application and abandon testing
+without concern for recovering their initial outlay of effort.
 
 
 \subsubsection{Discussion}
 
-!!!!Discussion!!!!
+There is no direct comparison to this "test writing" process in AFL.
+Instead AFL uses built in rules and patterns to mutate input files.  Out
+findings indicate that this is a blessing or a curse depending on the
+participants preferred testing style.  CrashSimulator certainly requires
+more initial effort but this effort can be paid back many fold if multiple
+applications are tested using the same tests.
 
 
 \subsection{Does CrashSimulator require significant skills to be useful?}
@@ -707,7 +731,7 @@ tool.  In answering this question we hope to ascertain whether
 CrashSimulator requires its users have significant skills in a particular
 area in order to be effective.  Table 2 compares our participants
 self-reported skillsets to their positive or negative experiences with
-CrashSimulator...
+CrashSimulator.
 
 
 \subsubsection{Findings}
@@ -721,19 +745,27 @@ CrashSimulator...
 
 As can be seen in Table 2, a strong background in operating systems
 concepts correlates with a more satisfactory user experience with
-CrashSimulator....
+CrashSimulator.  This is almost certainly because users that understand the
+operation of system calls are able to quickly understand and utilize the
+anomalies provided with CrashSimulator.  Additionally, these users were
+more likely to identify their own anomalies and construct their own
+mutators resulting in more bugs being found.
 
-Interestingly,  some participants that reported less background in
-operating systems had a positive experience with CrashSimulator.  These
-participants relied more heavily on built in
-anomalies/checkers/mutators....
+Interestingly, some participants that reported less background in operating
+systems had a positive experience with CrashSimulator.  Surveys indicated
+that these participants relied more heavily on built in
+anomalies and mutators.  These bugs were less likely to be fixed once
+identified but, in spite of this, ZZZ new bugs were reported to projects'
+developers.
 
 
 \subsubsection{Discussion}
 
 Given the level with which CrashSimulator interacts with applications, it
 is not surprising that users with significant operating systems backgrounds
-are better able to utilize the tool's more advanced features....
+are better able to utilize the tool's more advanced features.  The
+advantage of CrashSimulator in this case is that one high-level user's
+expertise can be utilized by the rest of the developers on a team.
 
 It is encouraging to see that users with less os background had success
 with the tool.  Based on this, we believe it is likely that CrashSimulator
@@ -751,17 +783,24 @@ and fixing bugs?}
 
 \subsubsection{Findings}
 
-Developer feedback across the board indicated that CrashSimulator's output
-made it easier to identify bugs than the simpler crash reports provided by
-AFL and Mutiny.  This impression is backed up by the results in Table 3
-that show a higher percentage of bugs identified with CrashSimulator were
-fixed than bugs identified with the other tools....
+Participant feedback across the board indicated that CrashSimulator's
+output made it easier to identify bugs than the simpler crash reports
+provided by AFL and Mutiny.  This impression is backed up by the results in
+Table 3 that show a higher percentage of bugs identified with
+CrashSimulator were fixed than bugs identified with the other tools.
+
+In a few cases participants lamented having put considerable effort into
+identifying the source of bugs found with AFL and Mutiny without result.
+This is somewhat confounded by these participants having typically reported
+lower experience with debugging tools, operating systems concepts, and
+software development in general.
+
 
 \begin{figure}[t]
   \center{}
   \includegraphics[scale=.5]{images/table3}
   \caption{\emph{Identified Bugs With Accepted Fixes By Tool}}
-  \label{fig-skill-exp}
+  \label{fig-fixed-tool}
 \end{figure}
 
 
@@ -772,7 +811,7 @@ CrashSimulator were more likely to be fixed -- bug "depth" and the ease
 with which a bug can be fixed.  It is possible that, because CrashSimulator
 focuses on a lesser targeted area of an application, more easily fixed, low
 hanging fruit style bugs were identified compared to the more battle tested
-user input handling codepaths that AFL and Mutiny tend to explore.
+user input handling code paths that AFL and Mutiny tend to explore.
 Additionally, many of the bugs types identifiable with CrashSimulator arise
 because of a minor missing check meaning that the fix is small and easily
-incorporated....
+incorporated.
