@@ -435,8 +435,8 @@ available on the system.
 
 Satisfied that CrashSimulator's technique can reliably identify bugs in
 real world applications, we turned our focus toward determining how well it
-could be used by the larger developer community.  To accomplish this we
-conducted a user study in hopes of answering the following questions:
+could be used by the larger developer community.  In this evaluation phase
+we conducted a user study in hopes of answering the following questions:
 
 \begin{enumerate}
 
@@ -462,58 +462,6 @@ fixing bugs?
 
 \subsection{Study Design}
 
-\preston{This is where the study design will go once I've come nailed it
-down}
-
-\subsection{Selected Tools for Comparison}
-
-CrashSimulator's system call based technique its user to replicate
-anomalous environmental conditions in a wide variety of operating systems
-domains.  In future sections this paper how we used CrashSimulator to test
-applications' responses to environmental anomalies that could be expressed
-through file system and network related system calls.  In light of this it
-is appropriate to compare
-CrashSimulator against two existing testing tools, one that is
-file based (AFL) and another that performs network oriented testing
-(Mutiny).
-
-\begin{itemize}
-\item{AFL}
-
-AFL (American Fuzzy Lop) is a file-based fuzzer that tests an application
-by mutating the contents of a candidate file provided by the user.  It
-offers two improvements the naive approach of simply passing random data to
-an application through a file.  First, AFL bases its mutations on a valid
-file for the application.  This increases the chance that the mutated file
-will make deeper into processing code improving coverage.  Second, AFL
-provides a set of C compiler customizations that add instrumentation code
-to the application being tested at compile time.  This instrumentation
-allows AFL to tune its mutations to more thoroughly exercise the
-application's code paths.  The intention when testing with AFL is to
-generate an input file that makes the application crash.  Once a
-crash-causing file is discovered, users must manually analyze the file and
-application in order to ascertain the cause of the crash and fix it.
-Though there is some support for testing closed source applications through
-a hypervisor AFL, is intended to test applications written in C on Linux
-and has an impressive track record in terms of bugs discovered in major
-applications that meet this criteria.
-
-\item{Mutiny Fuzzer}
-
-At a high level, mutiny has an architecture similar to CrashSimulator.  Its
-primary method of interacting with an application is mutating and
-replaying previously captured {\tt pcap} recordings of network
-activity.  The specific mutations to be made are encoded as mutator
-plugins that are enabled and disabled by the tool's user.  Mutiny
-monitors and takes action based on the application's behavior
-during replay of a mutated recording.  For example, Mutiny can
-alter the data being communicated to the target host when a
-particular network error is encountered.
-
-\end{itemize}
-
-\subsection{Method}
-
 We gathered a group of YYYY participants from a computer science master's
 program.  These students had varying backgrounds in relation to software
 development and automated testing.  All received AAA hours
@@ -522,35 +470,32 @@ initial setup, configuration, usage, and how to interpret the tools'
 results.  BBB of the students had used AFL in previous course work.  None
 of the students had previous experience with Mutiny or CrashSimulator.
 
-% Talk about the challenges around getting a bug fixed,  finding teh source,
-% convincing maintainers to take a look, all that.
-We asked our participants
-to test popular real-world applications with the goal of identifying
-new bugs and reporting them to the application's developers.  In performing
-this task our participants had to correctly set up and configure each of
-the tools, execute a testing process, evaluate the results, and produce
-sufficient proof of validity for each bug that a convincing case
-could be made for fixing
-it.  Each of these steps is an opportunity to for gain insight
-into how CrashSimulator stacks up against other tools.
+We asked our participants to test popular real-world applications with the
+goal of identifying new bugs and reporting them to the application's
+developers.  In performing this task our participants had to correctly set
+up and configure each of the tools, execute a testing process, evaluate the
+results, and produce sufficient proof of validity for each bug that a
+convincing case could be made for fixing it.  Each of these steps is an
+opportunity to for gain insight into how CrashSimulator stacks up against
+other tools.
 
-We used three techniques to capture the
-experience of our participants as they
-used tool.  First, we examined the time required for participants to carry
-out defined tasks relevant to the process of bug hunting. This provided a
-quantitative measure that was determined by the time
-required for participants to
-perform each step of the process of finding and reporting a
-bug.
-We also captured hard counts of the number of bugs identified by our
-participants using each of the tools.
-The specifics of these bugs will be discussed in more
-detail......
+We used three techniques to capture the experience of our participants as
+they used tool.  First, we examined the time required for participants to
+carry out defined tasks relevant to the process of bug hunting. This
+provided a quantitative measure that was determined by the time required
+for participants to perform each step of the process of finding and
+reporting a bug.  We also captured hard counts of the number of bugs
+identified by our participants using each of the tools.
 
-For Qualitative concerns, we used surveys to gather participant impressions
-on the tools.
-These surveys were structured to give insight into how
-CrashSimulator compares to the other tools in three areas:
+For Qualitative concerns, participant impressions were gathered using
+several instruments.  First, data around developer skills and educational
+backgrounds were gathered using a pre-survey.  Second, during the 3-week
+study period, the participants' progress toward finding and fixing bugs was
+tracked through the submission of weekly update worksheets.  Finally, at
+the end of the study period, overall developer impressions were gathered
+using a post-survey and one-on-one interviews.  These instruments were
+structured to give insight into how CrashSimulator compares to the other
+tools in three areas:
 
 \begin{itemize}
 
@@ -565,30 +510,79 @@ interest in an application.
 
 \end{itemize}
 
-Additionally, we asked our participants to rate their own experience level in
-software development, software testing, and operating systems concepts so
-that we might determine whether or not an individual's background has an
-effect on what tools they prefer.
+\subsection{Tools Selected for Comparison}
+
+CrashSimulator's system call based technique its user to replicate
+anomalous environmental conditions in a wide variety of operating systems
+domains.  In future sections this paper how we used CrashSimulator to test
+applications' responses to environmental anomalies that could be expressed
+through file system and network related system calls.  In light of this it
+is appropriate to compare CrashSimulator against two existing testing
+tools, one that is file based (AFL) and another that performs network
+oriented testing (Mutiny).
+
+\begin{itemize}
+
+\item{AFL} (American Fuzzy Lop) is a file-based fuzzer that tests an
+application by mutating the contents of a candidate file provided by
+the user.  It offers two improvements the naive approach of simply
+passing random data to an application through a file.  First, AFL
+bases its mutations on a valid file for the application.  This
+increases the chance that the mutated file will make deeper into
+processing code improving coverage.  Second, AFL provides a set of
+C compiler customizations that add instrumentation code to the
+application being tested at compile time.  This instrumentation
+allows AFL to tune its mutations to more thoroughly exercise the
+application's code paths.  The intention when testing with AFL is
+to generate an input file that makes the application crash.  Once a
+crash-causing file is discovered, users must manually analyze the
+file and application in order to ascertain the cause of the crash
+and fix it.  Though there is some support for testing closed source
+applications through a hypervisor AFL, is intended to test
+applications written in C on Linux and has an impressive track
+record in terms of bugs discovered in major applications that meet
+this criteria.
+
+\item{Mutiny Fuzzer} At a high level, mutiny has an architecture similar to
+CrashSimulator.  Its primary method of interacting with an application
+is mutating and replaying previously captured {\tt pcap} recordings
+of network activity.  The specific mutations to be made are encoded
+as mutator plugins that are enabled and disabled by the tool's
+user.  Mutiny monitors and takes action based on the application's
+behavior during replay of a mutated recording.  For example, Mutiny
+can alter the data being communicated to the target host when a
+particular network error is encountered.
+
+\end{itemize}
+
 
 \subsection{Are users able to effectively find bugs using CrashSimulator?}
 
-For any of the testing tools used the primary concern is whether or not it
-can find bugs.  To evaluate this concern in the case of CrashSimulator,
-case we need to answer users are able to
-effectively find bugs using the tool....
-
+For any testing tool, the primary concern is whether or not it can find
+bugs.  To evaluate this concern in the case of CrashSimulator, case we need
+to answer users are able to effectively find bugs in real world
+applications.  To focus this process on the actual but finding and fixing
+process, rather than open source development meta-concerns, participants
+were encouraged, but not limited to, testing applications listed highly on
+the Debian popularity contest.  These applications are more likely to have
+clean, mature code bases and active developer communities reducing the
+barrier to entry for our participants.
 
 \subsubsection{Findings}
 
-Table 1 contains counts of bugs identified during the study
-broken down by the tool used to
-identify them, as well as developer's self reported developer experience
-level with operating
-system concepts. A total of !!!!15!!!! bugs were found using
-CrashSimulator, with the majority reported by participants with a
-self-reported high degree of operating system experience.  Participants
-with a moderate and low degrees of operating systems experience found more
-bugs AFL.....
+Table 1 contains counts of bugs identified during the study broken down by
+the tool used to identify them, as well as developer's self reported
+developer experience level with operating system concepts. A total of
+!!!!15!!!! bugs were found using CrashSimulator, with the majority reported
+by participants with a self-reported high degree of operating system
+experience.  Participants with a moderate and low degrees of operating
+systems experience found more bugs AFL.  Participant impressions indicated
+that, while AFL was easier to set up, the ``luck'' aspect of hoping to come
+across a crash-causing input mutation was unsatisfying.  In spite of this,
+EEEE bugs were found using AFL.  Survey results indicate that lower bug
+counts for Mutiny can be attributed to the increased complexity of setting
+up an environment where valid network recordings could be taken.  Overall,
+less network applications were tested.
 
 \begin{figure}[t]
   \center{}
@@ -601,16 +595,25 @@ bugs AFL.....
 \subsubsection{Discussion}
 
 The above results indicate that, when it comes to using CrashSimulator,
-having experience with operating systems concepts is very beneficial...
-That said, users with a self-reported low degree of experience with OS
+having experience with operating systems concepts is very beneficial.  At
+the same time, users with a self-reported low degree of experience with OS
 concepts were still able to identify bugs using CrashSimulator's built in
-corpus of anomalies and checkers...
-Table 2 illustrates which of these checkers were most effective......
+corpus of anomalies.  Table 2 shows which of these anomalies most commonly
+resulted in application bugs.
+
+\begin{figure}[t]
+  \center{}
+  \includegraphics[scale=.5]{images/anomaly}
+  \caption{\emph{Bugs Found Using CrashSimulator Organized by Anomaly}}
+  \label{fig-tool-anomaly}
+\end{figure}
 
 
 \subsubsection{Discussion on Specific Bugs}
 
-!!!! DISCUSSION !!!!
+\preston{I don't have text here because I feel like I'd be making it up
+entirely and it would likely all be thrown away.  However, if having some
+stuff here is useful let me know and I'll come up with some.}
 
 
 \subsection{How well does CrashSimulator allow users to test the areas of
@@ -619,33 +622,35 @@ applications in which they are interested?}
 Modern applications typically consist of many different parts (e.g. user
 interfaces,  back-end processing, storage, networking) and may require
 different skill sets to operate effectively.  These different application
-areas also
-require disparate testing strategies.  For example, some application
-areas such as graphical user interfaces, are notoriously difficult to cover
-depending on the tools and techniques being used.  These difficulties
-usually result from limitations in the way the testing tool interacts with
-the application. We wanted to know whether or not
+areas also require disparate testing strategies.  For example, some
+application areas such as graphical user interfaces, are notoriously
+difficult to cover depending on the tools and techniques being used.  These
+difficulties usually result from limitations in the way the testing tool
+interacts with the application. We wanted to know whether or not
 CrashSimulator was able to effectively test the specific areas of
-applications its
-users needed to evaluate.  To answer this question, we turn to the
-surveys our participants completed regarding their experience with
-CrashSimulator.
+applications its users needed to evaluate.  To answer this question, we
+turn to the surveys our participants completed regarding their experience
+with CrashSimulator.
 
 
 \subsubsection{Findings}
 
 The results from our surveys indicate that our participants self-reported
-backgrounds have an effect on what areas of an application they tested...
+backgrounds have an effect on what areas of an application they tested.
+Participants with lower self-reported development experience focused more
+on more surface level concerns.  These participants preferred the simple
+process of providing an input file to AFL to CrashSimulator's more complex
+setup.  Participants with little native development experience struggled
+with deciding which anomalies were appropriate to apply to applications
+they were evaluating resulting in instances where tests were being run that
+didn't accomplish anything.  We hope to reduce cases like this in the
+future by providing a more helpful interface for selecting anomalies.
 
 Developers with a high degree of experience in software engineering tended
 to focus on testing an application's interaction with various library and
-operating system provided APIs.  Survery results indicate participants were
+operating system provided APIs.  Survey results indicate participants were
 satisfied with CrashSimulator's ability to test application's interaction
-with file and and network APIs....
-
-Developers with lower self-reported experience
-focused more on user interface level concerns...  Preferred AFL's ability
-to easily supply a file to be processed to an application....
+with file and network APIs.
 
 
 \subsubsection{Discussion}
@@ -653,13 +658,17 @@ to easily supply a file to be processed to an application....
 Findings indicate that a higher level of software development experience
 tends to push participants towards testing interfaces between modules in an
 application.  This resulted in overall higher satisfaction with
-CrashSimulator amongst participants.....
+CrashSimulator amongst these participants.  It should be noted that several
+developers found bugs in the libraries on which they applications they were
+testing depended.  Being able to localize a bug to a specific sequence of
+system calls meant that these participants were saved the effort of
+analyzing application code for a bug whose cause lay elsewhere.
 
 Users with less self-reported software engineering experience expressed
 some concern with CrashSimulator's limitations around testing the user
 facing aspects of applications.  For example, CrashSimulator requires more
 up front effort than effort than tools like AFL when conducting simple
-tests such as mutating the properties of an input file.....
+tests such as mutating the properties of an input file.
 
 
 \subsection{Does CrashSimulator allow its users to construct a test suite
@@ -747,6 +756,13 @@ made it easier to identify bugs than the simpler crash reports provided by
 AFL and Mutiny.  This impression is backed up by the results in Table 3
 that show a higher percentage of bugs identified with CrashSimulator were
 fixed than bugs identified with the other tools....
+
+\begin{figure}[t]
+  \center{}
+  \includegraphics[scale=.5]{images/table3}
+  \caption{\emph{Identified Bugs With Accepted Fixes By Tool}}
+  \label{fig-skill-exp}
+\end{figure}
 
 
 \subsubsection{Discussion}
