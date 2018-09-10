@@ -1,12 +1,13 @@
 \begin{abstract}
 
-It is common that an application that is tested extensively, still has a
-large numbers of bugs manifest when deployed in production.  This is
-because it is not feasible to test all of an application's potential
-\emph{environments}.  These environmental differences, such as slightly
-different behavior due to different OS versions, file systems, network
-middleboxes, etc. often manifest themselves as failures or crashes of
-the application.
+It is a fact of life for software developers that once an application is
+deployed into an environment it will encounter bugs.  Unfortunately,
+these bugs may not be detectable until the tool is deployed, and the
+encounter will likely be costly.  This is because it is not feasible to
+test all of an application's potential \emph{environments}.  These
+environmental differences, such as slightly different behavior due to
+different OS versions, file systems, network middleboxes, etc. often
+manifest themselves as failures or crashes of the application.
 
 CrashSimulator is a technique and tool that uses information about how
 different environments differ to identify incorrect application
@@ -21,8 +22,7 @@ about the correctness of the application's behavior as follows: if the
 application changes its system call behavior, it might be handling the
 anomaly correctly.  If it does not modify its behavior, it is not
 responding to the error -- a result indicative of a bug.
-This
-process allows CrashSimulator to use incorrect behavior identified in
+This process allows CrashSimulator to use incorrect behavior identified in
 one application running in one environment to determine whether other
 applications would make the same mistake in that environment. By
 testing an application against a series of these test cases,
@@ -37,16 +37,12 @@ service conditions.
 
 In order to show that CrashSimulator performs well outside of the lab a
 CrashSimulator was compared to two similar tools (AFL and Mutiny) in a
-study with ZZZ users.  Participants were asked to use these tools to
+study in which ZZZ participants were asked to use these tools to
 hunt for bugs in popular, real-world applications.  This study revealed
 that CrashSimulator's strategy of identifying bugs visible in system
-call sequences is effective, and that the tool can be used by
-developers with diverse backgrounds, and across skill sets.  Though
-developers with a high degree of proficiency with operating systems
-concepts appreciated CrashSimulator's ability to target unusual
-environmental conditions, even subjects had little experience did not
-appear to be overwhelmed by the tool's setup and operation.  As YYY
-novel bugs were identified and reported during the study, even when
+call sequences is effective, and yielded results for
+developers with diverse backgrounds, and across skill sets.
+As YYY novel bugs were identified and reported during the study, even when
 used by novice developers, CrashSimulator is poised to help uncover a
 great deal of previously unidentified bugs in new and existing
 codebases.
