@@ -41,28 +41,31 @@ In this paper, we introduce {\em CrashSimulator}\footnote{ Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
 variety of rare, adverse scenarios (water landings, engine failures, etc.)
 before the pilots are certified to work in practice.}, a testing approach
-and tool that can test an application as though it is running in a large
-number of diverse environments likely to cause crashes.  It is not feasible
-to test all possible environments, so an important consideration is how to
-choose which environments to test.  These environments can be chosen by
-identifying situations that caused environmental bugs in other applications
-and then testing for them systematically.  Selecting situations in this way
-means that an environmental bug that is detected in one application can be
-detected by CrashSimulator in other applications.  This merely requires
-CrashSimulator be configured to identify the environmental bug in question.
-Once this is done, any application can be tested for the bug using
-CrashSimulator with no added effort.  CrashSimulator can be configured to
-test a suite of bugs accumulated from a set of applications running in a
-variety of environments.  This is somewhat analogous to CrashSimulator
-automatically creating unit tests for all environments in which an
-application could run.  Each of these ``tests'' consists of rules for
-mutating system call behavior to give the application the illusion that it
-is executing in an anomalous environment and rules for determining whether
-or not the application responds appropriately.  Because these rules can be
-applied to many applications that may be prone to mishandling the anomalous
-environment in question, prior knowledge gathered from past deployment
-experiences can be used to more thoroughly work out a new application so
-that it can handle the challenges of its target environments correctly.
+and tool that can replicate a large
+number of diverse environments likely to cause crashes before an
+application is deployed.  CrashSimulator identifies
+situations that have caused environmental bugs in other applications,
+and then systematically tests for them.
+
+% Selecting situations in this way
+% means that an environmental bug that is detected in one application can be
+% detected by CrashSimulator in other applications.  This merely requires
+% CrashSimulator be configured to identify the environmental bug in question.
+% Once this is done, any application can be tested for the bug using
+% CrashSimulator with no added effort.
+% 
+% CrashSimulator can be configured to
+% test a suite of bugs accumulated from a set of applications running in a
+% variety of environments.  This is somewhat analogous to CrashSimulator
+% automatically creating unit tests for all environments in which an
+% application could run.  Each of these ``tests'' consists of rules for
+% mutating system call behavior to give the application the illusion that it
+% is executing in an anomalous environment and rules for determining whether
+% or not the application responds appropriately.  Because these rules can be
+% applied to many applications that may be prone to mishandling the anomalous
+% environment in question, prior knowledge gathered from past deployment
+% experiences can be used to more thoroughly work out a new application so
+% that it can handle the challenges of its target environments correctly.
 
 CrashSimulator's technique for performing this testing procedure is based
 on the insight that environmental anomalies can be represented as anomalies
