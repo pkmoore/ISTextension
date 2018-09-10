@@ -53,7 +53,7 @@ and then systematically tests for them.
 % CrashSimulator be configured to identify the environmental bug in question.
 % Once this is done, any application can be tested for the bug using
 % CrashSimulator with no added effort.
-% 
+%
 % CrashSimulator can be configured to
 % test a suite of bugs accumulated from a set of applications running in a
 % variety of environments.  This is somewhat analogous to CrashSimulator
@@ -67,16 +67,14 @@ and then systematically tests for them.
 % experiences can be used to more thoroughly work out a new application so
 % that it can handle the challenges of its target environments correctly.
 
-CrashSimulator's technique for performing this testing procedure is based
-on the insight that environmental anomalies can be represented as anomalies
-in results and side effects of the system calls an application makes.
-CrashSimulator tests an application by exposing it to these anomalous
+What sets CrashSimulator's approach apart from other automated testing
+tools is the insight that environmental anomalies can be identified
+in the results and side effects of the system calls an application makes.
+An application is tested by exposing it to these anomalous
 conditions during the course of execution and evaluating the application's
-response to them.  The details of this exposure are configured by taking a
+response.  The details of this exposure are configured by taking a
 system call trace of the application under normal conditions and modifying
-it such that the anomalous conditions are represented.  CrashSimulator uses
-these modified system call traces to control a replay execution of the
-application in which these conditions will be encountered.
+it to represent the anomalous conditions are represented.
 
 In the course of this work we built a proof of concept version of
 CrashSimulator's technique that was able to find bugs, both known and
@@ -88,46 +86,42 @@ question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total, 84
 bugs were identified.
 
-In addition to these quantitative results, this paper presents the results
-of a user study conducted with the goal of determining how CrashSimulator
-performs in the hands of developers as they test real world applications.
-This study involved ZZZ participants consisting of Master's computer
+In addition to proving CrashSimulator could find bugs, we were also able to
+show that even developers with limited experience operating systems
+concepts could identify bugs in real world applications with a high degree
+of confidence.
+We conducted a user study with
+ZZZ Master's computer
 science students with varying backgrounds and specializations.  These
 participants were asked to test existing popular applications (as ranked by
-Debian's Popularity Contest) using CrashSimulator, AFL, and Mutiny.  This
-survey yielded results in the form of numbers of bugs identified and
-qualitative results about the tools' user experience through surveys.
-These results show that developers are able to find new bugs with
+Debian's Popularity Contest) using CrashSimulator, and two other frequently
+used testing tools.
+The results show that the developers were able to find new bugs with
 CrashSimulator, many of which would not have been found with the other
-tools due to its unique testing approach.  Additionally, survey
-participants report that CrashSimulator allows them to find bugs they would
-not have been about to find otherwise due to a self-reported lack of
-experience with operating systems concepts.
+tools.  Additionally, the
+participants were able to find bugs
+involving environments with which they had a limited amount of experience.
 
-With both sets of result in mind, the main contributions in this work are
-as follows:
+The main contributions in this work can be summarized as follows:
 
 \begin{enumerate}
 
-\item{It proves the importance of the interaction between an application
-and its environment in creating potential flaws upon deployment.}
+\item{It supports our premise that the interaction between an application
+and its environment can create potential flaws upon deployment.}
 
-\item{It proposes the idea that by manipulating these interactions through
+\item{It provides evidence that by manipulating these interactions through
 the use of system calls, the responses of an application to any given
-environment can be accurately simulated without an actual
-deployment to that environment.}
+environment can be accurately simulated.}
 
-\item{It offers an approach for encoding an appropriate flow of
+\item{It offers a method for encoding an appropriate flow of
 interactions between an application and its environment as a model that
 can be later used to check for correct behavior.}
 
-\item{It shows that CrashSimulator allows these developers to find real
-bugs in real applications.}
+\item{It shows that CrashSimulator allows even developers with limited
+experience with a given environment to find real bugs in
+real applications.}
 
 \item{It provides proof that CrashSimulator compares favorably against
 similar automated testing tools in the number and type of bugs found.}
-
-\item{It submits favorable opinion results taken from study participant
-survey data.}
 
 \end{enumerate}
