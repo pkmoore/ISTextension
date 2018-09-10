@@ -56,13 +56,3 @@ call engineered in such a way that the elements required to reflect the
 desired environmental anomaly is present.  Supervisors can complete this
 process independently of one another lending a high degree of speed and
 parallelism to the whole CrashSimulator testing process.
-
-\subsection{Implementation}
-
-We built CrashSimulator to operate on a modern 32-bit Linux kernel running
-on Ubuntu 16.04 LTS.  Our modifications to {\tt rr} were carried out in C++
-and the CrashSimulator supervisor was implemented in ZZZZ lines of Python
-2.7. code with a YYYY line C extension that allows it to interact with
-processes using the {\tt Ptrace} API.  This version of CrashSimulator is
-available as a Docker container and, due to some operating system
-configuration being necessary, is most easily installed in this fashion.
