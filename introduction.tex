@@ -3,17 +3,19 @@
 \textit{No Battle Plan Survives Contact With the Enemy --- Helmuth von Moltke}
 
 No matter how well an application is tested before being released, new bugs
-always seem to be found after deployment. An important reason explaining
-this observation is that applications are running in a diverse set of
-different deployment \emph{environments}. Many applications seek to work
-across different operating systems, network types, etc.  Changing the
-operating system can cause new bugs to occur~\cite{LinuxGlibcChanges}, file
-systems exhibit subtle but critical differences among each
-other~\cite{EXT4Layout, AppleHFS}, and differences in network behavior can
-be substantial, even in situations where the network type or even the
+always seem to be found after deployment.  One reason for this situation
+is that applications run in a diverse set of
+different deployment \emph{environments}, - and often
+across different operating systems, and network types,
+each of which can introduce new flaws~\cite{LinuxGlibcChanges}.
+In addition, file
+systems can exhibit subtle but critical
+differences~\cite{EXT4Layout, AppleHFS}, and while differences in network
+behavior can
+be substantial, even if the network type or even the
 adapter are identical~\cite{vbox}. These environmental differences greatly
-exacerbate the problems in ensuring that an application functions correctly
-before it is deployed.
+exacerbate the chance of ensuring that an application will function
+correctly when deployed.
 
 A recent survey conducted by ClusterHQ~\cite{ClusterHQSurvey} confirmed
 that application developers spend a significant portion of their time
