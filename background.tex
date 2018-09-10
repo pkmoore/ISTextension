@@ -1,63 +1,69 @@
 \section{what is an Environment?}
 \label{SEC:background}
 
-Before looking at how environments differ, it is important to clearly
-define what an environment is.  An application's environment is the
-collection of all resources external to the application with which the
-application communicates.  These external resources can be thought of as
+Before discussing aspects of an environment that can contribute to the
+presence of bugs, it is important to clearly
+define what an environment is.  An environment can be defined as
+all resources external to the application with it will
+communicate.  These external resources can be thought of as
 providing implicit inputs to the program that affect its flow of execution.
 
 There are many examples of ways in which environments differ, even in
-situations where they implement a ``standard interface'', such as Java or
+situations where they implement a ``standard interface,'' such as Java or
 POSIX.
 
 \begin{itemize}
 
-\item {\bf Operating Systems.}  A commonly observed difference is that many
-applications behave in different ways due to the varying ways in which the
-operating systems implement system calls.  For example, on Linux it is
-possible to remove an open file while this is not allowed on Windows
-systems~\cite{UnlinkStandard}.  An application written without this
-difference in mind could fail should if it relies on one implementation or
-the other.
+\item {\bf Operating Systems.} Difference in the way operating systems
+implement system call scan influence the behavior of applications.  For
+example, on Linux it is possible to remove an open file, yet this is not
+allowed on Windows systems~\cite{UnlinkStandard}.  An application
+written without this difference in mind could fail if it relies on one
+implementation or the other.
 
 \item {\bf File Systems.}  The exact file system used will also have a
 substantial impact on the behavior of a system, independent of the
 operating system.  The popular Ext4 file system on Linux is case sensitive,
-so that ``a'' and ``A'' are different files, while OS X's HFS+ file system
-is case insensitive so those file names would refer to the same file.
-Different file systems have varying limits or behaviors for other items,
+so that ``a'' and ``A'' are different files, while in OS X's HFS+ file system
+those file names would refer to the same file.
+File systems can have varying limits or behaviors for other items as well,
 including file name length (popularized due to the 8.3 limitations of the
-FAT file system), maximum file length, number of directory entries, depth
-of directories supported, which leads to errors when programs are not
-written to take these issues into account~\cite{EXT4Layout, AppleHFS}.
+FAT file system), maximum file length, number of directory entries, or
+depth
+of directories supported, all of which lead to errors when programs
+do not account for these issues~\cite{EXT4Layout, AppleHFS}.
 
-\item {\bf Network.}  Aspects of the network environment also have a
-substantial impact on the behavior of application.  This can be either
-local things or remote network behaviors.  For example, POSIX operating
+\item {\bf Network.}  Aspects of the network environment, be it local or
+remote, also have a
+substantial impact on the behavior of an application.
+For example, POSIX operating
 systems support the notion of limiting the kernel buffer set aside for a
-socket.  However, popular operating systems (Windows, Linux, and Mac)
+socket.  However, many other popular operating
+systems (Windows, Linux, and Mac)
 implement this quite differently.  For example, in Linux, if a UDP datagram
 larger than the specified buffer size is received it will be dropped.  In
-Windows, however, UDP datagrams larger than the specified buffer size are
-received but system calls that retrieve data from the buffer they are
-stored in will only return a number of bytes less than or equal to the
+Windows, however, such
+UDP datagrams are
+received, but system calls that retrieve data from the buffer in which
+they are
+stored will only return a number of bytes less than or equal to the
 buffer size at one time~\cite{Zhuang_NSDI_2014}.
 
-\item {\bf Processor.}  The processor can also make a substantial
-difference in the behavior of an application.  This is very frequently
+item {\bf Processor.}  The processor can also influence the
+behavior of an application.  This is very frequently
 evidenced through the variety of different floating point behaviors on
-different processors~\cite{ArbitraryPrecision}.  However, this is not the
-only difference.  Bugs in processors are fairly common and cause variance.
-There are also intended differences that occur from varying interpretations
-of how to execute complex instructions~\cite{Microarch}.
+processors~\cite{ArbitraryPrecision}.  In addition, bugs are fairly common
+in processors and cause variances, as does differences in interpreting
+how to execute complex instructions~\cite{Microarch}.
 
 \end{itemize}
 
-In this work, we focus on operating system, file system, and network
-environmental issues which are the bulk of environmental issues that
-applications struggle with today. Specifically, we are concerned with
-issues from the above sources that are visible in the results and side
-effects of the system calls an application makes.  We leave processor-based
-environmental differences and differences not visible in system call
-activity for future efforts.
+In this work, we chose to focus on operating system,
+file system, and network
+environmental issues.
+Specifically, we are concerned with issues from the above source that are
+visible in the results an side effects of the system calls made by the
+application.  We leave processor-based environmental differences and
+differences not visible in system call activity for future efforts.
+Our rationale is that the bulk of environmental issues that applications
+struggle with today are tied to the other three sources.
