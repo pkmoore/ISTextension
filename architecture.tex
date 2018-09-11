@@ -61,3 +61,35 @@ desired environmental anomaly.  Supervisors can complete this
 process independently of one another, which lends a
 high degree of speed and
 parallelism to the whole CrashSimulator testing process.
+
+\subsection{Preparing the Tool for Testing}
+
+To be able to evaluate how CrashSimulator performs, a series of tests were
+conducted using a prototype build on {\tt rr} version 5.2.0 running on a
+32-bit Linux kernel running distributed with  Ubuntu 16.04 LTS.  Our
+modifications to {\tt rr} were carried out in C++ and the CrashSimulator
+supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
+line C extension that allows it to interact with processes using the {\tt
+Ptrace} API.  This version of CrashSimulator is available as a Docker
+container and, due to some operating system configuration being necessary,
+is most easily installed in this fashion.  For a test environment, we chose
+a vmware virtual machine running the above.  We ran the tests on a 1.7 gHz
+core i7 system with 8GB of RAM. Our implementation used {\tt ptrace} to
+interpose on the running program and interject anomalous behavior into its
+execution.  To our knowledge, the only major negative impact these design
+choices had was that the use of {\tt ptrace} and Python slowed our
+prototype's performance.  On the positive side, it simplified construction
+of the prototype.  As will be discussed later, much of this performance
+degradation is offset by the highly asynchronous fashion in which our
+prototype can execute tests. Given appropriate information, our
+implementation of CrashSimulator can test for anomalies that exist in other
+platforms and environments as well.
+
+This prototype was evaluated in two phases.  The goal of the first phase
+was to prove that CrashSimulator's technique worked in the real world and
+that it was sufficiently performant.  This phase consisted of
+the tool's developers using it to find bugs in popular open
+source applications.  The purpose of the second phase was to ascertain
+whether or not CrashSimulator was usable by the wider developer community
+and how its capabilities stacked up against other well known automated
+testing tools.
