@@ -72,24 +72,26 @@ supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
 line C extension that allows it to interact with processes using the {\tt
 Ptrace} API.  This version of CrashSimulator is available as a Docker
 container and, due to some operating system configuration being necessary,
-is most easily installed in this fashion.  For a test environment, we chose
-a vmware virtual machine running the above.  We ran the tests on a 1.7 gHz
+is most easily installed in this fashion.
+
+With the prototype in hand, we were ready to test its bug finding
+abilities.  For a test environment, we chose
+a vmware virtual machine running version of CrashSimulator described above.
+We ran the tests on a 1.7 gHz
 core i7 system with 8GB of RAM. Our implementation used {\tt ptrace} to
 interpose on the running program and interject anomalous behavior into its
-execution.  To our knowledge, the only major negative impact these design
-choices had was that the use of {\tt ptrace} and Python slowed our
-prototype's performance.  On the positive side, it simplified construction
-of the prototype.  As will be discussed later, much of this performance
+execution.  To our knowledge, the only major negative impact of
+these design choices was that the use of {\tt ptrace} and Python did slow
+down our
+prototype's performance.  On the positive side, it simplified construction.
+As will be discussed later, much of this performance
 degradation is offset by the highly asynchronous fashion in which our
-prototype can execute tests. Given appropriate information, our
-implementation of CrashSimulator can test for anomalies that exist in other
-platforms and environments as well.
+prototype can execute tests.
 
-This prototype was evaluated in two phases.  The goal of the first phase
-was to prove that CrashSimulator's technique worked in the real world and
-that it was sufficiently performant.  This phase consisted of
-the tool's developers using it to find bugs in popular open
-source applications.  The purpose of the second phase was to ascertain
-whether or not CrashSimulator was usable by the wider developer community
-and how its capabilities stacked up against other well known automated
-testing tools.
+This prototype was evaluated in two phases.  The first phase set out to
+prove that CrashSimulator's technique could work in the real world with a
+reasonable degree of efficiency.  In this phase, the tool's developers used
+it to find bugs in popular open source applications.  In the second phase,
+we aimed to ascertain whether or not the tool could be used by developers
+at various skill and experience levels, and to determine how its
+capabilities stacked up against other well known automated testing tools.
