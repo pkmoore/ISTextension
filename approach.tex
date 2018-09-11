@@ -1,4 +1,4 @@
-\section{Approach Details}
+\section{How CrashSimulator Works}
 \label{SEC:approach}
 
 \begin{figure}[t]
@@ -8,22 +8,23 @@
   \label{figure:approach}
 \end{figure}
 
-In order to understand CrashSimulator's operation it is necessary to have a
-more detailed understanding of how its components fit together and what
-steps are required to use it in testing an application.
-Figure~\ref{figure:approach} illustrates the steps required to gather
-the anomaly information CrashSimulator requires, how that information is to
-be transformed into mutated traces and what output CrashSimulator yields
-once its replay and analysis process completes.
+CrashSimulator uses a four-step operation to identify environmental bugs.
+These steps, illustrated in Figure~\ref{figure:approach}, include:
+gathering the required anomaly information, transforming that information
+into mutated traces, and interpreting  the output its replay and analysis
+process yields.
+
 
 \subsection{Anomaly Identification} \label{subsec:anomalyidentification}
 
 The first step in CrashSimulator's testing process is identifying an
-environmental anomaly to test an application against.  This can be
-accomplished either manually or by examining results of other applications
-running in the target environment with existing tools.  For example, this
+environmental anomaly against which to test an application.  This can be
+accomplished either manually or by using existing tools to examine results
+of other applications
+running in the target environment.  For example, this
 work utilized the results of both NetCheck~\cite{Zhuang_NSDI_2014} and
-CheckAPI~\cite{rasley2015detecting}, as well as manual analysis, to develop
+CheckAPI~\cite{rasley2015detecting}, along with some
+manual analysis, to develop
 the set of anomalies used in our evaluation.  NetCheck, which can be
 thought of as a precursor to CrashSimulator, is a tool that can determine
 the cause of a failure in a networked application, without any specific
@@ -33,18 +34,18 @@ communication between one or more hosts.  CheckAPI performs a similar
 function by comparing the behavior of an API implementation to a reference
 model.
 
-Another source of anomalies is the public bug trackers of projects
-available on the web.  If the presence of a bug is indicated by the results
-and side effects of a series of system calls then CrashSimulator can be
-used to inject these same results and side effects at appropriate times in
-other applications.  This is ideal when determining whether or not an
-application is vulnerable to a widely publicized bug.  Similarly, bugs can
-be taken from similar projects in order to expand a project's set of
-available anomalies.
+Anomalies can be located and isolated via a number of methods. One source
+are the public bug trackers of projects available on the web. If the
+results and side effects of a series of system calls indicate the presence
+of a bug,,  CrashSimulator can inject these same results and side effects
+at appropriate times in other applications. This is ideal when determining
+whether or not an application is vulnerable to a widely publicized bug. In
+additional project’s set of available anomalies can be supplemented by bugs
+taken from similar projects.
 
-In selecting anomalies for use it is important to understand that they can
-be as subtle as a single configuration flag being set differently under
-specific circumstances.  For example, in BSD and OS X sockets returned by
+It is important to understand that anomalies can
+be as subtle as a single configuration flag set differently under
+specific circumstances.  For example, in BSD and OS X, sockets returned by
 the {\tt accept()} system call inherit the values of the {\tt O\_NONBLOCK}
 and {\tt O\_ASYNC} flags from their parent socket.  In Linux, these values
 are not inherited.  As a result, the correct behavior is to always
@@ -60,7 +61,7 @@ socket was configured for the opposite behavior.
 
 Anomalies can also be found around more complex operations.  Moving files
 around in a filesystem is an extremely common operation that, on face
-value, seems to fairly simplistic to carry out.  In reality, things become
+value, seems fairly simple to carry out.  In reality, things become
 complex quickly once a few implementation details are taken into account:
 namely limitations in Linux's {\tt rename()} system call and the way
 Linux's directory hierarchy can abstract away complicated device
@@ -79,7 +80,7 @@ are on the same device) are accomplished using the {\tt rename()} system
 call.  In cases where the source and destination are not on the same device
 this system call fails and the application must handle the operation
 manually. This means that \emph{any} application that moves files around on
-a Linux system must be able to deal with the situation where some part of
+a Linux system must be able to deal with a situation in which some part of
 the directory structure may physically reside on a different device.
 During our evaluation, we modeled what it takes to move a file correctly
 using the GNU Coreutils {\tt mv} command as our ``gold standard.''  We
@@ -97,16 +98,16 @@ or security issues.
 
 %  This paragraph should cover the "describe manual effort" feedback
 Once a new anomaly has been identified, it is distilled into a sequence of
-system calls that respond to the anomaly.  This process involves examining
-the system call traces in order to identify a series of calls indicative of
+system calls.  This process involves examining
+system call traces and finding a series of calls indicative of
 an inappropriate response to a specified anomaly.  This analysis should
 identify any mutations that may need to be made to the trace
 to simulate the anomalous environment (i.e. what modifications must be made
 to system call return values and program state during replay).  Much like
 the effort involved in constructing a unit test to check for correct
 behavior in a piece of code, this process involves an initial outlay of
-user skill and effort that will be paid back as it is used repeatedly over
-time to test many different applications.
+user skill and effort that will be paid back, as it can be 
+used repeatedly over time to test many different applications.
 
 As a more concrete example of the above, consider an anomaly
 involving unusual file types we will later address in our evaluation of
@@ -127,57 +128,62 @@ member.  CrashSimulator can mutate this  line to the following:
 
 The trace containing this modified line can then be replayed in order to
 test how the application responds when a file that is expected to be
-regular is actually a character device. In our evaluation we further
+regular is actually a character device. In our evaluation, we further
 explore the behavior of applications as they encounter other possible valid
 values of {\tt st\_mode} in the course of testing.
 
 
 \subsection{Trace Recording and Anomaly Injection}
 
-\preston{This is worded strangely}
-The trace into which anomalies will be injected is generated by recording
-the application being tested as it executes in some environment where the
-chosen anomaly isn't present.
-
+In the next step, a trace is generated by recording the application to be
+tested as it executes in an environment where the chosen anomaly is not
+present.
 Once this trace has been generated, CrashSimulator's replay-based approach
-makes it easy to inject anomalies into an execution by introducing the
-features of the anomaly into the trace.  Because replaying the modified
+can inject anomalies into an execution by introducing certain features
+associated with the anomaly.
+Because replaying the modified
 trace faithfully follows the described system call behavior, the
-application is exposed to the anomalous conditions that were injected.  For
+application is exposed to the injected
+anomalous conditions.  For
 example, suppose an anomaly causes a call to {\tt read()} to fail with
 return value of -1 and {\tt errno} set to {\tt EINVAL}.  Exposing an
 application to this situation only requires editing the system call trace,
 such that the line describing this read call reflects the above values.
 
 Our implementation of CrashSimulator uses a combination of {\tt rr}, a
-record-and-replay debugger, and our own CrashSimulator process supervisor
+record-and-replay debugger, and our own process supervisor
 to accomplish the above.  We rely on {\tt rr's} trace recording to format
 to store the information necessary to perform the bulk of uninteresting
 replay and {\tt strace}-style output to describe user facing system call
 sequences that will be mutated during testing.  {\tt Strace} is a good fit
 for this purpose because it provides a familiar way to describe an
 application's system call activity in terms of a user-friendly
-representation of the inputs, outputs, and side effects of each system call
-an application makes.  This means CrashSimulator's user can easily modify
-an {\tt strace} recording using a text editor in order to express an
-anomaly in terms of system call results and side effects.  These
+representation of inputs, outputs, and side effects.
+This means CrashSimulator's user can easily modify
+a {\tt strace} recording using a text editor to express
+system call results and side effects associated with the anomaly.  These
 modifications can typically be automated with the help of a "mutator"
 script (and were for the anomalies used in our evaluation).
 
 \subsection{Analyzing an Execution}
 
 CrashSimulator's determination about whether an application may be
-responding to an anomaly comes down to whether the application alters its
-system call behavior or not.  When CrashSimulator injects anomalous
-behavior into a replay execution it is expected that the application under
-test will deal with this anomaly in some way. For example, applications can
+responding to an anomaly comes down to whether or not 
+the application alters its
+system call behavior.  When an anomalous
+behavior is injected into a replay execution,
+it is expected that the application under
+test will deal with it in some way.  For example, applications can
 be expected to behave differently when the structure returned by a call to
 {\tt stat()} indicates the target file is a symlink, rather than a regular
-file.  CrashSimulator bases its assessment on the assumption that an
-application's efforts to deal with the anomaly will result in it executing
-different program paths (and therefore different system calls) than were
-executed when the system call trace was recorded.  If the application being
-replayed does not alter its behavior to deal with the anomaly, it has not
+file.  CrashSimulator bases its assessment on the assumption that the way
+an
+application deals with the anomaly will yield
+different program paths (and therefore different system calls) than 
+those
+executed when the original system call trace was recorded.
+If the application
+does not alter its behavior, it has not
 correctly handled this flaw --- a failing result.  Alternatively, if the
 application does deviate, it is likely that the application is taking some
 action to handle the injected condition --- an indication of possibly
@@ -188,6 +194,7 @@ with traditional tests, CrashSimulator does not tell us that an application
 is bug free in a given situation; instead, it asserts that an application
 has incorrectly handled a given situation.  In our experience, actually
 exposing applications to anomalies CrashSimulator reported as unhandled
-resulted in bugs ranging from simple hangs to more dramatic crashes that
+did result
+in bugs ranging from simple hangs to more dramatic crashes that
 had the side effect of consuming all available resources or filling
 available disk space with garbage.
