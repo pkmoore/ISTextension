@@ -45,8 +45,17 @@ affected parties and 5 have already been corrected.
 %  introduced by CrashSimulator's technique meant that it was able to find
 %  these bugs quickly in spite of its unoptimized implementation.
 
-Future work will include expanding the repository of anomalies and their
-checkers, as well as exploring opportunities to further automate the
-discovery process.  In the long term, we envision a
-public repository of anomalies along with CrashSimulator test patterns that
-can be applied to new or existing applications.
+In the long term, we
+envision a public repository of anomalies along with CrashSimulator test
+patterns that can be applied to new or existing applications.
+In addition to expanding the repository of anomalies, as well as exploring
+opportunities to further automate the discovery process, we plan on improving
+CrashSimulator in two different directions.  First, we plan in improving
+CrashSimulator's bug detection capabilities by analyzing application's attempts
+to recover from the anomalies to which we have exposed them.  This would allow
+us to make determinations about whether an application is correctly recovering
+from an error rather.  Second, we hope to improve CrashSimulator so that it can
+understand and mutate common data formats.  This would allow CrashSimulator
+to fuzz test data processing code while taking advantage of its
+replay-based architecture to avoid re-executing portions of the application
+uninvolved in testing.
