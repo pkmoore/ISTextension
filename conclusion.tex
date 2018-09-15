@@ -1,56 +1,41 @@
 \section{Conclusion}
 \label{SEC:conclusion}
 
-Many post-deployment failures result from unexpected interactions between
+When an application fails upon deployment,
+the cause could likely be the result
+of unexpected interactions between
 an application and its environment.  Although finding and eliminating
 faults in applications is a key concern for software developers, it is
-impractical for them to test an application in all of the environments in
-which it will be deployed.  To address this problem, we introduced
-CrashSimulator, a testing approach that utilizes mutation and replay
-of system call traces in order to determine whether an application
-responds correctly to anomalous environmental conditions.
-\preston{Need to make sure this is emphasized throughout}A significant
-benefit of CrashSimulator is that failures observed in executing one
-application in an anomalous environment can easily be leveraged to test
-whether {\em other} applications suffer from the same underlying problem.
+impractical to run actual tests  of an application in every possible
+environment in
+which it could be deployed.  To address this problem, we introduced
+CrashSimulator, a strategy and tool
+that can determine whether an application will
+respond correctly to anomalous environmental conditions.
 
-CrashSimulator is able to identify
-bugs resulting from an
-application's interactions with its environment.  To test whether an
-application responds appropriately to a particular anomaly (such as an
-unexpected file type, an unexpected device, unexpected network conditions,
-etc.) CrashSimulator records system call traces from the application under
-test, mutates return values and/or program state to simulate execution in
-the anomalous environment, and uses subsequent
-system calls to decide whether a correct or incorrect response as occurred.
-This allows
-CrashSimulator to test an application running in one environment as if it
-were running in another.
-
-% The tool evaluates application behavior in the (simulated) anomalous
-% environment by using finite state models to characterize correct (or
-% incorrect) behavior.  This provides a generic ``signature'' for that
-% behavior, which is portable across applications.
-
-Operating on system calls gives CrashSimulator a ``universal'' way to
-encode and inject anomalies.
-Consequently, a set of
-mutations can be collected from any existing application for
-use in testing other new or existing applications.  In this way, an
-ever-expanding ``test suite'' can be created, allowing lessons learned from
-bugs in one application to benefit many others.
+The tool records system call traces from the application under test,
+mutates return values and/or program state to simulate execution in the
+anomalous environment, and uses sub- sequent system calls to decide whether
+a correct or incorrect response as occurred. This allows CrashSimulator to
+test an application running in one environment as if it were running in
+another. Operating on system calls gives the tool  a ``universal'' way to
+encode and inject anomalies. Consequently, a set of mutations can be
+collected from any existing application for use in testing other new or
+existing applications. In this way, an ever-expanding ``test suite'' can be
+created, allowing lessons learned from bugs in one application to benefit
+many others.
 
 Our evaluation of CrashSimulator has shown it to be both usable and
-effective.  In our survey of developers CrashSimulator compared favorably
+effective.  In our survey of developers, CrashSimulator compared favorably
 against both AFL and Mutiny across self-reported developer skill levels.
 CrashSimulator was particularly favored by developers with more operating
-systems experience but even developers with low OS experience were pleased
-with CrashSimulator's ability to let them find bugs by taking advantage of
-the expert knowledge encoded in the anomalies supplied with CrashSimulator
-by default.  The participants of our user study were able to find in total
-19 new bugs in popular applications.  These bugs have been reported to the
-affected parties and 5 have been corrected by patches submitted by the
-developers responsible for finding them.
+systems experience, but even developers with low OS experience were pleased
+with its ability to let them find bugs by taking advantage of
+the expert knowledge encoded in the tool.
+In our user study, a total of
+19 new bugs were identified in popular applications.
+These bugs have been reported to the
+affected parties and 5 have already been corrected.
 
 %  CrashSimulator was able to identify bugs related to unusual
 %  file types in 15 applications and bugs related to slow network performance
@@ -62,6 +47,6 @@ developers responsible for finding them.
 
 Future work will include expanding the repository of anomalies and their
 checkers, as well as exploring opportunities to further automate the
-discovery of anomalies and checkers.  In the long term, we envision a
+discovery process.  In the long term, we envision a
 public repository of anomalies along with CrashSimulator test patterns that
 can be applied to new or existing applications.
