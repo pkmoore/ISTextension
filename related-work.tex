@@ -1,6 +1,10 @@
 \section{Related Work}
 \label{SEC:related-work}
 
+In building and testing CrashSimulator, we examined a number of previous
+studies in bug detection, data mining, and testing protocols. This section
+summaries a few earlier initiatives in these areas.
+
 \subsection{Source Code Analyzing Tools}
 
 % One of the major limitations of many automated testing tools is a reliance
@@ -12,9 +16,6 @@
 % source code will have diminished capability in projects incorporating
 % closed source components.
 
-In building and testing CrashSimulator, we examined a number of previous
-studies in bug detection, data mining, and testing protocols. This section
-summaries a few earlier initiatives in these areas.
 
 \iffalse
 While there is a vast literature on test
@@ -37,7 +38,7 @@ Crash reproduction by test case mutation~\cite{DBLP:conf/sigsoft/XuanXM15}.
 \fi
 
 
-\noindent 
+\noindent
 {\bf Static analysis. }
 Tools based on static analysis techniques, such as abstract interpretation,
 model checking, and symbolic execution have been used to successfully
@@ -67,7 +68,7 @@ as expected.
 Substantial work has been done in validating API and protocol behaviors,
 e.g., finding faults in the Linux TCP implementation, SSH2 and
 RCP~\cite{Udrea:2008}, BGP configuration~\cite{Feamster:2005}, and
-identifying network vulnerabilities~\cite{ritchey-sp00}. 
+identifying network vulnerabilities~\cite{ritchey-sp00}.
 \fi
 
 \noindent
@@ -85,7 +86,7 @@ anomalies. So far, we have specified these checkers manually for
 CrashSimulator.
 
 \noindent
-{\bf Tracing and log mining.} 
+{\bf Tracing and log mining.}
 Similar to API protocol mining, there has been substantive work on using
 log files to detect anomalies~\cite{pinpoint,
 jiang_abnormal_trace_detection_icac_2005, xu2009detecting, lou2010mining2}
@@ -125,7 +126,7 @@ DBLP:conf/icst/DallmeierP0MZ14}.
 A few researchers have developed testing techniques aimed at checking
 whether programs respond appropriately to anomalous situations.  For
 example, Fu et al. introduced data flow testing techniques that require
-tests that cover paths from points at which exceptions are thrown to points
+tests cover from the points at which exceptions are thrown to the points
 at which they are handled in Java code. The purpose is to discover whether
 programs respond correctly to exceptional situations anticipated by the
 programmer~\cite{DBLP:journals/tse/FuMRW05}.  Koopman and DeVale developed
@@ -153,23 +154,23 @@ submission}
 
 %\noindent
 %{\bf Runtime verification:}
-%Runtime verification (RV) 
+%Runtime verification (RV)
 %techniques~\cite{DBLP:conf/rv/2010, Liu:2007:WCC:1973430.1973449, Lu_ASPLOS_2006,
 %Archer:2007:ICT:1236360.1236382, Verbowski_OSDI_2006, Tucek_SOSP_2007,
 %Park_ASPLOS_2009,DBLP:journals/jlp/LeuckerS09}
 %can detect violations of properties on specific executions
 %but do not show that the software satisfies the specification for every
 %possible input or on every possible execution.
-%Many of these techniques find general violations of 
+%Many of these techniques find general violations of
 %properties, such as atomicity~\cite{Park_ASPLOS_2009, Verbowski_OSDI_2006}.
-%Other RV techniques enable checking program-specific requirements 
+%Other RV techniques enable checking program-specific requirements
 %usually specified with formal languages, such as automata or logic
 %formalisms~\cite{DBLP:conf/vmcai/BarringerGHS04, DBLP:conf/kbse/GiannakopoulouH01}.
 %
 %Many RV approaches instrument code to capture relevant
-%events or application state and insert executable 
+%events or application state and insert executable
 %assertions~\cite{Orso:2002:GSC:566172.566182, DBLP:conf/icse/ClauseO11,
-%DBLP:books/sp/Liblit2007, Jin:2010:ISS:1932682.1869481, Barnett01spyingon, 
+%DBLP:books/sp/Liblit2007, Jin:2010:ISS:1932682.1869481, Barnett01spyingon,
 %DBLP:journals/jss/BarnettS03}.
 %However, inserting pre- and post-conditions obscures the fact that the
 %specification can be treated as a parallel construct to the
@@ -181,17 +182,17 @@ submission}
 %CheckAPI does not require application instrumentation, assuming a tracing
 %mechanism exists in the API~\cite{strace, Cappos_CCS_10}.
 
-%Like CheckAPI, 
+%Like CheckAPI,
 %several other (runtime and static) checking techniques
-%allow the use of languages more familiar to 
-%programmers. 
+%allow the use of languages more familiar to
+%programmers.
 %The WiDS checker allows using a scripting language to specify properties of a
 %distributed system~\cite{Liu:2007:WCC:1973430.1973449}.
 %Contracts written in a C-like language can specify components for use
 %in TinyOS applications~\cite{Archer:2007:ICT:1236360.1236382}.
 %CheckAPI allows
 %programmers to choose the language for PSI construction or simply to
-%use an existing implementation. Lastly, work on deterministic 
+%use an existing implementation. Lastly, work on deterministic
 %replay~\cite{Viennot13} enables record-replay techniques on multi-core
 %systems and could help improve CheckAPI-MT performance.
 
@@ -208,7 +209,7 @@ NetCheck diagnoses application failures without application-specific
 models.  Khanna~\cite{khanna2007automated} identifies the source of
 failures using a rule base of allowed state transition paths.
 %However, it requires specialized human-generated rules for each
-%application. 
+%application.
 CrashSimulator leverages NetCheck's approach to simulate identified
 anomalies in network behavior, file system behavior, etc. to test
 applications other than the ones on which the anomalies were originally
