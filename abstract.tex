@@ -19,21 +19,20 @@ call behavior, CrashSimulator can use incorrect behavior identified in
 one application running in one environment to determine whether other
 applications would make the same mistake in that environment.
 
-We evaluated CrashSimulator by using it to test a set of the most popular
+We evaluated CrashSimulator against set of the most popular
 Linux applications selected
-from the Coreutils project and the Debian popularity contest. The
-result of this evaluation was 84 bugs identified in 31 applications
-with consequences ranging from hangs and crashes to data loss and
-remote denial of service conditions.  We also compared CrashSimulator
-to two similar tools (AFL and Mutiny) in a
-study in which ZZZ participants used the tools to
-hunt for bugs in popular applications.  This study revealed
+from the Coreutils project and the Debian popularity contest.
+Our tests found a total of was XXXX bugs YYYY applications,
+the consequences of which range from hangs and crashes to data loss and
+remote denial of service conditions.  In addition, we conducted
+a user study in which
+ZZZ participants used both CrashSimulator and two similar tools (AFL
+and Mutiny) to hunt for bugs in popular applications and found the tool
+was relatively easy to use, even for developers with limited experience
+in the underlying operating systems concepts.
+This study revealed
 that CrashSimulator's strategy of identifying bugs
 is effective, and yielded results for
 developers with diverse backgrounds, and across skill sets.
-As YYY novel bugs were identified and reported during the study,
-CrashSimulator is poised to help uncover a
-great deal of previously unidentified bugs in new and existing
-codebases.
 
 \end{abstract}
