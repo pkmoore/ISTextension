@@ -1,49 +1,40 @@
 \begin{abstract}
 
-It is a fact of life for software developers that once an application is
-deployed into an environment it will encounter bugs.  Unfortunately,
-these bugs may not be detectable until the tool is deployed, and the
-encounter will likely be costly.  This is because it is not feasible to
-test all of an application's potential \emph{environments}.  These
-environmental differences, such as slightly different behavior due to
-different OS versions, file systems, network middleboxes, etc. often
-manifest themselves as failures or crashes of the application.
+A common problem for software developers is that applications exhibit new
+bugs resultant from \emph{environmental} differences after they have been
+deployed.  These environmental differences, such as slightly different
+behavior due to different OS versions, file systems, network
+middleboxes, etc. often manifest themselves as failures or crashes of
+the application.  These costly encounters are difficult to avoid
+because it is not feasible to test all of an application's potential
+environments.
 
 CrashSimulator is a technique and tool that uses information about how
-different environments differ to identify incorrect application
-behavior caused by unhandled anomalous environmental conditions before
-the application is deployed.
-
-The tool replays system call traces recorded from the application under
-test as a means to monitor and control execution. During replay,
-CrashSimulator modifies system call return values and program states to
-simulate an anomalous environment.  CrashSimulator makes a determination
-about the correctness of the application's behavior as follows: if the
-application changes its system call behavior, it might be handling the
-anomaly correctly.  If it does not modify its behavior, it is not
-responding to the error -- a result indicative of a bug.
-This process allows CrashSimulator to use incorrect behavior identified in
+environments differ to identify incorrect application behavior before
+the application is deployed.  The tool replays a recording of the
+application under test as a means to monitor and control execution.
+During replay, CrashSimulator modifies system call return values and
+side effects to simulate an anomalous environment. It then makes a
+determination about whether or not the application is responding to it.
+Encoding unusual environmental conditions as differences in system call
+behavior means CrashSimulator can use incorrect behavior identified in
 one application running in one environment to determine whether other
-applications would make the same mistake in that environment. By
-testing an application against a series of these test cases,
-CrashSimulator lets the developer see how the application would respond
-if executed in a similar environment.  We evaluated CrashSimulator by
-using it to test a set of the most popular Linux applications,
-including vim, nano, aspell, and others selected from the Coreutils
-project and the Debian popularity contest. The result of this
-evaluation was 84 bugs identified in 31 applications with consequences
-ranging from hangs and crashes to data loss and remote denial of
-service conditions.
+applications would make the same mistake in that environment.
 
-In order to show that CrashSimulator performs well outside of the lab a
-CrashSimulator was compared to two similar tools (AFL and Mutiny) in a
-study in which ZZZ participants were asked to use these tools to
-hunt for bugs in popular, real-world applications.  This study revealed
-that CrashSimulator's strategy of identifying bugs visible in system
-call sequences is effective, and yielded results for
+We evaluated CrashSimulator by using it to test a set of the most popular
+Linux applications selected
+from the Coreutils project and the Debian popularity contest. The
+result of this evaluation was 84 bugs identified in 31 applications
+with consequences ranging from hangs and crashes to data loss and
+remote denial of service conditions.  We also compared CrashSimulator
+to two similar tools (AFL and Mutiny) in a
+study in which ZZZ participants used the tools to
+hunt for bugs in popular applications.  This study revealed
+that CrashSimulator's strategy of identifying bugs
+is effective, and yielded results for
 developers with diverse backgrounds, and across skill sets.
-As YYY novel bugs were identified and reported during the study, even when
-used by novice developers, CrashSimulator is poised to help uncover a
+As YYY novel bugs were identified and reported during the study,
+CrashSimulator is poised to help uncover a
 great deal of previously unidentified bugs in new and existing
 codebases.
 
