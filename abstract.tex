@@ -9,15 +9,13 @@ this point, avoiding such behavior has proven difficult because it is
 not feasible to test against all the potential environments an
 application might face.
 
-CrashSimulator is a technique and tool that uses information about how
-environments differ to identify incorrect application behavior before
-the application is deployed.  The tool replays a recording of the
-application under test as a means to monitor and control execution.
-During replay, CrashSimulator modifies system call return values and
-side effects to simulate an anomalous environment. It then makes a
-determination about whether or not the application is responding to it.
-Encoding unusual environmental conditions as differences in system call
-behavior means CrashSimulator can use incorrect behavior identified in
+Enter CrashSimulator, a tool that uses information about how environments
+differ to identify incorrect behavior before the application is
+deployed.  The tool modifies system call return values and side effects
+to simulate an anomalous environment and makes a determination about
+whether or not the application is responding correctly to it.  As
+unusual environmental properties are encoded as differences in system
+call behavior, CrashSimulator can use incorrect behavior identified in
 one application running in one environment to determine whether other
 applications would make the same mistake in that environment.
 
