@@ -1,13 +1,13 @@
 \begin{abstract}
 
 A common problem for software developers is that applications exhibit new
-bugs resultant from \emph{environmental} differences after they have been
-deployed.  These environmental differences, such as slightly different
-behavior due to different OS versions, file systems, network
-middleboxes, etc. often manifest themselves as failures or crashes of
-the application.  These costly encounters are difficult to avoid
-because it is not feasible to test all of an application's potential
-environments.
+bugs after they have been deployed as a result of unanticipated
+differences between its development and deployment environments.  When
+factors such as new OS versions, file systems and network middleboxes
+present themselves they can cause an application to crash or fail.  To
+this point, avoiding such behavior has proven difficult because it is
+not feasible to test against all the potential environments an
+application might face.
 
 CrashSimulator is a technique and tool that uses information about how
 environments differ to identify incorrect application behavior before
