@@ -47,26 +47,6 @@ application is deployed.  CrashSimulator identifies
 situations that have caused environmental bugs in other applications,
 and then systematically tests for them.
 
-% Selecting situations in this way
-% means that an environmental bug that is detected in one application can be
-% detected by CrashSimulator in other applications.  This merely requires
-% CrashSimulator be configured to identify the environmental bug in question.
-% Once this is done, any application can be tested for the bug using
-% CrashSimulator with no added effort.
-%
-% CrashSimulator can be configured to
-% test a suite of bugs accumulated from a set of applications running in a
-% variety of environments.  This is somewhat analogous to CrashSimulator
-% automatically creating unit tests for all environments in which an
-% application could run.  Each of these ``tests'' consists of rules for
-% mutating system call behavior to give the application the illusion that it
-% is executing in an anomalous environment and rules for determining whether
-% or not the application responds appropriately.  Because these rules can be
-% applied to many applications that may be prone to mishandling the anomalous
-% environment in question, prior knowledge gathered from past deployment
-% experiences can be used to more thoroughly work out a new application so
-% that it can handle the challenges of its target environments correctly.
-
 What sets CrashSimulator's approach apart from other automated testing
 tools is the insight that environmental anomalies can be identified
 in the results and side effects of the system calls an application makes.
