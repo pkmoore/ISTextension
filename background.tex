@@ -3,14 +3,29 @@
 
 Before discussing aspects of an environment that can contribute to the
 presence of bugs, it is important to clearly
-define what an environment is.  An environment can be defined as
-all resources external to the application with it will
-communicate.  These external resources can be thought of as
+define what an environment is.
+An application's environment consists of
+all of the
+components an application depends upon that its developers do not control.
+In practice, this is everything other than the code and data packaged
+within the application itself.  Anything other than this code and data is
+external to the application and can be
+influenced in unexpected ways by the configuration of the
+deployment environment.
+For example, library search rules can result in system libraries being
+loaded instead of versions of the same library that were
+deployed alongside the
+application.
+These external resources can be thought of as
 providing implicit inputs to the program that affect its flow of execution.
-
 There are many examples of ways in which environments differ, even in
 situations where they implement a ``standard interface,'' such as Java or
 POSIX.
+An investigation of bug reports has shown that environmental bugs in the
+following categories have been found in major applications.
+
+\preston{I don't like the previous sentence but I can't think of a better
+way to introduce these categories.}
 
 \begin{itemize}
 
@@ -49,7 +64,7 @@ they are
 stored will only return a number of bytes less than or equal to the
 buffer size at one time~\cite{Zhuang_NSDI_2014}.
 
-item {\bf Processor.}  The processor can also influence the
+\item {\bf Processor.}  The processor can also influence the
 behavior of an application.  This is very frequently
 evidenced through the variety of different floating point behaviors on
 processors~\cite{ArbitraryPrecision}.  In addition, bugs are fairly common
@@ -58,12 +73,13 @@ how to execute complex instructions~\cite{Microarch}.
 
 \end{itemize}
 
+\preston{Do we need a category for library-based environmental bugs?}
+
 In this work, we chose to focus on operating system,
 file system, and network
 environmental issues.
 Specifically, we are concerned with issues from the above source that are
 visible in the results an side effects of the system calls made by the
-application.  We leave processor-based environmental differences and
-differences not visible in system call activity for future efforts.
-Our rationale is that the bulk of environmental issues that applications
-struggle with today are tied to the other three sources.
+application.  We leave processor-based environmental differences as such
+bugs are being handled by other
+work~\cite{Alglave:2018:FSC:3173162.3177156}.
