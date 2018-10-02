@@ -1,12 +1,12 @@
 \section{Conclusion}
 \label{SEC:conclusion}
 
-As our first round of tests proved, an unexpected interaction between an
-application and its environment can cause
-an application to fail upon deployment.
+As our first round of tests proved,
+applications often fail upon deployment because of unexpected interactions
+with its environment.
 Although finding and eliminating
 faults in applications is a key concern for software developers, it is
-impractical to do actual tests of an application in every possible
+impractical to do actual tests in every possible
 environment it may face.
 To address this problem, we developed CrashSimulator
 in order to determine whether an application will
@@ -14,42 +14,39 @@ respond correctly to unexpected conditions.
 
 CrashSimulator's
 technique of
-operating on system calls gives it a ``universal'' way to
+operating on system calls gives the tool a ``universal'' way to
 encode and inject anomalies. Consequently, a set of mutations can be
-collected from existing applications for use in testing other
-applications. In this way, an ever-expanding ``test suite'' can be
+collected from existing applications for use in testing others.
+In this way, an ever-expanding ``test suite'' can be
 created, allowing lessons learned from bugs in one application to benefit
 many others.
-
-Our evaluation of CrashSimulator has shown it to be both usable and
+Our two-stage evaluation of CrashSimulator
+has shown it to be both usable and
 effective.  In our survey of developers, it compared favorably
-against both AFL and Mutiny across self-reported developer skill levels.
-CrashSimulator was favored by developers with more operating
-systems experience, but developers with low OS experience were pleased
-with its ability to let them find bugs by taking advantage of
-the expert knowledge encoded in the tool.
+against both AFL and Mutiny across a range of self-reported skill levels.
+Though favored by developers with more experienced developers in our
+sample, even those with little experience were pleased that
+the expert knowledge encoded in the tool
+let them find bugs.
 In our user study, a total of
 XXXX new bugs were identified in popular applications.
 These bugs have been reported to the
 affected parties and YYYY have already been corrected.
 
 In the long term, we
-envision a public repository of anomalies 
+envision this testing strategy will yield a public repository of anomalies
 that can be applied to new or existing applications.
 We are also exploring
 opportunities to further automate the discovery process.
 Beyond these logical
-evolutions of the tool our research will proceed in
-two different directions.  First, we plan on improving
-its bug detection capabilities by analyzing how an
+evolutions of the tool, our future work
+will focus on analyzing how an
 application attempts
-to recover from the anomalies to which they are exposed.  This would allow
-us to make determinations about whether
+to recover from the anomalies.  This would allow
+us to determine whether
 an application is correctly recovering
-from an error rather than indicating only
-the presence of some sort of response.
+from an error, or carrying out some incorrect response.
 Second, we will work on making it possible for CrashSimulator to
-understand and mutate common data formats, allowing it
-to fuzz test data processing code while taking advantage of its
-replay-based architecture to avoid re-executing portions of the application
-that are not involved in the test.
+understand and mutate common data formats, allowing it to test using
+anomalies that appear within the data returned by system calls like {\tt
+read()} and {\tt recv()}.
