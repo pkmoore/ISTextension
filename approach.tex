@@ -239,29 +239,3 @@ test how the application responds when a file that is expected to be
 regular is actually a character device. In our evaluation, we further
 explore the behavior of applications as they encounter other possible valid
 values of {\tt st\_mode} in the course of testing.
-
-\subsubsection{Implementation Details}
-\preston{I am struggling with where to put this information.  Maybe it
-should go at the beginning of the evaluation?}
-To be able to evaluate how CrashSimulator performs, a series of tests were
-conducted using a prototype build on {\tt rr} version 5.2.0 running on a
-32-bit Linux kernel running distributed with  Ubuntu 16.04 LTS.  Our
-modifications to {\tt rr} were carried out in C++ and the CrashSimulator
-supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
-line C extension that allows it to interact with processes using the {\tt
-Ptrace} API.  This version of CrashSimulator is available as a Docker
-container and, due to some operating system configuration being necessary,
-is most easily installed in this fashion.
-
-For a test environment, we chose
-a vmware virtual machine running version of CrashSimulator described above.
-We ran the tests on a 1.7 gHz
-core i7 system with 8GB of RAM. Our implementation used {\tt ptrace} to
-interpose on the running program and interject anomalous behavior into its
-execution.  To our knowledge, the only major negative impact of
-these design choices was that the use of {\tt ptrace} and Python did slow
-down our
-prototype's performance.  On the positive side, it simplified construction.
-As will be discussed later, much of this performance
-degradation is offset by the highly asynchronous fashion in which our
-prototype can execute tests.
