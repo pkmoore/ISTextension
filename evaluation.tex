@@ -384,6 +384,61 @@ applications, including security-focused applications like gnu-gpg, and a host
 of popular network applicaitons, by following a repeatable and principled
 protocol.
 
+\subsubsection{Bugs Found By Participants}
+
+For any testing tool, the primary concern is whether or not it can find
+bugs.  To evaluate this concern in the case of CrashSimulator, case we need
+to answer users are able to effectively find bugs in real world
+applications.  To focus this process on the actual but finding and fixing
+process, rather than open source development meta-concerns, participants
+were encouraged, but not limited to, testing applications listed highly on
+the Debian popularity contest.  These applications are more likely to have
+clean, mature code bases and active developer communities reducing the
+barrier to entry for our participants.
+
+{\bf Findings. }
+
+A total of 15 bugs were found using CrashSimulator, and, perhaps not
+surprisingly, the majority were reported by participants with a
+self-reported high degree of operating systems experience.
+~\ref{table:fig-tool-exp} contains the
+counts of bugs identified during the study broken down by
+the tool used to identify them, as well as developer's self reported
+developer experience level with operating system concepts.
+Participants with a moderate and low degrees of operating
+systems experience found more bugs AFL.  Participant impressions indicated
+that, while AFL was easier to set up, the ``luck'' aspect of hoping to come
+across a crash-causing input mutation was unsatisfying.  In spite of this,
+EEEE bugs were found using AFL.  Survey results indicate that lower bug
+counts for Mutiny can be attributed to the increased complexity of setting
+up an environment where valid network recordings could be taken.  Overall,
+fewer network applications were tested.
+
+\begin{figure}[t]
+  \center{}
+  \includegraphics[scale=.5]{images/table1}
+  \caption{\emph{Bugs Found by Tool and Experience Level}}
+  \label{fig-tool-exp}
+\end{figure}
+
+
+{\bf Discussion. }
+
+The above results indicate that, when it comes to using CrashSimulator,
+having experience with operating systems concepts is very beneficial.  At
+the same time, users with a self-reported low degree of experience with OS
+concepts were still able to identify bugs by using its built in corpus of
+anomalies. ~\ref{table:fig-tool-anomaly} shows which
+of these anomalies most commonly
+resulted in application bugs.
+
+\begin{figure}[t]
+  \center{}
+  \includegraphics[scale=.5]{images/anomaly}
+  \caption{\emph{Bugs Found Using CrashSimulator Organized by Anomaly}}
+  \label{fig-tool-anomaly}
+\end{figure}
+
 
 \subsection{What sorts of errors does CrashSimulator make?}
 \label{sec-sorts-errors}
@@ -528,8 +583,6 @@ we conducted a user study in hopes of answering the following questions:
 
 \begin{enumerate}
 
-\item Are users able to effectively find bugs using CrashSimulator?
-
 \item Does CrashSimulator allow its users to efficiently construct a test suite?
 
 \item Does user experience level have an impact on their ability to use the
@@ -540,63 +593,6 @@ fixing bugs?
 
 \end{enumerate}
 
-
-
-
-\subsection{Are users able to effectively find bugs using CrashSimulator?}
-
-For any testing tool, the primary concern is whether or not it can find
-bugs.  To evaluate this concern in the case of CrashSimulator, case we need
-to answer users are able to effectively find bugs in real world
-applications.  To focus this process on the actual but finding and fixing
-process, rather than open source development meta-concerns, participants
-were encouraged, but not limited to, testing applications listed highly on
-the Debian popularity contest.  These applications are more likely to have
-clean, mature code bases and active developer communities reducing the
-barrier to entry for our participants.
-
-{\bf Findings. }
-
-A total of 15 bugs were found using CrashSimulator, and, perhaps not
-surprisingly, the majority were reported by participants with a
-self-reported high degree of operating systems experience.
-~\ref{table:fig-tool-exp} contains the
-counts of bugs identified during the study broken down by
-the tool used to identify them, as well as developer's self reported
-developer experience level with operating system concepts.
-Participants with a moderate and low degrees of operating
-systems experience found more bugs AFL.  Participant impressions indicated
-that, while AFL was easier to set up, the ``luck'' aspect of hoping to come
-across a crash-causing input mutation was unsatisfying.  In spite of this,
-EEEE bugs were found using AFL.  Survey results indicate that lower bug
-counts for Mutiny can be attributed to the increased complexity of setting
-up an environment where valid network recordings could be taken.  Overall,
-fewer network applications were tested.
-
-\begin{figure}[t]
-  \center{}
-  \includegraphics[scale=.5]{images/table1}
-  \caption{\emph{Bugs Found by Tool and Experience Level}}
-  \label{fig-tool-exp}
-\end{figure}
-
-
-{\bf Discussion. }
-
-The above results indicate that, when it comes to using CrashSimulator,
-having experience with operating systems concepts is very beneficial.  At
-the same time, users with a self-reported low degree of experience with OS
-concepts were still able to identify bugs by using its built in corpus of
-anomalies. ~\ref{table:fig-tool-anomaly} shows which
-of these anomalies most commonly
-resulted in application bugs.
-
-\begin{figure}[t]
-  \center{}
-  \includegraphics[scale=.5]{images/anomaly}
-  \caption{\emph{Bugs Found Using CrashSimulator Organized by Anomaly}}
-  \label{fig-tool-anomaly}
-\end{figure}
 
 
 {\bf Discussion on Specific Bugs. }
