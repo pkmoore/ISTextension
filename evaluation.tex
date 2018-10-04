@@ -1,30 +1,44 @@
-\section{Evaluation Phase 1 -- Tool Efficacy and Efficiency}
+\section{Evaluation}
 \label{SEC:evaluation}
 
+To be able to evaluate how CrashSimulator performs, a series of tests were
+conducted using a prototype build on {\tt rr} version 5.2.0 running on a
+32-bit Linux kernel running distributed with  Ubuntu 16.04 LTS.  Our
+modifications to {\tt rr} were carried out in C++ and the CrashSimulator
+supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
+line C extension that allows it to interact with processes using the {\tt
+Ptrace} API.  This version of CrashSimulator is available as a Docker
+container and, due to some operating system configuration being necessary,
+is most easily installed in this fashion.
 
-In our first phase of evaluation, our focus was quite simple: Did the tool
-allow us to efficiently find environmental bugs? To measure efficiently, we
-set out to answer the following questions:
+For a test environment, we chose
+a vmware virtual machine running version of CrashSimulator described above.
+We ran the tests on a 1.7 gHz
+core i7 system with 8GB of RAM. Our implementation used {\tt ptrace} to
+interpose on the running program and interject anomalous behavior into its
+execution.  To our knowledge, the only major negative impact of
+these design choices was that the use of {\tt ptrace} and Python did slow
+down our
+prototype's performance.  On the positive side, it simplified construction.
+As will be discussed later, much of this performance
+degradation is offset by the highly asynchronous fashion in which our
+prototype can execute tests.
 
-\subsection{Study Design}
-
-We gathered a group of YYYY participants from a computer science master's
+Part of our evaluation consisted of a user study involving
+YYYY participants from a computer science master's
 program.  These students had varying backgrounds in relation to software
 development and automated testing.  All received AAA hours
-of training on each of these tools.  This training focused on the tools'
+of training on CrashSimulator.  This training focused on the tools'
 initial setup, configuration, and usage,
 as well as on how to interpret its
-results.  BBB of the students had used AFL in previous course work.  None
-of the students had previous experience with Mutiny or CrashSimulator.
+results.
 
 We asked our participants to test popular real-world applications with the
 goal of identifying new bugs and reporting them to the application's
 developers.  In performing this task our participants had to correctly set
-up and configure each of the tools, execute a testing process, evaluate the
+up and configure CrashSimulator, execute a testing process, evaluate the
 results, and produce a sufficient proof of validity for each bug to
-convincingly support the case for fixing it.  Each of these steps is an
-opportunity to for gain insight into how CrashSimulator stacks up against
-other tools.
+convincingly support the case for fixing it.
 
 We used three techniques to capture the experience of our participants as
 they used the tool.  First, we examined the time required for participants
@@ -42,69 +56,25 @@ study period, the participants' progress toward finding and fixing bugs was
 tracked through the submission of weekly update worksheets.  Finally, at
 the end of the study period, overall developer impressions were gathered
 using a post-survey and one-on-one interviews.  These instruments were
-structured to give insight into how CrashSimulator compares to the other
-tools in three areas:
+structured to give insight into the experience of using
+CrashSimulator in three areas:
 
 \begin{itemize}
 
-\item Usability of the tool. (i.e. set up, configuration, executing tests,
-interpretring results)
+\item{Usability of the tool. (i.e. set up, configuration, executing tests,
+interpreting results)}
 
-\item Extendability of the tool through the creation of additional
-anomalies
+\item{Extendability of the tool through the creation of additional
+anomalies}
 
-\item Effectiveness of the tool in its ability to test specific areas of
-interest in an application.
-
-\end{itemize}
-
-\subsection{Tools Selected for Comparison}
-
-
-CrashSimulator's system call based technique allows its user to replicate
-anomalous environmental conditions in a wide variety of operating systems
-domains.  As was discussed earlier, we used this capability to test
-applications' responses to unusual filesystem and network conditions.
-In light of this it
-is appropriate to compare CrashSimulator against two existing testing
-tools, one that is file based (AFL) and another that performs network
-oriented testing (Mutiny).
-
-\begin{itemize}
-
-\item{AFL} (American Fuzzy Lop) is a file-based fuzzer that tests an
-application by mutating the contents of a candidate file provided by
-the user.  It offers two improvements over the naive approach of simply
-passing random data to an application through a file.  First, AFL
-bases its mutations on a valid file for the application.  This
-increases the chance that the mutated file will not be immediately rejected
-by
-processing code, which improves coverage.  Second, AFL provides a set of
-C compiler customizations
-that at compile time add instrumentation code to the
-application being tested.  This instrumentation
-allows AFL to tune its mutations to more thoroughly exercise the
-application's code paths.  The intention when testing with AFL is
-to generate an input file that makes the application crash.  Once a
-crash-causing file is discovered, users must manually analyze the
-file and application in order to ascertain the cause of the crash
-and fix it.  Though there is some support for testing closed source
-applications through a hypervisor AFL, is intended to test
-applications written in C on Linux and has an impressive track
-record in terms of bugs discovered in major applications that meet
-this criteria.
-
-\item{Mutiny Fuzzer} At a high level, Mutiny has an architecture similar to
-CrashSimulator.  Its primary method of interacting with an application
-is mutating and replaying previously captured {\tt pcap} recordings
-of network activity.  The specific mutations to be made are encoded
-as mutator plugins that are enabled and disabled by the tool's
-user.  Mutiny monitors and takes action based on the application's
-behavior during replay of a mutated recording.  For example, Mutiny
-can alter the data being communicated to the target host when a
-particular network error is encountered.
+\item{Effectiveness of the tool in its ability to test specific areas of
+    interest in an application.}
 
 \end{itemize}
+
+With our prototype and study instruments in hand, we
+set out to answer the following questions:
+
 \begin{enumerate}
 
 \item{Do environmental bugs exist in widely used applications and can
@@ -118,10 +88,10 @@ fixing bugs?
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
-\item{Can CrashSimulator execute tests efficiently? (Subsection~\ref{sec-perf})}
+\item{Can CrashSimulator
+      execute tests efficiently? (Subsection~\ref{sec-perf})}
 
 \end{enumerate}
-
 
 \subsection{Do environmental bugs  exist in widely used applications and
 can CrashSimulator find them?} \label{sec-env-bugs}
@@ -617,7 +587,6 @@ the execution if either one ends in an accepting condition.
     \label{table:stepsandcalls}
 \end{table}
 
-\subsubsection{Effects of user's background}
 The background of a user can
 dramatically influence their experience with a
 tool.  In answering this question we hope to ascertain whether
