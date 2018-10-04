@@ -39,6 +39,12 @@ developers.  In performing this task our participants had to correctly set
 up and configure CrashSimulator, execute a testing process, evaluate the
 results, and produce a sufficient proof of validity for each bug to
 convincingly support the case for fixing it.
+To focus this process on the actual but finding and fixing
+process, rather than open source development meta-concerns, participants
+were encouraged, but not limited to, testing applications listed highly on
+the Debian popularity contest.  These applications are more likely to have
+clean, mature code bases and active developer communities reducing the
+barrier to entry for our participants.
 
 We used three techniques to capture the experience of our participants as
 they used the tool.  First, we examined the time required for participants
@@ -84,11 +90,11 @@ fixing bugs?
 applications?}
 \label{sec-env-bugs}
 
-Do the types of bugs
-identified by CrashSimulator exist in in popular applications?  This is a
-crucial question to ask because,
-if such bugs do not exist in practice, then there would be no need for
-such a tool.  To test this premise,
+The most crucial question to ask about CrashSimulator is whether or not it is
+effective in finding new environmental bugs in popular applications.
+identified by CrashSimulator exist in in popular applications?  If it cannot
+find such bug then there is little reason for CrashSimulator to exist.
+To test this premise,
 we chose to look for two anomalies that we could test for in a large
 array of programs.  One is a file system anomaly and the other is found in
 network applications.
@@ -340,26 +346,13 @@ resources and cause detrimental system behavior~\cite{Slowloris}.
 Similar attacks can be used to indefinitely delay security updates to
 clients, leaving them vulnerable to compromise~\cite{Cappos_TR_08}.
 
-{\bf Concluding Thoughts} The results of the above analysis show that
-CrashSimulator is readily able to identify novel bugs in widely used
-applications, including security-focused applications like gnu-gpg, and a host
-of popular network applicaitons, by following a repeatable and principled
-protocol.
 
 \subsubsection{Bugs Found By Participants}
 
-For any testing tool, the primary concern is whether or not it can find
-bugs.  To evaluate this concern in the case of CrashSimulator, case we need
-to answer users are able to effectively find bugs in real world
-applications.  To focus this process on the actual but finding and fixing
-process, rather than open source development meta-concerns, participants
-were encouraged, but not limited to, testing applications listed highly on
-the Debian popularity contest.  These applications are more likely to have
-clean, mature code bases and active developer communities reducing the
-barrier to entry for our participants.
-
-{\bf Findings. }
-
+Another topic of relevance in answering this question is how well new users are
+able to find bugs with CrashSimulator.
+To answer this question we can examine the bug finding results from our user
+study.
 A total of 15 bugs were found using CrashSimulator, and, perhaps not
 surprisingly, the majority were reported by participants with a
 self-reported high degree of operating systems experience.
@@ -368,21 +361,8 @@ counts of bugs identified during the study broken down by
 the tool used to identify them, as well as developer's self reported
 developer experience level with operating system concepts.
 Participants with a moderate and low degrees of operating
-systems experience found more bugs AFL.  Participant impressions indicated
-that, while AFL was easier to set up, the ``luck'' aspect of hoping to come
-across a crash-causing input mutation was unsatisfying.  In spite of this,
-EEEE bugs were found using AFL.  Survey results indicate that lower bug
-counts for Mutiny can be attributed to the increased complexity of setting
-up an environment where valid network recordings could be taken.  Overall,
-fewer network applications were tested.
-
-\begin{figure}[t]
-  \center{}
-  \includegraphics[scale=.5]{images/table1}
-  \caption{\emph{Bugs Found by Tool and Experience Level}}
-  \label{fig-tool-exp}
-\end{figure}
-
+systems experience found more bugs had success even if they found a lower total
+volume of bugs.
 
 {\bf Discussion. }
 
@@ -400,6 +380,12 @@ resulted in application bugs.
   \caption{\emph{Bugs Found Using CrashSimulator Organized by Anomaly}}
   \label{fig-tool-anomaly}
 \end{figure}
+
+{\bf Concluding Thoughts} The results of the above analysis show that
+CrashSimulator is readily able to identify novel bugs in widely used
+applications, including security-focused applications like gnu-gpg, and a host
+of popular network applications, by following a repeatable and principled
+protocol.
 
 
 \subsection{Does CrashSimulator allow its users to construct a test suite
