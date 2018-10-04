@@ -118,8 +118,7 @@ fixing bugs?
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
-\item{Can CrashSimulator
-      execute tests efficiently? (Subsection~\ref{sec-perf})}
+\item{Can CrashSimulator execute tests efficiently? (Subsection~\ref{sec-perf})}
 
 \end{enumerate}
 
@@ -618,9 +617,67 @@ the execution if either one ends in an accepting condition.
     \label{table:stepsandcalls}
 \end{table}
 
+\subsubsection{Effects of user's background}
+The background of a user can
+dramatically influence their experience with a
+tool.  In answering this question we hope to ascertain whether
+CrashSimulator requires its users to
+have significant skills in a particular
+area in order to use it effectively. ~\ref{table:fig-skill-exp}
+compares our participants
+self-reported skillsets to their positive or negative experiences with
+CrashSimulator.
+
+
+{\bf Findings. }
+
+\begin{figure}[t]
+  \center{}
+  \includegraphics[scale=.5]{images/table2}
+  \caption{\emph{Skill Level Compared to User Experience.}}
+  \label{fig-skill-exp}
+\end{figure}
+
+As can be seen in Table 2, a strong background in operating systems
+concepts correlates with a more satisfactory user experience with
+CrashSimulator.  This is almost certainly because users who understand the
+operation of system calls are able to quickly understand and utilize the
+anomalies provided with CrashSimulator.  Additionally, these users were
+more likely to identify their own anomalies and construct their own
+mutators, which resulted in more bugs being found.
+
+Interestingly, some participants who reported less familiarity in operating
+systems did have a positive experience with CrashSimulator.
+Surveys indicated
+that these participants relied more heavily on built-in
+anomalies and mutators.  These bugs were less likely to be fixed once
+identified but, in spite of this, ZZZ new bugs were reported to projects'
+developers.
+
+
+{\bf Discussion. }
+
+Given the level with which CrashSimulator interacts with applications, it
+is not surprising that users with significant operating systems backgrounds
+are better able to utilize the tool's more advanced features.  The
+advantage of CrashSimulator in this case is that the expertise of one
+high-level user
+could be utilized by the rest of a development team through the sharing of
+anomalies and mutators.
+
+It is encouraging to see that users with limited operating systems
+background had success
+with the tool.  Based on this, we believe it is likely that CrashSimulator
+could be successfully adopted by real-world teams whose members have
+diverse background skillsets.  Users that are more comfortable with the
+concepts CrashSimulator relies on can supply new testing materials as
+needed while other users can rely on the portable nature of
+these tests to evaluate new applications without
+having to worry about their implementation details.
+
+
 \subsection{Can CrashSimulator execute tests efficiently?}
 \label{sec-perf}
-
 
 One key attribute of successful testing tools is that they are able to
 complete their tests in a timely manner.  If a tool takes too long
@@ -681,82 +738,3 @@ magnitude slower than their native counterparts.  CrashSimulator's
 asynchronous testing means that enabling additional tests does not
 significantly degrade performance as long as multiprocessing resources are
 available on the system.
-
-
-\section{Evaluation Phase 2 -- Tool Usability}
-
-Satisfied that CrashSimulator's technique can reliably identify bugs in
-real world applications, we turned our focus toward determining how well it
-could be used by the larger developer community.  In this evaluation phase
-we conducted a user study in hopes of answering the following questions:
-
-\begin{enumerate}
-
-
-\item Does user experience level have an impact on their ability to use the
-tool?
-
-
-\end{enumerate}
-
-\subsection{Does user experience level have an impact on ability to use the
-tool?}
-
-The background of a user can
-dramatically influence their experience with a
-tool.  In answering this question we hope to ascertain whether
-CrashSimulator requires its users to
-have significant skills in a particular
-area in order to use it effectively. ~\ref{table:fig-skill-exp}
-compares our participants
-self-reported skillsets to their positive or negative experiences with
-CrashSimulator.
-
-
-{\bf Findings. }
-
-\begin{figure}[t]
-  \center{}
-  \includegraphics[scale=.5]{images/table2}
-  \caption{\emph{Skill Level Compared to User Experience.}}
-  \label{fig-skill-exp}
-\end{figure}
-
-As can be seen in Table 2, a strong background in operating systems
-concepts correlates with a more satisfactory user experience with
-CrashSimulator.  This is almost certainly because users who understand the
-operation of system calls are able to quickly understand and utilize the
-anomalies provided with CrashSimulator.  Additionally, these users were
-more likely to identify their own anomalies and construct their own
-mutators, which resulted in more bugs being found.
-
-Interestingly, some participants who reported less familiarity in operating
-systems did have a positive experience with CrashSimulator.
-Surveys indicated
-that these participants relied more heavily on built-in
-anomalies and mutators.  These bugs were less likely to be fixed once
-identified but, in spite of this, ZZZ new bugs were reported to projects'
-developers.
-
-
-{\bf Discussion. }
-
-Given the level with which CrashSimulator interacts with applications, it
-is not surprising that users with significant operating systems backgrounds
-are better able to utilize the tool's more advanced features.  The
-advantage of CrashSimulator in this case is that the expertise of one
-high-level user
-could be utilized by the rest of a development team through the sharing of
-anomalies and mutators.
-
-It is encouraging to see that users with limited operating systems
-background had success
-with the tool.  Based on this, we believe it is likely that CrashSimulator
-could be successfully adopted by real-world teams whose members have
-diverse background skillsets.  Users that are more comfortable with the
-concepts CrashSimulator relies on can supply new testing materials as
-needed while other users can rely on the portable nature of
-these tests to evaluate new applications without
-having to worry about their implementation details.
-
-
