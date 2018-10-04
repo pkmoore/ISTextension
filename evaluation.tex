@@ -112,6 +112,9 @@ particular network error is encountered.
 
 \item Does CrashSimulator allow its users to efficiently construct a test suite?
 
+\item Does CrashSimulator provide output that is useful in locating and
+fixing bugs?
+
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
@@ -504,6 +507,47 @@ more initial effort but it can be paid back many fold if multiple
 applications are tested using the same tests.
 
 
+\subsection{Does CrashSimulator provide output that is useful in locating
+and fixing bugs?}
+
+
+{\bf Findings. }
+
+Participant feedback across the board indicated that CrashSimulator's
+output made it easier to identify bugs than the simpler crash reports
+provided by AFL and Mutiny.  This impression is backed up by the results in
+~\ref{table:fig-fixed-tool} that
+show a higher percentage of bugs identified with
+CrashSimulator were fixed than bugs identified with the other tools.
+
+In a few cases participants lamented having put considerable effort into
+identifying the source of bugs found with AFL and Mutiny without result.
+This is somewhat confounded by these participants having typically reported
+lower experience with debugging tools, operating systems concepts, and
+software development in general.
+
+
+\begin{figure}[t]
+  \center{}
+  \includegraphics[scale=.5]{images/table3}
+  \caption{\emph{Identified Bugs With Accepted Fixes By Tool}}
+  \label{fig-fixed-tool}
+\end{figure}
+
+
+{\bf Discussion. }
+
+There are two reasons, other than output quality, that bugs found with
+CrashSimulator were more likely to be fixed -- bug "depth" and the ease
+with which a bug can be fixed.  It is possible that, because CrashSimulator
+focuses on anomalies in an applications environment, a source of bugs that
+is not well tested in most applications, a higher number of easily fixed,
+low
+hanging fruit style bugs were identified compared to the more battle tested
+user input handling code paths that AFL and Mutiny tend to explore.
+Additionally, many of the bugs types identifiable with CrashSimulator arise
+because of a minor missing check meaning that the fix is small and easily
+incorporated.
 
 \subsection{What sorts of errors does CrashSimulator make?}
 \label{sec-sorts-errors}
@@ -652,19 +696,8 @@ we conducted a user study in hopes of answering the following questions:
 \item Does user experience level have an impact on their ability to use the
 tool?
 
-\item Does CrashSimulator provide output that is useful in locating and
-fixing bugs?
 
 \end{enumerate}
-
-
-
-{\bf Discussion on Specific Bugs. }
-
-\preston{I don't have text here because I feel like I'd be making it up
-entirely and it would likely all be thrown away.  However, if having some
-stuff here is useful let me know and I'll come up with some.}
-
 
 \subsection{Does user experience level have an impact on ability to use the
 tool?}
@@ -727,44 +760,3 @@ these tests to evaluate new applications without
 having to worry about their implementation details.
 
 
-\subsection{Does CrashSimulator provide output that is useful in locating
-and fixing bugs?}
-
-
-{\bf Findings. }
-
-Participant feedback across the board indicated that CrashSimulator's
-output made it easier to identify bugs than the simpler crash reports
-provided by AFL and Mutiny.  This impression is backed up by the results in
-~\ref{table:fig-fixed-tool} that
-show a higher percentage of bugs identified with
-CrashSimulator were fixed than bugs identified with the other tools.
-
-In a few cases participants lamented having put considerable effort into
-identifying the source of bugs found with AFL and Mutiny without result.
-This is somewhat confounded by these participants having typically reported
-lower experience with debugging tools, operating systems concepts, and
-software development in general.
-
-
-\begin{figure}[t]
-  \center{}
-  \includegraphics[scale=.5]{images/table3}
-  \caption{\emph{Identified Bugs With Accepted Fixes By Tool}}
-  \label{fig-fixed-tool}
-\end{figure}
-
-
-{\bf Discussion. }
-
-There are two reasons, other than output quality, that bugs found with
-CrashSimulator were more likely to be fixed -- bug "depth" and the ease
-with which a bug can be fixed.  It is possible that, because CrashSimulator
-focuses on anomalies in an applications environment, a source of bugs that
-is not well tested in most applications, a higher number of easily fixed,
-low
-hanging fruit style bugs were identified compared to the more battle tested
-user input handling code paths that AFL and Mutiny tend to explore.
-Additionally, many of the bugs types identifiable with CrashSimulator arise
-because of a minor missing check meaning that the fix is small and easily
-incorporated.
