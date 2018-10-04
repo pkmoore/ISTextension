@@ -431,8 +431,6 @@ we conducted a user study in hopes of answering the following questions:
 
 \item Are users able to effectively find bugs using CrashSimulator?
 
-\item Does CrashSimulator allow users to test specific application areas?
-
 \item Does CrashSimulator allow its users to efficiently construct a test suite?
 
 \item Does user experience level have an impact on their ability to use the
@@ -605,74 +603,6 @@ resulted in application bugs.
 \preston{I don't have text here because I feel like I'd be making it up
 entirely and it would likely all be thrown away.  However, if having some
 stuff here is useful let me know and I'll come up with some.}
-
-
-\subsection{Does CrashSimulator allow users to test specific application
-areas?}
-
-\preston{The more I read this the less I like this question.  What I want
-to figure out is how many participants don't prefer/are unable to the tool
-because it is too low level or not appropriate for testing the parts of
-applications they are concerned with.  For example, a student that is
-mostly concerned with user-space data processing code that isn't testable
-by CrashSimulator}
-
-Modern applications typically consist of many different parts (e.g. user
-interfaces,  back-end processing, storage, networking) and may require
-different skill sets to operate effectively.  These different application
-areas also require disparate testing strategies.  For example, some
-application areas such as graphical user interfaces, are notoriously
-difficult to cover depending on the tools and techniques being used.  These
-difficulties usually result from limitations in the way the testing tool
-interacts with the application. We wanted to know whether or not
-CrashSimulator was able to effectively test the specific areas of
-applications its users needed to evaluate.  To answer this question, we
-turn to the surveys our participants completed regarding their experience
-with CrashSimulator.
-
-
-{\bf Findings. }
-
-The results from our surveys indicate that a strong correlation between our
-participants' self-reported
-backgrounds and what areas of an application they tested.
-Participants with lower self-reported development experience focused more
-on more surface level concerns, and so they preferred the simple
-process of providing an input file to AFL as opposed to using
-CrashSimulator's more complex
-setup.  Participants with little native development experience struggled
-with deciding which anomalies were appropriate to apply to the applications
-they were evaluating.  For this reason, there were instances of tests
-being run that
-didn't accomplish anything.  We hope to reduce cases like this in the
-future by providing a more helpful interface for selecting anomalies.
-
-A majority of participants
-with a high degree of experience in software engineering tended
-to focus on testing an application's interaction with various library and
-APIs provided by operating systems.
-Survey results indicate participants were
-satisfied with CrashSimulator's ability to test applications' interaction
-with file and network APIs.
-
-
-{\bf Discussion. }
-
-Findings indicate that a higher level of software development experience
-tends to push participants towards testing interfaces between modules in an
-application.  This resulted in overall higher satisfaction with
-CrashSimulator amongst these participants.  It should be noted that several
-developers found bugs in the libraries on which the applications they were
-testing depended.  Being able to localize a bug to a specific sequence of
-system calls means that these participants were saved the effort of
-analyzing application code for a bug whose cause lay elsewhere.
-
-Users with less self-reported software engineering experience expressed
-some concern with CrashSimulator's limitations around testing the user
-facing aspects of applications.  For example, CrashSimulator requires more
-up front effort than tools like AFL when conducting simple
-tests, such as mutating the properties of an input file.
-
 
 \subsection{Does CrashSimulator allow its users to construct a test suite
 efficiently?}
