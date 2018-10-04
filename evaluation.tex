@@ -110,6 +110,8 @@ particular network error is encountered.
 \item{Do environmental bugs exist in widely used applications and can
       CrashSimulator find them? (Subsection~\ref{sec-env-bugs})}
 
+\item Does CrashSimulator allow its users to efficiently construct a test suite?
+
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
@@ -440,6 +442,69 @@ resulted in application bugs.
 \end{figure}
 
 
+\subsection{Does CrashSimulator allow its users to construct a test suite
+efficiently?}
+
+Constructing a test suite using CrashSimulator involves identifying new
+anomalies to test for and creating the mutators required
+to test an application's response to them.
+The effort and skill involved in
+this process is similar to that involved in writing a unit test or
+integration test using a modern testing framework.  However, unlike a unit
+test or integration test, a CrashSimuator test can be run
+against multiple
+applications without concern for dependencies like the language in which
+they were
+written in or the libraries they depend on.
+
+
+{\bf Findings. }
+
+
+Most developers reported a high degree of
+satisfaction with regard to the speed
+of setup for AFL.  In contrast, there was a concensus that
+CrashSimulator required an
+overall higher initial outlay of effort before testing could begin.
+Additionally, they indicated that expanding a CrashSimulator test suite by
+implementing new checkers and mutators was more difficult that either
+expanding the scope of fuzzing with AFL or instructing Mutiny to mutate
+different messages from a recorded network session.  However, the subjects
+did appreciate
+CrashSimulator's ability to allow for
+more specific testing,
+to test across multiple applications
+with minimal additional effort once the tests had been constructed.
+
+Those participants who preferred to test a wide variety of applications
+quickly were inclined to reach first for AFL.  Survey results indicated
+that this was due to the tool's ease of use and lack of configuraiton.
+This allowed participants to quickly begin and halt testing an application
+without concern for recovering their initial outlay of effort.  However,
+those participants
+who wanted to dive deeply into a smaller set of applications
+preferred CrashSimulator and Mutiny to AFL.  There was a great deal of
+positive feedback around CrashSimulator's ability to use a mutator to apply
+an anomaly to multiple eligible system call sequences throughout an
+execution.  This meant a single test could be constructed to cover similar
+operations throughout an application's code base, which would
+shrink the size of the
+required test suite in the process.
+
+
+{\bf Discussion. }
+
+There is no direct comparison to CrashSimulator's "test writing"
+process in AFL, which
+uses built in rules and patterns to mutate input files.  Our
+findings indicate that this is either a blessing or a curse
+depending on the
+a user's preferred testing style.  CrashSimulator certainly requires
+more initial effort but it can be paid back many fold if multiple
+applications are tested using the same tests.
+
+
+
 \subsection{What sorts of errors does CrashSimulator make?}
 \label{sec-sorts-errors}
 
@@ -583,7 +648,6 @@ we conducted a user study in hopes of answering the following questions:
 
 \begin{enumerate}
 
-\item Does CrashSimulator allow its users to efficiently construct a test suite?
 
 \item Does user experience level have an impact on their ability to use the
 tool?
@@ -600,67 +664,6 @@ fixing bugs?
 \preston{I don't have text here because I feel like I'd be making it up
 entirely and it would likely all be thrown away.  However, if having some
 stuff here is useful let me know and I'll come up with some.}
-
-\subsection{Does CrashSimulator allow its users to construct a test suite
-efficiently?}
-
-Constructing a test suite using CrashSimulator involves identifying new
-anomalies to test for and creating the mutators required
-to test an application's response to them.
-The effort and skill involved in
-this process is similar to that involved in writing a unit test or
-integration test using a modern testing framework.  However, unlike a unit
-test or integration test, a CrashSimuator test can be run
-against multiple
-applications without concern for dependencies like the language in which
-they were
-written in or the libraries they depend on.
-
-
-{\bf Findings. }
-
-
-Most developers reported a high degree of
-satisfaction with regard to the speed
-of setup for AFL.  In contrast, there was a concensus that
-CrashSimulator required an
-overall higher initial outlay of effort before testing could begin.
-Additionally, they indicated that expanding a CrashSimulator test suite by
-implementing new checkers and mutators was more difficult that either
-expanding the scope of fuzzing with AFL or instructing Mutiny to mutate
-different messages from a recorded network session.  However, the subjects
-did appreciate
-CrashSimulator's ability to allow for
-more specific testing,
-to test across multiple applications
-with minimal additional effort once the tests had been constructed.
-
-Those participants who preferred to test a wide variety of applications
-quickly were inclined to reach first for AFL.  Survey results indicated
-that this was due to the tool's ease of use and lack of configuraiton.
-This allowed participants to quickly begin and halt testing an application
-without concern for recovering their initial outlay of effort.  However,
-those participants
-who wanted to dive deeply into a smaller set of applications
-preferred CrashSimulator and Mutiny to AFL.  There was a great deal of
-positive feedback around CrashSimulator's ability to use a mutator to apply
-an anomaly to multiple eligible system call sequences throughout an
-execution.  This meant a single test could be constructed to cover similar
-operations throughout an application's code base, which would
-shrink the size of the
-required test suite in the process.
-
-
-{\bf Discussion. }
-
-There is no direct comparison to CrashSimulator's "test writing"
-process in AFL, which
-uses built in rules and patterns to mutate input files.  Our
-findings indicate that this is either a blessing or a curse
-depending on the
-a user's preferred testing style.  CrashSimulator certainly requires
-more initial effort but it can be paid back many fold if multiple
-applications are tested using the same tests.
 
 
 \subsection{Does user experience level have an impact on ability to use the
