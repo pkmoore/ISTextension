@@ -268,10 +268,8 @@ application's response disagreed.  This
 happened when we evaluated {\tt ptx}'s response to an
 infinite-sized character device.  CrashSimulator reported that {\tt ptx}
 had correctly responded to the anomaly.  But in reality, {\tt ptx} filled the
-disk of the the test machine.  As will be discussed later, correcting this
-error is easily accomplished by improving the checker used in this
-assessment -- an effort similar to updating a unit test when it is shown to
-be incomplete.  Overall, the results of this ``real world'' analysis
+disk of the the test machine.
+Overall, the results of this ``real world'' analysis
 support the claim that CrashSimulator can identify real bugs that can have
 damaging consequences.
 
@@ -545,8 +543,9 @@ system calls that can implement it in Table~\ref{table:stepsandcalls}.
 Each of the steps in the operation map to a small number of system calls
 and, in most cases, only one of these system calls is necessary.  In
 situations where two system call sequences can correctly implement the same
-operation, CrashSimulator simply runs two checkers in parallel and accepts
-the execution if either one ends in an accepting condition.
+operation, CrashSimulator simply runs two mutators in parallel resulting in a
+test executing for the one whose prerequisites are met.
+
 
 \begin{table}[t]
     \scriptsize{}
