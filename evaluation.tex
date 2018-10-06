@@ -391,9 +391,12 @@ protocol.
 \subsection{Does CrashSimulator allow its users to construct a test suite
 efficiently?}
 
-Constructing a test suite using CrashSimulator involves identifying new
-anomalies to test for and creating the mutators required
-to test an application's response to them.
+While CrashSimulator is able to test an application's response to a suite
+of anomalies out of the box its capabilities can be extended to best fit
+the needs of its users.  To get an idea of what end users might do with
+this functionality we asked our study participants to identify a new
+anomaly, construct a mutator for it, and test real world applications
+against it.
 The effort and skill involved in
 this process is similar to that involved in writing a unit test or
 integration test using a modern testing framework.  However, unlike a unit
@@ -401,35 +404,36 @@ test or integration test, a CrashSimuator test can be run
 against multiple
 applications without concern for dependencies like the language in which
 they were
-written in or the libraries they depend on.
+written in or the libraries they depend on allowing its users to get more
+value for the effort they put in.
 
 
 {\bf Findings. }
 
+Participants were split in the value they received
+from their attempts to extend
+CrashSimulator.  Of the ZZZ participants, YYY were able to complete the
+process of identifying and adding an environmental anomaly to
+CrashSimulator.  Of these BBB went on to identify new bugs using the novel
+anomalies.  However, NNN were unable to complete this process.  Survey
+results indicate that the process of identifying an anomaly stymied the
+majoity of this group.
 
-Most developers reported a high degree of
-satisfaction with regard to the speed
-of setup for AFL.  In contrast, there was a concensus that
-CrashSimulator required an
-overall higher initial outlay of effort before testing could begin.
-Additionally, they indicated that expanding a CrashSimulator test suite by
-implementing new checkers and mutators was more difficult that either
-expanding the scope of fuzzing with AFL or instructing Mutiny to mutate
-different messages from a recorded network session.  However, the subjects
-did appreciate
+There was a consensus that
+CrashSimulator required a
+moderately high initial outlay of effort before testing could begin.
+Surveys indicated that participants indicated that
+adding a new anomaly to
+CrashSimulator was more difficult than adding a new unit test to an
+existing test suite.
+However, the participants
+appreciated
 CrashSimulator's ability to allow for
-more specific testing,
-to test across multiple applications
+testing
+across multiple applications
 with minimal additional effort once the tests had been constructed.
 
-Those participants who preferred to test a wide variety of applications
-quickly were inclined to reach first for AFL.  Survey results indicated
-that this was due to the tool's ease of use and lack of configuraiton.
-This allowed participants to quickly begin and halt testing an application
-without concern for recovering their initial outlay of effort.  However,
-those participants
-who wanted to dive deeply into a smaller set of applications
-preferred CrashSimulator and Mutiny to AFL.  There was a great deal of
+There was a great deal of
 positive feedback around CrashSimulator's ability to use a mutator to apply
 an anomaly to multiple eligible system call sequences throughout an
 execution.  This meant a single test could be constructed to cover similar
@@ -440,14 +444,19 @@ required test suite in the process.
 
 {\bf Discussion. }
 
-There is no direct comparison to CrashSimulator's "test writing"
-process in AFL, which
-uses built in rules and patterns to mutate input files.  Our
-findings indicate that this is either a blessing or a curse
-depending on the
-a user's preferred testing style.  CrashSimulator certainly requires
-more initial effort but it can be paid back many fold if multiple
-applications are tested using the same tests.
+Examining survey results
+shows that previous operating system experience predicts more success in
+adding anomalies to CrashSimulator.  This is unsurprising as a developer
+inexperienced in these concepts would likely struggle to both identify
+a new anomaly and its effects in terms of system call results and side
+effects.
+Previous experience with automated testing was also indicative of success.
+Several participants that did not have experience in this area struggled
+reported being bogged down in the process of putting together new mutators
+and evaluating their correctness.  These results are encouraging in light
+of the limited length of the study.  We believe that as developers become
+more proficient with the CrashSimulator the difficulties some of our
+participants experienced will be alleviated. 
 
 
 \subsection{Does CrashSimulator provide output that is useful in locating
