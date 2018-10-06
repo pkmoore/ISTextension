@@ -168,12 +168,13 @@ on the given file type.
     \scriptsize{}
     \begin{tabular}{l  l  |  l  l  l  l  l  l  l}
     \toprule{}
-        Application & Condition Tested           & IFREG        & IFDIR        & IFCHR     & IFBLK    & FIFO      & IFLNK    & IFSOCK\\
+Application & Condition Tested           & IFREG        & IFDIR        &
+        IFCHR     & IFBLK    & IFIFO      & IFLNK    & IFSOCK\\
 \hline
         {\tt Aspell}      & Dictionary File            & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
         {\tt Aspell}      & File being checked         & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
         {\tt gnu-gpg}     & secring.gpg                & Initial Value  & Fail           & Fail        & Fail       & Fail        & Fail       & Fail\\
-        {\tt vim}         & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes* & Recognizes & Fail\\
+        {\tt vim}         & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes & Recognizes & Fail\\
         {\tt nano}        & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Fail        & Fail       & Fail\\
         {\tt sed}         & File being edited          & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
         {\tt df}          & /proc                      & Fail           & Initial Value  & Fail        & Fail       & Fail        & Fail       & Fail\\
@@ -190,7 +191,11 @@ on the given file type.
         {\tt unlink}      & File being unlinked        & \textbf{No file checks performed} & & & & & & \\
     \bottomrule{}
     \end{tabular}
-    \caption{Applications tested for their handling of unexpected file types.}
+    \caption{Applications tested for their handling of unexpected file types.  A
+    result of ``Recognizes'' indicates that the application identified the
+    presence of an unusual file and responded in some fashion.  A result of
+    ``Fail'' indicates that the application failed to recognize the presence of
+    an unusual file and attempted to process it.}
     \label{table:unexpectedtypes}
 \end{table*}
 
