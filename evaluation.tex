@@ -456,7 +456,7 @@ reported being bogged down in the process of putting together new mutators
 and evaluating their correctness.  These results are encouraging in light
 of the limited length of the study.  We believe that as developers become
 more proficient with the CrashSimulator the difficulties some of our
-participants experienced will be alleviated. 
+participants experienced will be alleviated.
 
 
 \subsection{Does CrashSimulator provide output that is useful in locating
@@ -465,24 +465,26 @@ and fixing bugs?}
 
 {\bf Findings. }
 
+Identifying the code responsible for a bug can present a major challenge in
+large, complex applications.  By nature of its operation CrashSimulator is
+able to provide a specific sequence of system calls responsible for a
+failed test.  This can provide developers with a solid starting point as
+they work to diagnose the cause of application misbehavior.
 Participant feedback across the board indicated that CrashSimulator's
-output made it easier to identify bugs than the simpler crash reports
-provided by AFL and Mutiny.  This impression is backed up by the results in
+output made it assisted in identifying the source of bugs identified with
+the tool.  This assertion is backed up by the high percentage of identified
+bugs that ended up being successfully diagnosed and fixed by our survey
+participants.  These results are available in the table
 ~\ref{table:fig-fixed-tool} that
-show a higher percentage of bugs identified with
-CrashSimulator were fixed than bugs identified with the other tools.
-
-In a few cases participants lamented having put considerable effort into
-identifying the source of bugs found with AFL and Mutiny without result.
-This is somewhat confounded by these participants having typically reported
-lower experience with debugging tools, operating systems concepts, and
-software development in general.
+shows a high percentage of bugs identified with
+CrashSimulator were fixed.
 
 
 \begin{figure}[t]
   \center{}
   \includegraphics[scale=.5]{images/table3}
-  \caption{\emph{Identified Bugs With Accepted Fixes By Tool}}
+  \caption{\emph{Identified Bugs With Accepted Fixes.  This table needs
+  to be updated}}
   \label{fig-fixed-tool}
 \end{figure}
 
