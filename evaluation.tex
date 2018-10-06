@@ -474,7 +474,7 @@ Participant feedback across the board indicated that CrashSimulator's
 output made it assisted in identifying the source of bugs identified with
 the tool.  This assertion is backed up by the high percentage of identified
 bugs that ended up being successfully diagnosed and fixed by our survey
-participants.  These results are available in the table
+participants.  Specific counts are available in the table
 ~\ref{table:fig-fixed-tool} that
 shows a high percentage of bugs identified with
 CrashSimulator were fixed.
@@ -492,13 +492,13 @@ CrashSimulator were fixed.
 {\bf Discussion. }
 
 There are two reasons, other than output quality, that bugs found with
-CrashSimulator were more likely to be fixed -- bug "depth" and the ease
-with which a bug can be fixed.  It is possible that, because CrashSimulator
+CrashSimulator were likely to be fixed -- bug "depth" and the ease
+with which a bug can be fixed.
+It is possible that, because CrashSimulator
 focuses on anomalies in an applications environment, a source of bugs that
 is not well tested in most applications, a higher number of easily fixed,
 low
-hanging fruit style bugs were identified compared to the more battle tested
-user input handling code paths that AFL and Mutiny tend to explore.
+hanging fruit style bugs were identified.
 Additionally, many of the bugs types identifiable with CrashSimulator arise
 because of a minor missing check meaning that the fix is small and easily
 incorporated.
@@ -506,13 +506,9 @@ incorporated.
 \subsection{What sorts of errors does CrashSimulator make?}
 \label{sec-sorts-errors}
 
-\preston{This false positives section needs to be reworked as it is based on
-"checkers" that could run without all of CrashSimulator's machinery.  We
-received negative feedback about this.}
-
 The primary source of false positives in CrashSimulator is an application
 using a different sequence of system calls to implement a given operation
-than a checker was anticipating. CrashSimulator's approach allows these
+than a mutator was anticipating. CrashSimulator's approach allows these
 situations to be easily corrected, once identified through analysis of the
 incorrect test results.  This is similar to the circumstance where an
 application's test suite is missing a test, necessitating action by the
@@ -520,20 +516,22 @@ developer to construct the missing test.
 
 For example, consider GNOME's {\tt glib} file handling facilities.  When an
 application makes use of these facilities to move a file across storage
-devices the library itself correctly handles the behaviors described above
-for a ``correct'' file move operation.  When we used CrashSimulator with
-the checkers described above to analyze a minimal application that used
-{\tt glib} for a cross-device move, we got reports stating that the
-application {\em did not} respond correctly to the anomaly.  By manually
+devices the library itself correctly performs a
+file move operation.  When we used CrashSimulator with
+mutators that expected a calls to {\tt read()} and {\tt write()}
+for a cross-device move, we got reports stating that the
+application {\em did not} perform the system calls necessary to inject
+an anomaly.  By manually
 examining a system call trace, we found that, while {\tt glib} correctly
-performs the required behaviors, it does so using alternative system call
+performs the requested move operation,
+it does so using alternative system call
 sequences.  Rather than using a sequence of {\tt read()} and {\tt write()}
-calls, as our checker expected, {\tt glib} creates a pipe and uses the {\tt
+calls, as our mutator expected, {\tt glib} creates a pipe and uses the {\tt
 splice()} system call to copy the contents out of the source file, through
 the pipe and into the destination file.
 
-Fortunately, as soon as false positives like this are discovered,
-CrashSimulator's checkers can be modified to deal with alternative
+Fortunately, as soon as issues like this are discovered,
+CrashSimulator's mutators can be modified to deal with alternative
 approaches to handling an anomaly.  This approach is viable because there
 are a finite number of system calls, and a given operation can be mapped to
 a manageable subset of system calls.  Given the above example around moving
@@ -571,64 +569,6 @@ the execution if either one ends in an accepting condition.
       the system call or calls that can implement it}
     \label{table:stepsandcalls}
 \end{table}
-
-The background of a user can
-dramatically influence their experience with a
-tool.  In answering this question we hope to ascertain whether
-CrashSimulator requires its users to
-have significant skills in a particular
-area in order to use it effectively. ~\ref{table:fig-skill-exp}
-compares our participants
-self-reported skillsets to their positive or negative experiences with
-CrashSimulator.
-
-
-{\bf Findings. }
-
-\begin{figure}[t]
-  \center{}
-  \includegraphics[scale=.5]{images/table2}
-  \caption{\emph{Skill Level Compared to User Experience.}}
-  \label{fig-skill-exp}
-\end{figure}
-
-As can be seen in Table 2, a strong background in operating systems
-concepts correlates with a more satisfactory user experience with
-CrashSimulator.  This is almost certainly because users who understand the
-operation of system calls are able to quickly understand and utilize the
-anomalies provided with CrashSimulator.  Additionally, these users were
-more likely to identify their own anomalies and construct their own
-mutators, which resulted in more bugs being found.
-
-Interestingly, some participants who reported less familiarity in operating
-systems did have a positive experience with CrashSimulator.
-Surveys indicated
-that these participants relied more heavily on built-in
-anomalies and mutators.  These bugs were less likely to be fixed once
-identified but, in spite of this, ZZZ new bugs were reported to projects'
-developers.
-
-
-{\bf Discussion. }
-
-Given the level with which CrashSimulator interacts with applications, it
-is not surprising that users with significant operating systems backgrounds
-are better able to utilize the tool's more advanced features.  The
-advantage of CrashSimulator in this case is that the expertise of one
-high-level user
-could be utilized by the rest of a development team through the sharing of
-anomalies and mutators.
-
-It is encouraging to see that users with limited operating systems
-background had success
-with the tool.  Based on this, we believe it is likely that CrashSimulator
-could be successfully adopted by real-world teams whose members have
-diverse background skillsets.  Users that are more comfortable with the
-concepts CrashSimulator relies on can supply new testing materials as
-needed while other users can rely on the portable nature of
-these tests to evaluate new applications without
-having to worry about their implementation details.
-
 
 \subsection{Can CrashSimulator execute tests efficiently?}
 \label{sec-perf}
