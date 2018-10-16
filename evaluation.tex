@@ -87,6 +87,8 @@ fixing bugs?
 \item{Can CrashSimulator
       execute tests efficiently? (Subsection~\ref{sec-perf})}
 
+\item{What kinds of applications can CrashSimulator test?}
+
 \end{enumerate}
 
 \subsection{Given a set of anomalies, can CrashSimulator find
@@ -639,3 +641,28 @@ magnitude slower than their native counterparts.  CrashSimulator's
 asynchronous testing means that enabling additional tests does not
 significantly degrade performance as long as multiprocessing resources are
 available on the system.
+
+
+\subsection{What kinds of applications can CrashSimulator test?}
+
+{\bf Discussion.} Our prototype of CrashSimulator is able to test most
+applications that are able to run on a setup that supports CrashSimulator
+regardless of common testing impediments like programming language
+differences or dependency issues.  This is primarily due to such
+applications interacting with their environment through system calls.
+CrashSimulator supports YYYY of the most commonly utilized system calls and
+provides helpful output when an unsupported system call is encountered.
+Adding support for system calls as they are encountered has been successful
+because the set of system calls used by an application is small and
+static~\cite{Tsai:2016:SML:2901318.2901341}.  Using this iterative process
+has allowed us to improve our prototype to the point that it can support a
+large number of popular, complex applications.
+
+During the course of this evaluation participants were encouraged to make
+an effort at implementing unsupported system calls should they encounter
+them while using the tool.  Five participants were able to add support for
+new system calls to CrashSimulator.  These participants gave favorable
+impressions about this process.  The common difficulty came from
+understanding the details of the system calls themselves rather than from
+the effort of implementing support for these system calls once they were
+understood.
