@@ -86,22 +86,6 @@ in bugs ranging from simple hangs to more dramatic crashes that
 had the side effect of consuming all available resources or filling
 available disk space with garbage.
 
-% It is important to understand that anomalies can
-% be as subtle as a single configuration flag set differently under
-% specific circumstances.  For example, in BSD and OS X, sockets returned by
-% the {\tt accept()} system call inherit the values of the {\tt O\_NONBLOCK}
-% and {\tt O\_ASYNC} flags from their parent socket.  In Linux, these values
-% are not inherited.  As a result, the correct behavior is to always
-% explicitly set these flags to the appropriate values on child sockets.
-% This environmental difference presented itself as a bug in the socket
-% implementation of Python 3.2.  Python took advantage of non-blocking
-% sockets in order to implement timeout capabilities for sockets.  Because
-% Python did not specifically set the {\tt O\_NONBLOCK} flag on the child
-% sockets underlying its socket object abstraction, it was possible that,
-% depending on the environment, the Python socket object would report the
-% socket as either blocking or non-blocking while the actual underlying
-% socket was configured for the opposite behavior.
-
 \subsection{Procedure Result Interposition Simulation}
 
 Procedure Result Interposition Simulation (PRIS) is our technique for
