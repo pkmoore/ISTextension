@@ -17,7 +17,32 @@ As can be seen in Figure~\ref{figure:architecture},
 our implementation of CrashSimulator uses a combination of a modified
 version of {\tt rr}, a
 record-and-replay debugger, and our own process supervisor
-to accomplish the above.
+to accomplish the above.  This arrangement arose as a result of several
+phases of prototyping that revealed weaknesses in more naive strategies.
+Early work on an initial CrashSimulator prototype revealed that a naive
+implementation of its technique could suffer from performance issues.  This
+prototype would relaunch the application and testing machinery in order to
+test each anomaly.  One of the goals put forward for
+
+A great deal of CrashSimulator's performance comes from its dramatically
+parallel testing strategy.  Central to this strategy is the technique of
+{\tt process set cloning}.  The idea behind this technique
+is to generate copies
+of an application's processes at specific points in execution and conduct
+tests on these clones rather than the original processes.  This allows the
+original processes to continue execution alleviating the need to restart
+the application for each test.  This allows each of CrashSimulator's tests
+to avoid wasting effort executing portions of the application preceding
+the test.
+
+In CrashSimulator, we implemented this technique by extending the
+capabilities of the {\tt rr} record and replay debugger.  {\tt rr} manages
+the full set of processes an application requires and offers the ability to
+make a copy of it so that users can make modifications in to test debugging
+hypothesis without damaging the originals.  Our modified version of {\tt
+rr} extends this capability to allow process sets to be liberated from {\tt
+rr} so that we can perform CrashSimulator's tests on them.
+
 During testing we rely on {\tt rr}
 to store the information necessary to perform the bulk of
 replay that must take place before the application reaches the point in
