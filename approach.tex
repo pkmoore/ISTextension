@@ -18,12 +18,9 @@ CrashSimulator uses a four-step operation to identify bugs resulting from
 the chosen anomaly.
 These steps, illustrated in Figure~\ref{figure:approach} are as follows.
 First, CrashSimulator records the application being tested.  Next, it
-modifies this recording so that the chosen anomaly is present in the
-recorded system call results and side effects.  It then replays this
+modifies this recording so that the chosen anomaly is present.
+Finally, It then replays this
 modified recording, exposing the application to the chosen anomaly.
-Finally, it monitors the application's system call activity after it
-encounters the anomaly and reports whether or not it has changed its
-behavior in response.
 
 \subsection{Trace Recording and Anomaly Injection}
 
@@ -37,7 +34,7 @@ known as a mutator, associated with the chosen anomaly.
 This script is responsible for identifying
 the points in the recording
 where the anomaly can be injected and modifying
-system call results and side effects such that the anomaly is present.
+the recording such that the anomaly is present.
 
 Once this mutated recording has been generated, CrashSimulator replays the
 application using this recording.
@@ -49,6 +46,26 @@ example, suppose an anomaly causes a call to {\tt read()} to fail with
 return value of -1 and {\tt errno} set to {\tt EINVAL}.  Exposing an
 application to this situation only requires modifying the recording,
 such that this read call reflects the above values.
+
+We refer to this process as {\tt Result Based Simulation} and it is based
+on the idea that environmental anomalies will be present in the results of
+the procedure calls an application makes that are influenced by the
+applications environment.
+This technique could be carried out several different levels
+of execution.  For example, the results of calls to functions in a
+platform's {\tt libc} library could be intercepted and modified to reflect
+environmental differences.  At a higher level, virtual machines like the
+{\tt JVM} could be adapted to allow the results and side effects of calls
+to be interposed upon in a similar fashion.
+For CrashSimulator's purposes we chose to interpose
+on the results and side effects of system calls in order to simulate
+unusual environment.  Operating at this level provides a few key
+advantages.  First, there is already robust tooling in the Linux kernel
+that allows for the interception and modification of system call results
+and side effects.  Additionally, Linux system call semantics are well
+defined which simplifies implementation.  Finally, operating at this level
+allows CrashSimulator to test applications written any language that can
+execute Linux system calls.
 
 \subsection{Analyzing an Execution}
 
@@ -85,48 +102,3 @@ did result
 in bugs ranging from simple hangs to more dramatic crashes that
 had the side effect of consuming all available resources or filling
 available disk space with garbage.
-
-\subsection{Procedure Result Interposition Simulation}
-
-Procedure Result Interposition Simulation (PRIS) is our technique for
-simulating environments by modifing the results and side effects of calls
-to procedures such that the unusual aspects of the simulated environment
-are present.  This technique could be carried out several different levels
-of execution.  For example, the results of calls to functions in a
-platform's libc library could be intercepted and modified to reflect
-environmental differences.  At a higher level, virtual machines like the
-{\tt JVM} could be adapted to allow the results and side effects of calls
-to be interposed upon.  For CrashSimulator's purposes we chose to interpose
-on the results and side effects of system calls in order to simulate
-unusual environment.  Operating at this level provides a few key
-advantages.  First, there is already robust tooling in the Linux kernel
-that allows for the interception and modification of system call results
-and side effects.  Additionally, Linux system call symantics are well
-defined which simplifies implementation.  Finally, operating at this level
-allows CrashSimulator to test applications written any language that can
-execute Linux system calls.
-
-\subsection{Process Set Cloning}
-
-Early work on an initial CrashSimulator prototype revaled that a naive
-implementation of its technique could suffer from performance issues.  This
-prototype would relaunch the application and testing machinery in order to
-test each anomaly.  One of the goals put forward for
-
-A great deal of CrashSimualtor's performance comes from its dramatically
-parallel testing strategy.  Central to this strategy is the technique of
-process set cloning.  The idea behind this technique is to generate copies
-of an application's processes at specific points in execution and conduct
-tests on these clones rather than the original processes.  This allows the
-original processes to continue execution alleviating the need to restart
-the application for each test.  This allows each of CrashSimulator's tests
-to avoid wasting effort executing portions of the application preceeding
-the test.
-
-In CrashSimulator, we implemented this technique by extending the
-capabilities of the {\tt rr} record and replay debugger.  {\tt rr} manages
-the full set of processes an application requires and offers the ability to
-make a copy of it so that users can make modifications in to test debugging
-hypothesis without damaging the originals.  Our modified version of {\tt
-rr} extends this capability to allow process sets to be liberated from {\tt
-rr} so that we can perform CrashSimulator's tests on them.
