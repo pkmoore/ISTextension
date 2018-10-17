@@ -19,13 +19,13 @@ version of {\tt rr}, a
 record-and-replay debugger, and our own process supervisor
 to accomplish the above.  This arrangement arose as a result of several
 phases of prototyping that revealed weaknesses in more naive strategies.
-Early work on an initial CrashSimulator prototype revealed that a naive
-implementation of its technique could suffer from performance issues.  This
-prototype would relaunch the application and testing machinery in order to
-test each anomaly.  One of the goals put forward for
-
-A great deal of CrashSimulator's performance comes from its dramatically
-parallel testing strategy.  Central to this strategy is the technique of
+Early work on an initial CrashSimulator prototype revealed relaunching an
+application and CrashSimulator's machinery for each test could result in
+poor performance.  One of the goals of our current CrashSimulator prototype
+was so rectify this situation by eliminating as much unnecessary execution
+as possible.  We achieved this by introducing a dramatic amount of
+parallelism into CrashSimulator's testing process.
+Central to this strategy is the technique of
 {\tt process set cloning}.  The idea behind this technique
 is to generate copies
 of an application's processes at specific points in execution and conduct
