@@ -68,6 +68,23 @@ process independently of one another, which lends a
 high degree of speed and
 parallelism to the whole CrashSimulator testing process.
 
+
+\subsection{Mutators and Test Portability}
+
+A second problem discovered in earlier prototypes was the difficulty of
+sharing tests between developers.  Differing system hardware and software
+setups meant that recordings taken a two different machines could vary
+enough that anomaly injection opportunities would occur at unpredictable
+spots in a recording.  A universal method for detecting these opportunities
+was needed in order to address these situations.  The successful strategy
+we landed upon was encoding anomaly injection opportunities as finite
+automata that consume the ordering and attributes of system calls in a
+recording.  These automata allow a mutator script to correctly identify
+these opportunities regardless of where they occur as a result of variances
+in test machines.  At the same time, this capability is what allows tests
+constructed for CrashSimulator to be used across applications.
+
+
 \subsection{Improving the CrashSimulator's Capabilities}
 
 CrashSimulator's users are able to improve its capabilities through
