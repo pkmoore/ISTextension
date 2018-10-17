@@ -14,7 +14,7 @@ applications.
 From a user's perspective, using CrashSimulator boils down to selecting one
 of the supplied anomalies to test an application against and allowing the
 tool to take over.  Behind the scenes,
-CrashSimulator uses a four-step operation to identify bugs resulting from
+a four-step operation is used to identify bugs resulting from
 the chosen anomaly.
 These steps, illustrated in Figure~\ref{figure:approach} are as follows.
 First, CrashSimulator records the application being tested.  Next, it
@@ -47,7 +47,7 @@ return value of -1 and {\tt errno} set to {\tt EINVAL}.  Exposing an
 application to this situation only requires modifying the recording,
 such that this read call reflects the above values.
 
-We refer to this process as {\tt Result Based Simulation} and it is based
+We refer to this process as {\tt Result Based Simulation} and it hinges on
 on the idea that environmental anomalies will be present in the results of
 the procedure calls an application makes that are influenced by the
 applications environment.
@@ -57,8 +57,8 @@ platform's {\tt libc} library could be intercepted and modified to reflect
 environmental differences.  At a higher level, virtual machines like the
 {\tt JVM} could be adapted to allow the results and side effects of calls
 to be interposed upon in a similar fashion.
-For CrashSimulator's purposes we chose to interpose
-on the results and side effects of system calls in order to simulate
+For CrashSimulator's purposes we chose to influence
+the results and side effects of system calls in order to simulate
 unusual environment.  Operating at this level provides a few key
 advantages.  First, there is already robust tooling in the Linux kernel
 that allows for the interception and modification of system call results
