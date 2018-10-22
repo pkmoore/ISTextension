@@ -372,8 +372,9 @@ threads\preston{cite http://austingroupbugs.net/view.php?id=529}.
 {\bf method.}  To hunt for bugs involving this anomaly we constructed a
 mutator that could identify situations where an application was closing a
 file and modify the results of those calls such that the error value -1 was
-returned with {\tt errno} set to {\tt EINTR}.  We chose this {\tt errno}
-value because it indicates that the {\tt close()} call was interrupted.  We
+returned with {\tt errno} set to {\tt EIO}.  We chose this {\tt errno}
+value because it indicates that the {\tt close()} call failed due to an
+unspecified I/O error.  We
 reasoned that this was a likely situation where developers would
 incorrectly repeat the call to {\tt close()} resulting in a bug.
 
@@ -384,14 +385,14 @@ incorrectly repeat the call to {\tt close()} resulting in a bug.
   \begin{tabular}{l | l | l}
     \toprule{}
       {\bf Application} & {\bf Analysis Result} & {\bf File Being Closed}\\
-      {\tt app\_A} & Correct & user specific configuration file\\
+      {\tt app\_A} & Failure & user specific configuration file\\
       {\tt app\_B} & Failure & file passed as parameter \\
       {\tt app\_C} & Failure & file passed as parameter \\
       {\tt app\_D} & Correct &  default database file\\
     \bottomrule{}
   \end{tabular}
     \caption{This table contains fake data about applications that
-    incorrectly handle close() calls that fail with errno set to EINTR.  A
+    incorrectly handle close() calls that fail with errno set to EIO.  A
     result of correct indicates CrashSimulator reported  the application
     did not alter its system call behavior -- a correct response.  A result
     if failure indicates the application did alter its system call behavior
@@ -400,6 +401,19 @@ incorrectly repeat the call to {\tt close()} resulting in a bug.
     manipulated.}
   \label{table:failedclose}
 \end{table}
+
+{\bf Findings.} As can be seen from table~\ref{table:failedclose},
+CrashSimulator indicated that XXXX percent of applications incorrectly
+altered their system call behavior when they encountered an failed {\tt
+close()} call.  An interesting aspect of this bug is CrashSimulator's usual
+reporting criteria must be flipped.  That is, altered system call behavior
+is classified as incorrect and unaltered system call behavior is correct.
+Manual analysis of the failing cases showed that this classification was
+accurate correct in all but YYY instances.  The incorrect classifications
+occurred as a result of applications printing a message and exiting when a
+failed {\tt close()} call was encountered.  This is a valid response to the
+situation.  We discuss improving CrashSimulator to address this sort of
+situation later in this evaluation.
 
 \subsubsection{Bugs Found By Participants}
 
