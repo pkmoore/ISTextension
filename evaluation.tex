@@ -77,9 +77,6 @@ set out to answer the following questions:
 \item{Does CrashSimulator allow its users to incorporate new anomalies
       efficiently ?}
 
-\item Does CrashSimulator provide output that is useful in locating and
-fixing bugs?
-
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
@@ -525,119 +522,6 @@ and evaluating their correctness.  These results are encouraging in light
 of the limited length of the study.  We believe that as developers become
 more proficient with the CrashSimulator the difficulties some of our
 participants experienced will be alleviated.
-
-
-\subsection{Does CrashSimulator provide output that is useful in locating
-and fixing bugs?}
-
-
-{\bf Findings. }
-
-Identifying the code responsible for a bug can present a major challenge in
-large, complex applications.  By nature of its operation CrashSimulator is
-able to provide a specific sequence of system calls responsible for a
-failed test.  This can provide developers with a solid starting point as
-they work to diagnose the cause of application misbehavior.
-Participant feedback across the board indicated that CrashSimulator's
-output made it assisted in identifying the source of bugs identified with
-the tool.  This assertion is backed up by the high percentage of identified
-bugs that ended up being successfully diagnosed and fixed by our survey
-participants.  Specific counts are available in the table
-~\ref{table:fig-fixed-tool} that
-shows a high percentage of bugs identified with
-CrashSimulator were fixed.
-
-
-\begin{figure}[t]
-  \center{}
-  \fbox{\includegraphics[scale=.75]{images/bugsfixed}}
-  \caption{\emph{Identified Bugs With Accepted Fixes.  This table needs
-  to be updated}}
-  \label{fig-fixed-tool}
-\end{figure}
-
-
-{\bf Discussion. }
-
-There are two reasons, other than output quality, that bugs found with
-CrashSimulator were likely to be fixed -- bug "depth" and the ease
-with which a bug can be fixed.
-It is possible that, because CrashSimulator
-focuses on anomalies in an applications environment, a source of bugs that
-is not well tested in most applications, a higher number of easily fixed,
-low
-hanging fruit style bugs were identified.
-Additionally, many of the bugs types identifiable with CrashSimulator arise
-because of a minor missing check meaning that the fix is small and easily
-incorporated.
-
-\subsection{What sorts of errors does CrashSimulator make?}
-\label{sec-sorts-errors}
-
-The primary source of false positives in CrashSimulator is an application
-using a different sequence of system calls to implement a given operation
-than a mutator was anticipating. CrashSimulator's approach allows these
-situations to be easily corrected, once identified through analysis of the
-incorrect test results.  This is similar to the circumstance where an
-application's test suite is missing a test, necessitating action by the
-developer to construct the missing test.
-
-For example, consider GNOME's {\tt glib} file handling facilities.  When an
-application makes use of these facilities to move a file across storage
-devices the library itself correctly performs a
-file move operation.  When we used CrashSimulator with
-mutators that expected a calls to {\tt read()} and {\tt write()}
-for a cross-device move, we got reports stating that the
-application {\em did not} perform the system calls necessary to inject
-an anomaly.  By manually
-examining a system call trace, we found that, while {\tt glib} correctly
-performs the requested move operation,
-it does so using alternative system call
-sequences.  Rather than using a sequence of {\tt read()} and {\tt write()}
-calls, as our mutator expected, {\tt glib} creates a pipe and uses the {\tt
-splice()} system call to copy the contents out of the source file, through
-the pipe and into the destination file.
-
-Fortunately, as soon as issues like this are discovered,
-CrashSimulator's mutators can be modified to deal with alternative
-approaches to handling an anomaly.  This approach is viable because there
-are a finite number of system calls, and a given operation can be mapped to
-a manageable subset of system calls.  Given the above example around moving
-files, consider the mapping from high level ``operation'' to the set of
-system calls that can implement it in Table~\ref{table:stepsandcalls}.
-Each of the steps in the operation map to a small number of system calls
-and, in most cases, only one of these system calls is necessary.  In
-situations where two system call sequences can correctly implement the same
-operation, CrashSimulator simply runs two mutators in parallel resulting in a
-test executing for the one whose prerequisites are met.
-
-
-\begin{table}[t]
-    \scriptsize{}
-    \begin{tabular}{l | l }
-    \toprule{}
-      {\bf Operation}                                               & {\bf Potential System calls}\\
-      Examine source file                                     & stat64(), lstat64(), fstat64()\\
-      Examine destination file                                & stat64(), lstat64(), fstat64()\\
-      Open source file                                        & open()\\
-      Read contents of source file                            & read(), splice() with a pipe\\
-      List source file's & \\ ~~~~~extended file attributes             & listxattr(), llistxattr(), flistxattr()\\
-      %Read contents of source file's extended file attributes & getxattr(), lgetxattr(), fgetxattr()\\
-      Read contents of source file's                    & \\
-      ~~~~~~~extended file attributes & getxattr(), lgetxattr(), fgetxattr() \\
-      Open destination file                                   & open(), optionally unlink() the file first\\
-      Write contents to destination file                      & write(), splice() with a pipe\\
-      Apply extended file attributes to & \\ ~~~~~destination file      & setxattr(), lsetxattr(), fsetxattr()\\
-      Apply proper timestamps to & \\ ~~~~~destination file             & utimens(), futimens()\\
-      Apply proper permissions & \\ ~~~~~to destination file            & chmod(), open() with a modeline specified\\
-      Close the source file                                   & close()\\
-      Close the destination file                              & close()\\
-    \bottomrule{}
-    \end{tabular}
-    \caption{Each step of a successful cross-disk file move operation mapped to
-      the system call or calls that can implement it}
-    \label{table:stepsandcalls}
-\end{table}
 
 \subsection{Can CrashSimulator execute tests efficiently?}
 \label{sec-perf}
