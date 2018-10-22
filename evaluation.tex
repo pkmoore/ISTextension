@@ -90,24 +90,23 @@ fixing bugs?
 
 \end{enumerate}
 
-\subsection{Given a set of anomalies, can CrashSimulator find
-environmental bugs in widely used applications?}
+\subsection{Is CrashSimulator able to identify a wide variety of
+environmental bugs?}
 \label{sec-env-bugs}
 
-The most crucial question to ask about CrashSimulator is whether or not it is
-effective in finding new environmental bugs in popular applications.
-If it cannot
-find such bug then there is little reason for CrashSimulator to exist.
-To test this premise,
-we chose to look for two anomalies that we could test for in a large
-array of programs.  One is a file system anomaly and the other is found in
-network applications.
-However, both use common API calls, and thus had the potential to
+The most crucial question to ask about CrashSimulator is how readily it can
+identify environmental bugs from a wide variety of causes.  To evaluate the
+tool in this regard we configured the tool to look for bugs from the
+categories discussed in Section~\ref{SEC:background}.  These bugs included
+a filesystem bug involving unusual file types of files on Linux systems, a
+network bug based on unhandled long network timeouts, and bug derived from
+operating system differences in the behavior of failed {\tt close} calls.
+All of these bugs relied on common API calls, and thus had the potential to
 appear in many programs.  We selected the tested applications either
-because they were deemed
-``popular'' by Debian's Popularity Contest~\cite{DebPopCon}, or were from
-GNU Coreutils.  Coreutils applications were chosen because of their
-widespread inclusion in many Linux distributions.
+because they were deemed ``popular'' by Debian's Popularity
+Contest~\cite{DebPopCon}, or were from GNU Coreutils.  Coreutils
+applications were chosen because of their widespread inclusion in many
+Linux distributions.
 
 \subsubsection{Unexpected File Types}
 \label{sec-file-type-bugs}
