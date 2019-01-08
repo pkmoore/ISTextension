@@ -56,9 +56,6 @@ set out to answer the following questions:
     bugs?
 (Subsection~\ref{sec-env-bugs})}
 
-\item{What work is involved in supporting new anomalies and applications?
-    (Subsection~\ref{sec-new-anom-app})}
-
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
@@ -427,63 +424,6 @@ applications without concern for dependencies like the language in which
 they were
 written in or the libraries they depend on allowing its users to get more
 value for the effort they put in.
-
-
-\subsubsection{Supporting New Anomalies}
-
-Adding support for new anomalies to CrashSimulator is discussed in detail
-in section~\ref{sec-improving-tool}.  The goal of this portion of our
-evaluation was to determine how well our participants could carry out this
-process and use the resulting improvements to find new bugs.  In order to
-understand this better we asked
-participants to identify a new environmental anomaly and add it to
-CrashSimulator in the form of a mutator.
-
-{\bf Findings. } Participants were split in
-the value they received
-from their attempts to extend
-CrashSimulator.  Of the ZZZ participants, YYY were able to complete the
-process of identifying and adding an environmental anomaly to
-CrashSimulator.  Of these BBB went on to identify new bugs using the novel
-anomalies.  However, NNN were unable to complete this process.  Survey
-results indicate that the process of identifying an anomaly stymied the
-majority of this group.
-
-There was a consensus that
-CrashSimulator required a
-moderately high initial outlay of effort before testing could begin.
-Surveys indicated that participants indicated that
-adding a new anomaly to
-CrashSimulator was more difficult than adding a new unit test to an
-existing test suite.
-However, the participants
-appreciated
-CrashSimulator's ability to allow for
-testing
-across multiple applications
-with minimal additional effort once the tests had been constructed.
-
-There was a great deal of
-positive feedback around CrashSimulator's ability to use a mutator to apply
-an anomaly to multiple eligible system call sequences throughout an
-execution.  This meant a single test could be constructed to cover similar
-operations throughout an application's code base, which would
-shrink the size of the
-required test suite in the process.
-
-{\bf Discussion. } Examining survey results
-shows that previous operating system experience predicts more success in
-adding anomalies to CrashSimulator.  This is unsurprising as a developer
-inexperienced in these concepts would likely struggle to both identify
-a new anomaly and its effects in terms of system call results and side
-effects.
-Previous experience with automated testing was also indicative of success.
-Several participants that did not have experience in this area struggled
-reported being bogged down in the process of putting together new mutators
-and evaluating their correctness.  These results are encouraging in light
-of the limited length of the study.  We believe that as developers become
-more proficient with the CrashSimulator the difficulties some of our
-participants experienced will be alleviated.
 
 
 \subsection{What sorts of errors does CrashSimulator make?}
