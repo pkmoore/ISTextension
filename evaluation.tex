@@ -336,26 +336,37 @@ Another topic of relevance in answering this question is how well new users are
 able to find bugs with CrashSimulator.
 To answer this question we can examine the bug finding results from our user
 study.
-A total of 15 bugs were found using CrashSimulator, and, perhaps not
-surprisingly, the majority were reported by participants with a
-self-reported high degree of operating systems experience.
-~\ref{table:fig-tool-exp} contains the
-counts of bugs identified during the study broken down by
-the tool used to identify them, as well as developer's self reported
-developer experience level with operating system concepts.
-Participants with a moderate and low degrees of operating
-systems experience found more bugs had success even if they found a lower total
-volume of bugs.
+A total of eleven bugs further bugs were found by participants using
+CrashSimulator.  Of these, nine were found using the ``Unusual Filetype.''
+Five of these bugs have been reported to the appropriate maintainers.
+Three of these reports contained patches constructed by the submitter.
 
 {\bf Discussion. }
 
-The above results indicate that, when it comes to using CrashSimulator,
-having experience with operating systems concepts is very beneficial.  At
-the same time, users with a self-reported low degree of experience with OS
-concepts were still able to identify bugs by using its built in corpus of
+The above results indicate that participants
+not involved in the development of
+CrashSimulator are able to use it to find new bugs in real world
+applications.  Participants commented that narrowing the source of a bug
+down to a particular sequence of system calls
+was helpful in identifying the area of
+code responsible for the bug decreasing the time required to produce a fix. 
+Observation showed that familiarity with operating systems concepts
+very beneficial when working with CrashSimulator.  At
+the same time, most participants were
+able to identify bugs by using its built in corpus of
 anomalies. ~\ref{table:fig-tool-anomaly} shows which
 of these anomalies most commonly
 resulted in application bugs.
+
+This effort revealed shortcomings with the tool.  First,  there can be
+confusion around what application behaviors constitute a bug.  For example,
+it may be the intention of an application's developer that the application
+run forever when processing an ``infinitely long'' file.  Additionally, it
+simply reporting that an application did or did not change its behavior in
+the presence of an anomaly is insufficient if CrashSimulator's user is
+unfamiliar what a result means.  Both of these issues are being corrected
+by improving the CrashSimulator's output so that it more clearly describes
+the nature of a given result and why the user should be concerned.
 
 \begin{figure}[t]
   \center{}
