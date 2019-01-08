@@ -56,6 +56,9 @@ set out to answer the following questions:
     bugs?
 (Subsection~\ref{sec-env-bugs})}
 
+\item{What work is involved in supporting new anomalies and applications?
+    (Subsection~\ref{sec-new-anom-app})}
+
 \item{Do tests using CrashSimulator make yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
@@ -383,11 +386,9 @@ protocol.
 applications?}
 \label{sec-new-anom-app}
 
-\preston{In writing this, I think this information might better fit in the
-implementation details section rather than an evaluation question.}
-
 \subsubsection{Supporting New Applications}
-{\bf Discussion.} Our prototype of CrashSimulator is able to test most
+{\bf Discussion.} Work using our prototype of CrashSimulator showed that
+it is able to test most
 applications that are able to run on a setup that supports CrashSimulator
 regardless of common testing impediments like programming language
 differences or dependency issues.  This is primarily due to such
@@ -401,20 +402,21 @@ has allowed us to improve our prototype to the point that it can support a
 large number of popular, complex applications.
 
 {\bf Findings.}During the
-course of this evaluation participants were encouraged to make
-an effort at implementing unsupported system calls should they encounter
-them while using the tool.  Five participants were able to add support for
-new system calls to CrashSimulator.  These participants gave favorable
-impressions about this process.  The common difficulty came from
+course of this evaluation participants were encouraged to report
+unsupported system calls should they encounter
+them while using the tool.  As a result exposure to a wider range of
+applications support for ten new system calls was added.  Adding support
+for these system calls was simple a relatively pain free process with the
+bulk of the difficulty coming down to 
 understanding the details of the system calls themselves rather than from
 the effort of implementing support for these system calls once they were
 understood.
+
+\subsubsection{Supporting New Anomalies}
+
 While CrashSimulator is able to test an application's response to a suite
 of anomalies out of the box its capabilities can be extended to best fit
-the needs of its users.  To get an idea of what end users might do with
-this functionality we asked our study participants to identify a new
-anomaly, construct a mutator for it, and test real world applications
-against it.
+the needs of its users.
 The effort and skill involved in
 this process is similar to that involved in writing a unit test or
 integration test using a modern testing framework.  However, unlike a unit
