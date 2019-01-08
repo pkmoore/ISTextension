@@ -110,34 +110,6 @@ CheckAPI~\cite{rasley2015detecting}
 to develop some of the
 anomalies used in our evaluation.
 
-Anomalies can also be found around more complex operations.  In this case
-it is useful to compare how several applications implement the same
-operation.  For example, moving files
-around in a filesystem is an extremely common operation that, on face
-value, seems fairly simple to carry out.  In reality, things become
-complex quickly once a few implementation details are taken into account:
-namely limitations in Linux's {\tt rename()} system call and the way
-Linux's directory hierarchy can abstract away complicated device
-configurations.
-
-Trivial cases of moving a file (i.e. those where the source and destination
-are on the same device) are accomplished using the {\tt rename()} system
-call.  In cases where the source and destination are not on the same device
-this system call fails and the application must handle the operation
-manually. This means that \emph{any} application that moves files around on
-a Linux system must be able to deal with a situation in which some part of
-the directory structure may physically reside on a different device.
-We examined several popular applications that move files around and
-determined that the most thorough example of the operation was carried out
-by
-the GNU Coreutils {\tt mv} command.  Using this application as our
-``gold standard''  we implemented several mutators that
-could modify the result of the initial call to {\tt rename} and the
-type of the file being removed as represented in the results of a system
-call in the {\tt stat} family.
-In our evaluation we will discuss how this work found many applications
-do not handle the above situations correctly
-
 \subsubsection{Converting Anomalies to System Call Sequences}
 
 Once a new anomaly has been identified, it is distilled into a
