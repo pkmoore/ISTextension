@@ -1,9 +1,9 @@
 \section{Implementation Details}
 \label{SEC:Implementation}
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \center{}
-  \fbox{\includegraphics[scale=.75]{images/architecture}}
+  \fbox{\includegraphics[scale=.65]{images/architecture}}
   \caption{Diagram illustrating CrashSimulator's Architecture.  During the
     course of a single rr execution, clone process sets are generated at
     specific rr events.  A CrashSimlator supervisor process attaches to
@@ -11,7 +11,7 @@
     subsequent system call activity and inject unusual environmental
     conditions.}
   \label{figure:architecture}
-\end{figure}
+\end{figure*}
 
 As can be seen in Figure~\ref{figure:architecture},
 our implementation of CrashSimulator uses a combination of a modified
