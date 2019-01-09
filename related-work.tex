@@ -3,7 +3,8 @@
 
 In building and testing CrashSimulator, we examined a number of previous
 studies in bug detection, data mining, environmental influence on
-applications, and testing protocols. This section
+applications, and protocols for checking program responses to anomalous
+situations. This section
 summarizes a few earlier initiatives in each of these areas and discusses
 their relevance to the development of our tool.
 
@@ -55,14 +56,18 @@ TCP implementations, and the Explode
 system~\cite{Yang:2006:ELG:1298455.1298469} for detecting crash recovery
 bugs in file system implementations. Unlike CrashSimulator, these
 approaches depend on the availability of source or byte code.
-Static analysis has also been
-used to detect portability issues related to changes between different
-versions of external components on which a program
-depends~\cite{silakov2010improving, javacompliance-www}. Like
-CrashSimulator, these address the application's interactions with its
-environment, but CrashSimulator focuses on testing the application's
-response to anomalies, rather than on proving that the environments behave
-as expected.
+
+Static analysis techniques have also been
+used to detect portability issues related to what happens when an
+applications encounters different
+versions of the external components on which
+it depends~\cite{silakov2010improving, javacompliance-www}. Like
+CrashSimulator, these techniques
+address the application's interactions with its
+environment. However, these studies were focused on proving that the
+environments behave as expected.
+CrashSimulator is only interested in the application's
+response to anomalies.
 
 \iffalse
 \noindent
@@ -86,37 +91,40 @@ these works could be used to mine system call patterns in source code.
 This will enable researchers
 to find checkers that identify incorrect responses to environmental
 anomalies. So far, we have specified these checkers manually for
-CrashSimulator. But, data mining techniques could be adapted in the years
-ahead to automate this process.
+CrashSimulator.  Data mining techniques could be adapted in the years
+ahead to reduce the manual effort required.
 
 \noindent
 {\bf Tracing and log mining.}
 Similar to API protocol mining, substantive work has been done using
 log files to detect anomalies~\cite{pinpoint,
 jiang_abnormal_trace_detection_icac_2005, xu2009detecting, lou2010mining2}
-and aid to program understanding~\cite{yuan2010sherlog,
+and to aid in program understanding~\cite{yuan2010sherlog,
 beschastnikh_synoptic_fse_2011, csight_icse_2014}.
-CheckAPI~\cite{rasley2015detecting} and NetCheck~\cite{Zhuang_NSDI_2014}
+For example, CheckAPI~\cite{rasley2015detecting}
+and NetCheck~\cite{Zhuang_NSDI_2014} both
 use system call traces to diagnose an application's violations of
-cross-platform portability.  In contrast to this work, CrashSimulator uses
-system call traces for a different purpose: driving replay executions
-in order to test responses to known environmental anomalies before an
-application is deployed.  This more active approach can expose bugs that
+cross-platform portability.  CrashSimulator in some ways takes these
+techniques a step futher by using
+system call traces
+to test responses to known environmental anomalies.
+This more active approach can expose bugs that
 are invisible to passive log mining.
 
 
 \noindent
 {\bf Environmental Influence and Cross-Platform Portability.}
-Negotiating the influence of an environment into which an
+Negotiating the influence of the environment into which an
 application is deployed has been investigated from several
-perspectives. One  is to build ``portable'' systems
+perspectives. One approach referred to previously
+is to build ``portable'' systems
 that have cross-platform capabilities.
-Wrapper subroutines
+Using wrapper subroutines
 can enable cross-platform portability
 of APIs~\cite{bartolomeicompliance} through system call delegation.
 These wrappers can be automatically generated through techniques like
-system call interposition ~\cite{Guo:2011:CUS:2002181.2002202}.  This
-technique can can also been used to detect and prevent security
+system call interposition ~\cite{Guo:2011:CUS:2002181.2002202}, a
+technique that can also be used to detect and prevent security
 violations~\cite{Hofmeyr:1998:IDU:1298081.1298084,
 Acharya:2000:MUP:1251306.1251307}.
 Other works that target complementary classes of portability problems
@@ -126,13 +134,12 @@ cross-browser incompatibilities for web
 applications~\cite{DBLP:conf/icsm/ChoudharyVO10, silakov2010improving,
 DBLP:conf/icse/Choudhary11, Mesbah:2011:ACC:1985793.1985870,
 DBLP:conf/icst/DallmeierP0MZ14}.  Static analysis tools, such as those
-mentioned in~\ref{rel-static-analysis}, have also been applied to
+mentioned earlier in this section, have also been applied to
 detection of differences between versions of external components.
 
-CrashSimulator's goals are complementary to these studies, however, our
-tool kit is more focused on testing an application’s response to anomalies.
-We are not interested in proving if the environments tested behave as
-expected.
+Such studies have helped to define the influence of the environment on
+application and thus provide a background to our work.  Our tool applies
+the idea to reliable testing of an application's response to anomalies.
 
 \noindent
 {\bf Testing exception handling and conformance.}
