@@ -1,18 +1,18 @@
 \begin{abstract}
 
-A common problem for software developers is that applications exhibit new
-bugs after they have been deployed
-and, to this point,
-avoiding these bugs has proven difficult.
+A common problem for software developers is that applications tend to 
+exhibit new bugs \textit{after} they have been deployed. 
+To this point,
+avoiding these bugs has proven difficult largely because there is no way to
+know how an application will react to every environment without
+time-consuming and expensive testing.
 Enter CrashSimulator, a tool that uses information about how environments
-differ to identify incorrect behavior before the application is
-deployed.  The tool modifies system call return values and side effects
-to simulate an anomalous environment and determines if
-the application is responding to it.  As these
-unusual properties are then encoded as differences in system
-call behavior, CrashSimulator can use incorrect behavior identified in
-one application to determine if others
-would make the same mistake in that environment.
+differ to identify incorrect behavior \textit{before} the application is
+deployed.  Using the key insight that unusual environmental properties can
+be encoded as differences present in the communications of an application
+with its environment, the tool is able
+to simulate anomalous environmental conditions by modifying these
+communications and determine if an application is responding to them.
 
 We evaluated CrashSimulator against a set of the most popular
 Linux applications selected
@@ -21,10 +21,10 @@ Our tests found a total of XXXX bugs in YYYY applications,
 the consequences of which range from hangs and crashes, to data loss and
 remote denial of service conditions.  In addition, we conducted
 a user study in which
-ZZZ participants utilized CrashSimulator to
-to test real world applications which resulted in an additional WWWW new
-bugs being identified
-These results demonstrate
+ZZZ participants tested real world applicaitons using CrashSimulator.
+This effort resulted in the identification of an additional WWWW new
+bugs.
+Our combined results demonstrate
 that CrashSimulator's strategy of identifying bugs
 is effective, and yielded results for
 developers with diverse backgrounds, and across skill sets.
