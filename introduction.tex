@@ -24,7 +24,7 @@ debugging errors that only appear in production.
 % testing as the main reason why bugs are not discovered earlier.
 Efforts have been made in several directions to reduce this burden.  One
 approach is to hide environmental differences behind standard interfaces.
-Unfortunately, 
+Unfortunately,
 even specialized ``Write-Once, Run Anywhere'' environments
 that attempt to hide these environmental differences,
 such as the Java Runtime Environment,
@@ -54,7 +54,7 @@ are visible in the results of the communications
 an application makes with its environment.
 When employing \textit{results based simulation},
 the anomalies that represent a given environment
-identified by
+are identified by
 observing the communications of applications already running in it.
 Other applications can be tested in an simulation of that environment
 by intercepting it's communications
@@ -72,7 +72,7 @@ variety of rare, adverse scenarios (water landings, engine failures, etc.)
 before the pilots are certified to work in practice.}.
 {\em CrashSimulator} implements \textit{results based simulation}
 by intercepting and manipulating the results and side-effects
-of the system calls and application makes.
+of the system calls an application makes.
 % These operations are performed with the help of a novel strategy
 % called \textit{process set cloning} which allows numerous clones of an
 % application's processes to be generated during the course of execution so
@@ -99,7 +99,7 @@ ZZZ Master's and Doctoral computer science students
 who were asked to use CrashSimulator to test
 the same type of applications evaluated in our initial tests.
 The results show that the developers were able to find bugs
-that were missed by applications' existing testing strategies.
+that were missed by the applications' existing testing strategies.
 Additionally, the
 participants were able to find bugs
 in environments with which they had a limited amount of experience.
@@ -114,7 +114,8 @@ between an application and its environment.}
 
 \item{It introduces \textit{Results Based Simulation}
 as an easy-to-use method of simulating environments
-so an applications an be tested before deployment
+so an applications' behavior in those environments
+can be assessed before deployment
 without the time and resource costs of
 testing each environment individually.}
 
@@ -125,6 +126,6 @@ in widely deployed and highly tested code.}
 
 \item{It shows that developers are able
 to use {\em CrashSimulator}
-to find real bugs in real applications}
+to find real bugs in real applications.}
 
 \end{enumerate}
