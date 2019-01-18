@@ -3,17 +3,18 @@
 \textit{No Battle Plan Survives Contact With the Enemy --- Helmuth von Moltke}
 
 No matter how well an application is tested before being released, new bugs
-always seem to be found after deployment.  One reason for this situation
-is that applications run in a diverse set of
-different deployment \emph{environments}, - and often
-across different operating systems, and network types,
-each of which can introduce new flaws~\cite{LinuxGlibcChanges}.
-In addition, file
-systems can exhibit subtle but critical
-differences~\cite{EXT4Layout, AppleHFS}, and while differences in network
-behavior can
-be substantial, even if the network type or even the
-adapter are identical~\cite{vbox}. These environmental differences greatly
+always seem emerge after deployment.  One reason
+is that these applications will run in a diverse set of
+deployment \emph{environments}, - and
+across different operating systems, and network types.
+Each of these new environmental influences can reveal previously
+undiscovered flaws~\cite{LinuxGlibcChanges}.
+File
+systems can also exhibit subtle but critical
+differences~\cite{EXT4Layout, AppleHFS}, and even if the network type and
+adapter is identical, network
+behavior can still diverge from what is expected~\cite{vbox}.
+These environmental differences greatly
 exacerbate the chance of ensuring that an application will function
 correctly when deployed.
 
@@ -21,83 +22,90 @@ This complicates the work of application developers who, according to a
 recent survey conducted by ClusterHQ~\cite{ClusterHQSurvey},
 spend a significant portion of their time
 debugging errors that only appear in production.
-Participants in this survey cited the inability to recreate
-production environments for
-testing as the main reason why bugs are not discovered earlier.
-Even if an
+% Participants in this survey cited the inability to recreate
+% production environments for
+% testing as the main reason why bugs are not discovered earlier.
+Even if
 enormous developer effort is put forward, it may be insufficient
 to uncover these bugs
 before deployment.  Microsoft employs thousands of engineers with nearly a
 1:1 ratio of testers to developers~\cite{Page2009}.
 Yet, recent Windows Update released in response
 to the Spectre Intel CPU vulnerability resulted in machines with certain
-hardware configurations were rendered unbootable~\cite{kb4056892}.  Even
+hardware configurations rendered unbootable~\cite{kb4056892}.  Even
 specialized ``Write-Once, Run Anywhere'' environments that attempt to hide
 these environmental differences, such as the Java Runtime Environment, are
 not perfect, leading them to be rechristened ``Write-Once, Debug
 Everywhere''~\cite{WODE}.
 
+\preston{put something here regarding different approaches people have
+tried}
+
+\preston{CrashSimulator is the tool rather than the technique}
 In this paper, we introduce {\em CrashSimulator}\footnote{ Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
 variety of rare, adverse scenarios (water landings, engine failures, etc.)
 before the pilots are certified to work in practice.}, a testing approach
 and tool that can replicate a large
 number of diverse environments likely to cause crashes before an
-application is deployed.  CrashSimulator identifies
-situations that have caused environmental bugs in other applications,
-and then systematically tests for them.
+application is deployed.
 
+\preston{remember that you deleted text about using system calls}
+\preston{More stuff about communication with the environment and less about
+system call stuff}
 What sets CrashSimulator's approach apart from other automated testing
 tools is the insight that environmental differences, known as anomalies,
 can be identified
 in the results and side effects of an application's interactions with its
-environment.
-Though an this approach could be carried out at the level of libraries or a
-language runtime, we chose to identify and encode anomalies using the
-results and side effects of the system calls an application makes.
-An application is tested by exposing it to these anomalous
-conditions during the course of execution and evaluating the application's
-response.  The details of this exposure are configured by taking a
-system call trace of the application under normal conditions and modifying
-it to represent the anomalous conditions are represented.
+environment.  The way the tool responds to these anomalies indicates the
+potential for bugs.
+The required exposure is engineered by taking a
+system call trace of the application under normal conditions and
+then modifying it to introduce the anomalous conditions.
 
-In the course of this work we built a proof of concept version of
-CrashSimulator's technique that was able to find bugs, both known and
-unknown, in popular Linux applications as ranked by Debian's popularity
-contest~\cite{DebPopCon}.  These bugs were found by exposing the
-applications to environmental conditions that simulate unusual file system
-configurations, file types, and network delays.  When the applications in
+%  Results based simulation
+To test the potential of our proposed tool for triggering environmental
+bugs, we built and tested a proof of concept version of
+CrashSimulator.  Our results showed that the tool was able to find bugs,
+both known and unknown,
+in Linux applications ranked highly on Debian's popularity
+contest~\cite{DebPopCon}.  The applications tested were exposed to
+environmental conditions present as a result of often unanticipated
+file system configurations, file types, and network delays.
+When the applications in
 question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total,
 \textbf{!!!!RECOUNT!!!!} 84
 bugs were identified.
 
 In addition to proving CrashSimulator could find bugs, we were also able to
-show that even developers with varying backgrounds
-could identify bugs in real world applications with a high degree
-of confidence.
+show that developers with varying backgrounds
+could use the tool to identify bugs
+in real world applications
+with a high degree of confidence.
 We conducted a user study with
-ZZZ Master's computer
-science students with varying backgrounds and specializations.  These
-participants were asked to test existing popular applications (as ranked by
-Debian's Popularity Contest) using CrashSimulator.
-The results show that the developers were able to find new bugs with
-CrashSimulator, many of which would not have been found with other
-tools.
+ZZZ Master's and Doctoral computer science students
+who were asked to use CrashSimulator to test
+the same type of applications evaluated in our initial tests.
+The results show that the developers were able to find bugs
+that were missed by applications' existing testing strategies.
 Additionally, the
 participants were able to find bugs
-involving environments with which they had a limited amount of experience.
+in environments with which they had a limited amount of experience.
 
 The main contributions in this work can be summarized as follows:
 
 \begin{enumerate}
 
-\item{It supports our premise that the interaction between an application
-and its environment can create potential flaws upon deployment.}
+\item{It provides evidence
+that previously unanticipated flaws can be created by the interaction
+between an application and its environment.}
 
-\item{It provides evidence that by manipulating
-an application's interactions with its environments allows CrashSimulator to
-accurately simulate other environments.}
+\item{It introduces CrashSimulator
+as an easy-to-use method of simulating environments
+so an applications an be tested before deployment
+without the time and resource costs of
+testing each environment individually.}
 
 \item{It offers a method for encoding an appropriate flow of
 interactions between an application and its environment as a model that
