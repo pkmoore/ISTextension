@@ -2,21 +2,18 @@
 \label{SEC:introduction}
 \textit{No Battle Plan Survives Contact With the Enemy --- Helmuth von Moltke}
 
-No matter how well an application is tested before being released, new bugs
-always seem emerge after deployment.  One reason
-is that these applications will run in a diverse set of
-deployment \emph{environments}, - and
-across different operating systems, and network types.
-Each of these new environmental influences can reveal previously
-undiscovered flaws~\cite{LinuxGlibcChanges}.
-File
-systems can also exhibit subtle but critical
-differences~\cite{EXT4Layout, AppleHFS}, and even if the network type and
-adapter is identical, network
-behavior can still diverge from what is expected~\cite{vbox}.
-These environmental differences greatly
-exacerbate the chance of ensuring that an application will function
-correctly when deployed.
+No matter how well an application is tested before being released,
+new bugs always seem emerge after deployment.
+One reason is that these applications will run in a diverse set of
+deployment \emph{environments}.
+Variations between these environments tend to
+reveal previously undiscovered flaws.
+APIs provided by operating systems can change across versions~\cite{LinuxGlibcChanges},
+file systems can exhibit subtle but critical differences~\cite{EXT4Layout, AppleHFS},
+and, even if the network and adapter are identical,
+network behavior can still diverge from what is expected~\cite{vbox}.
+These environmental differences greatly exacerbate
+the chance that an application will function incorrectly when deployed.
 
 This complicates the work of application developers who, according to a
 recent survey conducted by ClusterHQ~\cite{ClusterHQSurvey},
@@ -25,52 +22,66 @@ debugging errors that only appear in production.
 % Participants in this survey cited the inability to recreate
 % production environments for
 % testing as the main reason why bugs are not discovered earlier.
-Even if
-enormous developer effort is put forward, it may be insufficient
-to uncover these bugs
-before deployment.  Microsoft employs thousands of engineers with nearly a
+Efforts have been made in several directions to reduce this burden.  One
+approach is to hide environmental differences behind standard interfaces.
+Unfortunately, 
+even specialized ``Write-Once, Run Anywhere'' environments
+that attempt to hide these environmental differences,
+such as the Java Runtime Environment,
+are not perfect,
+leading them to be rechristened ``Write-Once, Debug Everywhere''~\cite{WODE}.
+A more direct approach is
+to identify and fix deficiencies before deployment
+but history has shown that,
+even if enormous developer effort is put forward,
+it may be insufficient to uncover these bugs.
+Microsoft employs thousands of engineers with nearly a
 1:1 ratio of testers to developers~\cite{Page2009}.
-Yet, recent Windows Update released in response
-to the Spectre Intel CPU vulnerability resulted in machines with certain
-hardware configurations rendered unbootable~\cite{kb4056892}.  Even
-specialized ``Write-Once, Run Anywhere'' environments that attempt to hide
-these environmental differences, such as the Java Runtime Environment, are
-not perfect, leading them to be rechristened ``Write-Once, Debug
-Everywhere''~\cite{WODE}.
+Yet, recent Windows Update released
+in response to the Spectre Intel CPU vulnerability
+resulted in machines with certain hardware configurations
+being rendered unbootable~\cite{kb4056892}.
+This work hopes to move the needle in the developers favor by presenting a
+new technique for catching environmental bugs
+so expensive and time consuming post-deployment bug fixes
+can be avoided.
 
-\preston{put something here regarding different approaches people have
-tried}
+We refer to this technique as {\textit results based simulation}
+and it is founded upon the key insight
+that problematic environmental properties
+(which we refer to as {\textit anomalies})
+are visible in the results of the communications
+an application makes with its environment.
+When employing {\textit results based simulation},
+the anomalies that represent a given environment
+identified by
+observing the communications of applications already running in it.
+Other applications can be tested in an simulation of that environment
+by intercepting it's communications
+and modifying them in such a way
+the observed anomalies present.
+The way the application responds to the simulated anomalies
+indicates the potential for bugs once the it is actually deployed
+to the target environment.
 
-\preston{CrashSimulator is the tool rather than the technique}
-In this paper, we introduce {\em CrashSimulator}\footnote{ Our approach is
+To test the ability of this technique to expose environmental
+bugs, we built and tested a proof of concept tool
+called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
 variety of rare, adverse scenarios (water landings, engine failures, etc.)
-before the pilots are certified to work in practice.}, a testing approach
-and tool that can replicate a large
-number of diverse environments likely to cause crashes before an
-application is deployed.
-
-\preston{remember that you deleted text about using system calls}
-\preston{More stuff about communication with the environment and less about
-system call stuff}
-What sets CrashSimulator's approach apart from other automated testing
-tools is the insight that environmental differences, known as anomalies,
-can be identified
-in the results and side effects of an application's interactions with its
-environment.  The way the tool responds to these anomalies indicates the
-potential for bugs.
-The required exposure is engineered by taking a
-system call trace of the application under normal conditions and
-then modifying it to introduce the anomalous conditions.
-
-%  Results based simulation
-To test the potential of our proposed tool for triggering environmental
-bugs, we built and tested a proof of concept version of
-CrashSimulator.  Our results showed that the tool was able to find bugs,
+before the pilots are certified to work in practice.}.
+{\em CrashSimulator} implements {\texit results based simulation}
+by intercepting and manipulating the results and side-effects
+of the system calls and application makes.
+% These operations are performed with the help of a novel strategy
+% called {\textit process set cloning} which allows numerous clones of an
+% application's processes to be generated during the course of execution so
+% destructive tests do not necessitate a full re-execution.
+Our results showed that the tool was able to find bugs,
 both known and unknown,
 in Linux applications ranked highly on Debian's popularity
-contest~\cite{DebPopCon}.  The applications tested were exposed to
-environmental conditions present as a result of often unanticipated
+contest~\cite{DebPopCon}.  The applications were exposed to
+environmental conditions present as a result of unanticipated
 file system configurations, file types, and network delays.
 When the applications in
 question were actually exposed to these conditions a variety of failures
@@ -101,18 +112,19 @@ The main contributions in this work can be summarized as follows:
 that previously unanticipated flaws can be created by the interaction
 between an application and its environment.}
 
-\item{It introduces CrashSimulator
+\item{It introduces {\textit Results Based Simulation}
 as an easy-to-use method of simulating environments
 so an applications an be tested before deployment
 without the time and resource costs of
 testing each environment individually.}
 
-\item{It offers a method for encoding an appropriate flow of
-interactions between an application and its environment as a model that
-can be later used to check for correct behavior.}
+\item{It demonstrates a new tool, {\em CrashSimualtor},
+which implements results based simulation
+in order to find previously-undiscovered environmental bugs
+in widely deployed and highly tested code.}
 
-\item{It shows that CrashSimulator allows even developers with limited
-experience with a given environment to find real bugs in
-real applications.}
+\item{It shows that developers are able
+to use {\em CrashSimulator}
+to find real bugs in real applications}
 
 \end{enumerate}
