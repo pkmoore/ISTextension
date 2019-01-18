@@ -46,13 +46,13 @@ new technique for catching environmental bugs
 so expensive and time consuming post-deployment bug fixes
 can be avoided.
 
-We refer to this technique as {\textit results based simulation}
+We refer to this technique as \textit{results based simulation}
 and it is founded upon the key insight
 that problematic environmental properties
-(which we refer to as {\textit anomalies})
+(which we refer to as \textit{anomalies})
 are visible in the results of the communications
 an application makes with its environment.
-When employing {\textit results based simulation},
+When employing \textit{results based simulation},
 the anomalies that represent a given environment
 identified by
 observing the communications of applications already running in it.
@@ -70,11 +70,11 @@ called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
 variety of rare, adverse scenarios (water landings, engine failures, etc.)
 before the pilots are certified to work in practice.}.
-{\em CrashSimulator} implements {\texit results based simulation}
+{\em CrashSimulator} implements \textit{results based simulation}
 by intercepting and manipulating the results and side-effects
 of the system calls and application makes.
 % These operations are performed with the help of a novel strategy
-% called {\textit process set cloning} which allows numerous clones of an
+% called \textit{process set cloning} which allows numerous clones of an
 % application's processes to be generated during the course of execution so
 % destructive tests do not necessitate a full re-execution.
 Our results showed that the tool was able to find bugs,
@@ -112,7 +112,7 @@ The main contributions in this work can be summarized as follows:
 that previously unanticipated flaws can be created by the interaction
 between an application and its environment.}
 
-\item{It introduces {\textit Results Based Simulation}
+\item{It introduces \textit{Results Based Simulation}
 as an easy-to-use method of simulating environments
 so an applications an be tested before deployment
 without the time and resource costs of
