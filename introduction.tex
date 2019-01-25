@@ -5,8 +5,8 @@
 No matter how well an application is tested before being released,
 new bugs always seem emerge after deployment.
 One reason is that these applications will run in a diverse set of
-deployment \emph{environments}.
-Variations between these environments tend to
+deployment \emph{environments},
+and variations between these environments tend to
 reveal previously undiscovered flaws.
 APIs provided by operating systems can change across versions~\cite{LinuxGlibcChanges},
 file systems can exhibit subtle but critical differences~\cite{EXT4Layout, AppleHFS},
@@ -15,7 +15,8 @@ network behavior can still diverge from what is expected~\cite{vbox}.
 These environmental differences greatly exacerbate
 the chance that an application will function incorrectly when deployed.
 
-This complicates the work of application developers who, according to a
+These unforeseeable environmental bugs
+complicate the work of application developers who, according to a
 recent survey conducted by ClusterHQ~\cite{ClusterHQSurvey},
 spend a significant portion of their time
 debugging errors that only appear in production.
@@ -37,25 +38,28 @@ even if enormous developer effort is put forward,
 it may be insufficient to uncover these bugs.
 Microsoft employs thousands of engineers with nearly a
 1:1 ratio of testers to developers~\cite{Page2009}.
-Yet, recent Windows Update released
+Yet, a recent Windows Update released
 in response to the Spectre Intel CPU vulnerability
 resulted in machines with certain hardware configurations
 being rendered unbootable~\cite{kb4056892}.
-This work hopes to move the needle in the developers favor by presenting a
-new technique for catching environmental bugs
-so expensive and time consuming post-deployment bug fixes
-can be avoided.
 
-We refer to this technique as \textit{results based simulation}
-and it is founded upon the key insight
+
+The work documented in this paper
+hopes to move the needle in the developer's favor
+by presenting a new technique for catching environmental bugs
+so expensive and time consuming post-deployment fixes can be avoided.
+Guiding our efforts
+is a technique
+we call \textit{results based simulation}.
+It is founded upon the key insight
 that problematic environmental properties
 (which we refer to as \textit{anomalies})
-are visible in the results of the communications
-an application makes with its environment.
+are visible in the communications
+between application and its environment.
 When employing \textit{results based simulation},
 the anomalies that represent a given environment
 are identified by
-observing the communications of applications already running in it.
+observing the communications of applications already running within it.
 Other applications can be tested in an simulation of that environment
 by intercepting it's communications
 and modifying them in such a way
@@ -87,7 +91,7 @@ When the applications in
 question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total,
 \textbf{!!!!RECOUNT!!!!} 84
-bugs were identified.
+bugs were identified in this manner.
 
 In addition to proving CrashSimulator could find bugs, we were also able to
 show that developers with varying backgrounds
@@ -104,6 +108,9 @@ Additionally, the
 participants were able to find bugs
 in environments with which they had a limited amount of experience.
 
+\preston{I kept contribution 1 because I think we make this case pretty
+strongly in section II.}
+
 The main contributions in this work can be summarized as follows:
 
 \begin{enumerate}
@@ -119,7 +126,7 @@ can be assessed before deployment
 without the time and resource costs of
 testing each environment individually.}
 
-\item{It demonstrates a new tool, {\em CrashSimualtor},
+\item{It demonstrates a new tool, {\em CrashSimulator},
 which implements results based simulation
 in order to find previously-undiscovered environmental bugs
 in widely deployed and highly tested code.}
