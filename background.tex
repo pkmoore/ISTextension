@@ -1,12 +1,13 @@
 \section{what is an Environment?}
 \label{SEC:background}
 
-Before discussing aspects of an environment that can contribute to the
-presence of bugs, it is important to clearly
-define what an environment is.
+It is important
+to have a clear understanding
+of what constitutes an application's environment
+in order to see how it can contribute to the presence of bugs.
 An application's environment consists of
-all of the
-components an application depends upon that its developers do not control.
+all of the components an application depends upon
+that its developers do not control.
 In practice, this is everything other than the code and data packaged
 within the application itself.  Anything other than this code and data is
 external to the application and can be
@@ -18,9 +19,6 @@ deployed alongside the
 application.
 These external resources can be thought of as
 providing implicit inputs to the program that affect its flow of execution.
-There are many examples of ways in which environments differ, even in
-situations where they implement a ``standard interface,'' such as Java or
-POSIX.
 An investigation of bug reports has shown that environmental bugs in the
 following categories have been found in major applications.
 
@@ -36,7 +34,8 @@ implementation or the other.
 \item {\bf File Systems.}  The exact file system used will also have a
 substantial impact on the behavior of a system, independent of the
 operating system.  The popular Ext4 file system on Linux is case sensitive,
-so that ``a'' and ``A'' are different files, while in OS X's HFS+ file system
+so that ``a'' and ``A'' are different files,
+while in OS X's HFS+ file system
 those file names would refer to the same file.
 File systems can have varying limits or behaviors for other items as well,
 including file name length (popularized due to the 8.3 limitations of the
@@ -73,11 +72,12 @@ how to execute complex instructions~\cite{Microarch}.
 In this work, we chose to focus on operating system,
 file system, and network
 environmental issues.
-Specifically, we are concerned with issues from the above source that are
-visible in the results an side effects of the system calls made by the
-application.  In our evaluation we take a deeper look at anomalies from
-these categories in order to assess CrashSimulator's effectiveness
-at testing with them.
+Due to the fashion in which we chose to implement Results Based Simulation,
+we are specifically concerned with issues from the above sources
+that are visible in the results an side effects of the system calls
+made by an application.
+In our evaluation we take a deeper look at anomalies from
+these categories in order to assess technique's effectiveness.
 We leave processor-based environmental differences as such
 bugs are being handled by other
 work~\cite{Alglave:2018:FSC:3173162.3177156}.
