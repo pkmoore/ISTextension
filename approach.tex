@@ -31,7 +31,12 @@ by examining failures of other applications
 in a target deployment environment,
 exploring public bug trackers,
 or by using tools that can identify
-potentially problematic environmental conditions.
+potentially problematic environmental conditions~\cite{Zhuang_NSDI_2014,
+rasley2015detecting}.
+Identifying anomalies through bugs posted on public trackers
+is ideal when determining
+whether or not an application
+is vulnerable to a widely publicized bug.
 The chosen anomalies are then examined
 in order to determine how they cause an application's communications
 with its environment
@@ -54,6 +59,42 @@ The ``modification'' required to simulate this anomaly
 is to change the results of similar accesses
 in a test execution
 to return ``access denied.''
+
+The second step
+is identifying
+a way to monitor an application's communication
+with its environment,
+by redirecting function calls,
+observing memory access,
+monitoring network activity,
+intercepting system calls,
+or some other similar means.
+These opportunities are identified by looking at the parameters,
+return values,
+and orderings,
+of an application's communications
+that indicate
+it is an appropriate time to simulate an anomaly.
+Monitoring an application's communications
+in this fashion
+has the added benefit
+of allowing us to find obvious situations
+where an application will fail
+to handle certain environmental features.
+This is possible because an application's failure
+to carry out required operations is visible as it interacts
+with its environment.
+Consider an application that fails to check whether or not
+a file already exists
+before destructively opening it and writing to it.
+The absence of this check
+is problematic in environments where the file already exists
+as it will be blindly overwritten.
+Because it is obvious from the sequence of communications
+the application makes when writing to the file
+that this check has been neglected,
+no simulation is required to identify the presence of a bug.
+
 
 Included with CrashSimulator is a corpus of environmental anomalies
 that we found to be problematic for real world
