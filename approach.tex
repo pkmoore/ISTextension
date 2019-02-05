@@ -95,20 +95,91 @@ the application makes when writing to the file
 that this check has been neglected,
 no simulation is required to identify the presence of a bug.
 
+The third step in RBS
+involves interposing on communications
+and making the modifications necessary
+to simulate the presence
+of an environmental anomaly.
+This could be accomplished by
+influencing the results of function calls,
+strategically altering memory values,
+altering the results of system calls,
+or some other method
+of presenting modified communications to an application.
+In the simplest case,
+simulating an anomaly only requires
+the modification of a single value.
+In more complex cases,
+large numbers of diverse communications
+need to be interdicted and altered
+in order to correctly simulate an anomaly.
+For example,
+simulating an erratic system clock
+requires that all efforts
+to access the clock
+be correctly modified
+to reflect the chosen aberration.
 
-Included with CrashSimulator is a corpus of environmental anomalies
-that we found to be problematic for real world
-applications.
-From a user's perspective, using CrashSimulator boils down to selecting one
-of the supplied anomalies to test an application against and allowing the
-tool to take over.  Behind the scenes,
-a four-step operation is used to identify bugs resulting from
-the chosen anomaly.
-These steps, illustrated in Figure~\ref{figure:approach} are as follows.
-First, CrashSimulator records the application being tested.  Next, it
-modifies this recording so that the chosen anomaly is present.
-Finally, It then replays this
-modified recording, exposing the application to the chosen anomaly.
+Lastly, the fourth RBS step
+is to analyze an application's response
+to a simulated anomaly.
+This is accomplished by evaluating an application's
+communications after it has been exposed
+to a simulated anomaly.
+The simplest conclusion to draw
+is whether or not the application
+has made an effort to respond
+to the anomaly.
+This determination can be made based
+on the assumption that the way an
+application deals with the anomaly will yield
+different program paths (and therefore different communications) than
+it would execute absent the anomaly.
+If the application
+does not alter its behavior, it has not
+correctly handled this flaw --- a failing result.
+Alternatively,
+if the application does deviate,
+it is likely that the application is taking some
+action to handle the injected condition --- an indication of possibly
+correct behavior.
+This approach is often sufficient
+to classify application behavior.
+As with traditional tests,
+CrashSimulator does not tell us that an application
+is bug free in a given situation;
+instead,
+it asserts that an application
+has incorrectly handled a given situation.
+
+A limitation of the above strategy
+is that it can result in false negatives
+when application's change their behavior
+but do not handle the anomaly correctly.
+These false negatives can be addressed
+by more detailed analysis
+of the application's post simulation behavior.
+This more detailed analysis
+depends upon knowing what a correct response
+to an anomaly looks like.
+This ``known good'' behavior can be found
+in a number of ways
+including by looking at standards and documentation
+that describe best practices for handling an anomaly
+in a given environment
+and examining how applications that correctly
+deal with the anomaly do so.
+Consider the case where the system call {\tt close()} fails.
+Whether or not retrying the call is correct
+depends upon what environment is being simulated.
+Instead, the application's post-simulation communications
+must be examined in enough detail to identify a repeated {\tt close()}
+call taking into account
+what is correct for the environment being simulated.
+
+
+\subsection{CrashSimulator: A Concrete RBS Implementation}
+
 
 \subsection{Trace Recording and Anomaly Injection}
 
@@ -154,39 +225,3 @@ and side effects.  Additionally, Linux system call semantics are well
 defined which simplifies implementation.  Finally, operating at this level
 allows CrashSimulator to test applications written any language that can
 execute Linux system calls.
-
-\subsection{Analyzing an Execution}
-
-After an application has been exposed to an anomaly CrashSimulator must
-make a determination about whether the application may be responding to it.
-This determination comes down to whether or not
-the application alters its
-system call behavior.  When an anomalous
-behavior is injected into a replay execution,
-it is expected that the application under
-test will deal with it in some way.  For example, applications can
-be expected to behave differently when the structure returned by a call to
-{\tt stat()} indicates the target file is a block device,
-rather than a regular
-file.  CrashSimulator bases its assessment on the assumption that the way
-an
-application deals with the anomaly will yield
-different program paths (and therefore different system calls) than
-those
-executed when the original system call trace was recorded.
-If the application
-does not alter its behavior, it has not
-correctly handled this flaw --- a failing result.  Alternatively, if the
-application does deviate, it is likely that the application is taking some
-action to handle the injected condition --- an indication of possibly
-correct behavior.
-
-This approach is often sufficient to classify application behavior.  As
-with traditional tests, CrashSimulator does not tell us that an application
-is bug free in a given situation; instead, it asserts that an application
-has incorrectly handled a given situation.  In our experience, actually
-exposing applications to anomalies CrashSimulator reported as unhandled
-did result
-in bugs ranging from simple hangs to more dramatic crashes that
-had the side effect of consuming all available resources or filling
-available disk space with garbage.
