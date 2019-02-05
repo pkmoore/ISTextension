@@ -83,7 +83,6 @@ these opportunities regardless of where they occur as a result of variances
 in test machines.  At the same time, this capability is what allows tests
 constructed for CrashSimulator to be used across applications.
 
-
 \subsection{Improving the CrashSimulator's Capabilities}
 \label{sec-improving-tool}
 
@@ -92,23 +91,6 @@ the addition of new anomalies.  This process involves identifying a new
 anomaly, transforming it into a set of system call results and side
 effects, and implementing a mutator script that CrashSimulator can use in
 testing applications.
-
-\subsubsection{Anomaly Identification} \label{subsec:anomalyidentification}
-
-The first step in adding a new anomaly to CrashSimulator is to identify the
-environmental condition that might cause an application to fail.
-Anomalies can be located and isolated via a number of methods. One source
-are the public bug trackers of projects available on the web.
-Identifying anomalies in this fashion is ideal when determining
-whether or not an application is vulnerable to a widely publicized bug.
-Additionally, some tools exist that can discover environmental conditions
-that might cause problems
-for applications
-running in the target environment.  This
-work utilized the results of both NetCheck~\cite{Zhuang_NSDI_2014} and
-CheckAPI~\cite{rasley2015detecting}
-to develop some of the
-anomalies used in our evaluation.
 
 \subsubsection{Converting Anomalies to System Call Sequences}
 
