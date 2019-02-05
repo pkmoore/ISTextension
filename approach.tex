@@ -1,4 +1,4 @@
-\section{How CrashSimulator Works}
+\section{Defining and Applying the Results Based Simulation Technique}
 \label{SEC:approach}
 
 \begin{figure}[t]
@@ -7,6 +7,19 @@
   \caption{Diagram illustrating CrashSimulator's approach}
   \label{figure:approach}
 \end{figure}
+
+
+As mentioned earlier,
+the Results Based Simulation (RBS) technique
+offers a reliable way to identify bugs
+that could arise from interaction with a given environment.
+In this section,
+we will break down the elements of the technique,
+and then introduce a tool called CrashSimulator,
+which we built as a concrete implementation of RBS.
+We also describe a second technology
+called Process Set Cloning
+that evolved during our work on CrashSimulator.
 
 Included with CrashSimulator is a corpus of environmental anomalies
 that we found to be problematic for real world
