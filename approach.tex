@@ -8,7 +8,6 @@
   \label{figure:approach}
 \end{figure}
 
-
 As mentioned earlier,
 the Results Based Simulation (RBS) technique
 offers a reliable way to identify bugs
@@ -20,6 +19,41 @@ which we built as a concrete implementation of RBS.
 We also describe a second technology
 called Process Set Cloning
 that evolved during our work on CrashSimulator.
+
+
+\subsection{Stepping through RBS}
+
+The first step in implementing RBS
+is selecting an anomaly or anomalies
+against which you wish to test applications.
+Anomalies can be collected
+by examining failures of other applications
+in a target deployment environment,
+exploring public bug trackers,
+or by using tools that can identify
+potentially problematic environmental conditions.
+The chosen anomalies are then examined
+in order to determine how they cause an application's communications
+with its environment
+to differ from a normal execution.
+Once they have been teased out,
+these differences can be represented
+as a set of modifications
+that must be made to an application's communications
+in order to simulate the chosen anomaly or anomalies.
+As an example,
+consider an anomalous environment
+where access to a required file is denied because of
+the environment's configured file permissions.
+This anomaly presents as attempts to access the file,
+such as calls to {\tt fread()},
+the {\tt read()} system call,
+or other file access mechanisms,
+returning an error stating that access to the file is denied.
+The ``modification'' required to simulate this anomaly
+is to change the results of similar accesses
+in a test execution
+to return ``access denied.''
 
 Included with CrashSimulator is a corpus of environmental anomalies
 that we found to be problematic for real world
