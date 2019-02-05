@@ -8,6 +8,18 @@
   \label{figure:approach}
 \end{figure}
 
+\begin{figure*}[t]
+  \center{}
+  \fbox{\includegraphics[scale=.65]{images/architecture}}
+  \caption{Diagram illustrating CrashSimulator's Architecture.  During the
+    course of a single rr execution, clone process sets are generated at
+    specific rr events.  A CrashSimlator supervisor process attaches to
+    these process sets and uses a strace-style system call listing to feed
+    subsequent system call activity and inject unusual environmental
+    conditions.}
+  \label{figure:architecture}
+\end{figure*}
+
 As mentioned earlier,
 the Results Based Simulation (RBS) technique
 offers a reliable way to identify bugs
@@ -179,49 +191,3 @@ what is correct for the environment being simulated.
 
 
 \subsection{CrashSimulator: A Concrete RBS Implementation}
-
-
-\subsection{Trace Recording and Anomaly Injection}
-
-Before testing can begin
-CrashSimulator generates recording of the application to be
-tested as it executes in an environment where the chosen anomaly is not
-present.  This recording acts both as a medium into which anomalies can be
-injected and a log of the application's behavior under normal
-conditions.  Once this recording is complete CrashSimulator runs a script,
-known as a mutator, associated with the chosen anomaly.
-This script is responsible for identifying
-the points in the recording
-where the anomaly can be injected and modifying
-the recording such that the anomaly is present.
-
-Once this mutated recording has been generated, CrashSimulator replays the
-application using this recording.
-Because replaying the
-recording faithfully follows the described system call behavior, the
-application is exposed to the injected
-anomalous conditions.  For
-example, suppose an anomaly causes a call to {\tt read()} to fail with
-return value of -1 and {\tt errno} set to {\tt EINVAL}.  Exposing an
-application to this situation only requires modifying the recording,
-such that this read call reflects the above values.
-
-We refer to this process as {\tt Result Based Simulation} and it hinges on
-on the idea that environmental anomalies will be present in the results of
-the procedure calls an application makes that are influenced by the
-applications environment.
-This technique could be carried out several different levels
-of execution.  For example, the results of calls to functions in a
-platform's {\tt libc} library could be intercepted and modified to reflect
-environmental differences.  At a higher level, virtual machines like the
-{\tt JVM} could be adapted to allow the results and side effects of calls
-to be interposed upon in a similar fashion.
-For CrashSimulator's purposes we chose to influence
-the results and side effects of system calls in order to simulate
-unusual environment.  Operating at this level provides a few key
-advantages.  First, there is already robust tooling in the Linux kernel
-that allows for the interception and modification of system call results
-and side effects.  Additionally, Linux system call semantics are well
-defined which simplifies implementation.  Finally, operating at this level
-allows CrashSimulator to test applications written any language that can
-execute Linux system calls.
