@@ -3,10 +3,16 @@
 A common problem for software developers is that applications tend to
 exhibit new bugs \textit{after} they have been deployed.
 To this point,
-preventing these types of bugs has proven difficult
+preventing bugs related to
+network,
+operating system,
+file system,
+and other similar environmental features
+has proven difficult
 largely because there is no way to
 know how an application will react to every environment without
 time-consuming and expensive testing.
+
 Enter CrashSimulator, a tool that uses information about how environments
 differ to identify incorrect behavior \textit{before} an application is
 deployed.  The tool utilizes \textit{Results Based Simulation},
@@ -21,20 +27,11 @@ on another application
 by applying these modifications.
 If the application does not make an effort to respond to a given scenario,
 the tool reports that a bug may exist.
-
 We evaluated CrashSimulator against a set of the most popular
 Linux applications selected
 from the Coreutils project and the Debian popularity contest.
 Our tests found a total of XXXX bugs in YYYY applications,
 the consequences of which range from hangs and crashes, to data loss and
-remote denial of service conditions.  In addition, we conducted
-a user study in which
-ZZZ participants tested real world applicaitons using CrashSimulator.
-This effort resulted in the identification of an additional WWWW new
-bugs.
-Our combined results demonstrate
-that CrashSimulator's strategy of identifying bugs
-is effective, and could yield results for
-developers with diverse backgrounds, and across skill sets.
+remote denial of service conditions.
 
 \end{abstract}
