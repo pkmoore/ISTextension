@@ -59,7 +59,11 @@ between application and its environment.
 When employing \textit{results based simulation},
 the anomalies that represent a given environment
 are identified by
-observing the communications of applications already running within it.
+observing applications already running within the environment
+as they communicate with it
+through function calls,
+system calls,
+or similar means.
 Other applications can be tested in an simulation of that environment
 by intercepting it's communications
 and modifying them in such a way
@@ -99,7 +103,7 @@ could use the tool to identify bugs
 in real world applications
 with a high degree of confidence.
 We conducted a user study with
-ZZZ Master's and Doctoral computer science students
+ZZZ Undergraduate and Graduate computer science students
 who were asked to use CrashSimulator to test
 the same type of applications evaluated in our initial tests.
 The results show that the developers were able to find bugs
