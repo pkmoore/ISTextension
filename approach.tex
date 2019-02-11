@@ -1,4 +1,4 @@
-\section{Defining and Applying the Results Based Simulation Technique}
+\section{Defining and Applying the Anomalous Environment Simulation Technique}
 \label{SEC:approach}
 
 \begin{figure}[t]
@@ -21,58 +21,58 @@
 \end{figure*}
 
 As mentioned earlier,
-the Results Based Simulation (RBS) technique
+the anomalous environment simulation(AES) technique
 offers a reliable way to identify bugs
 that could arise from interaction with a given environment.
 In this section,
-we will break down the elements of the technique,
+we will break down the steps of the technique,
 and then introduce a tool called CrashSimulator,
-which we built as a concrete implementation of RBS.
+which we built as a concrete implementation of AES.
 We also describe a second technology
 called Process Set Cloning
 that evolved during our work on CrashSimulator.
 
 
-\subsection{Stepping through RBS}
+\subsection{Stepping through AES}
 
-The first step in implementing RBS
+The first step in implementing AES
 is selecting an anomaly or anomalies
-against which you wish to test applications.
+against which you wish to test an application.
 Anomalies can be collected
 by examining failures of other applications
 in a target deployment environment,
-exploring public bug trackers,
-or by using tools that can identify
-potentially problematic environmental conditions~\cite{Zhuang_NSDI_2014,
+by exploring public bug trackers,
+or by using other tools that can identify
+potentially problematic behavior in other domains~\cite{Zhuang_NSDI_2014,
 rasley2015detecting}.
-Identifying anomalies through bugs posted on public trackers
-is ideal when determining
+Selecting bugs posted on public trackers
+is ideal if you wish to determine
 whether or not an application
 is vulnerable to a widely publicized bug.
 The chosen anomalies are then examined
-in order to determine how they cause an application's communications
+to determine how they cause an application's communications
 with its environment
-to differ from a normal execution.
-Once they have been teased out,
-these differences can be represented
+to differ from a normal execution and why.
+Once teased out,
+these differences proscribe
 as a set of modifications
 that must be made to an application's communications
 in order to simulate the chosen anomaly or anomalies.
 As an example,
 consider an anomalous environment
 where access to a required file is denied because of
-the environment's configured file permissions.
-This anomaly presents as attempts to access the file,
+how the environment's file security configuration.
+This anomaly results in attempts to access the file,
 such as calls to {\tt fread()},
 the {\tt read()} system call,
 or other file access mechanisms,
-returning an error stating that access to the file is denied.
+failing with an error stating that access to the file is denied.
 The ``modification'' required to simulate this anomaly
 is to change the results of similar accesses
 in a test execution
 to return ``access denied.''
 
-The second step
+The second step in ASE
 is identifying
 a way to monitor an application's communication
 with its environment,
@@ -80,34 +80,36 @@ by redirecting function calls,
 observing memory access,
 monitoring network activity,
 intercepting system calls,
-or some other similar means.
-These opportunities are identified by looking at the parameters,
+or other means.
+Looking at the parameters,
 return values,
 and orderings,
 of an application's communications
-that indicate
-it is an appropriate time to simulate an anomaly.
+can indicate
+when it would be an appropriate time to simulate an anomaly.
 Monitoring an application's communications
 in this fashion
 has the added benefit
 of allowing us to find obvious situations
 where an application will fail
-to handle certain environmental features.
-This is possible because an application's failure
-to carry out required operations is visible as it interacts
-with its environment.
+to handle certain environmental features,
+as such failure to operate will be
+is visible.
 Consider an application that fails to check whether or not
 a file already exists
 before destructively opening it and writing to it.
 The absence of this check
-is problematic in environments where the file already exists
+is problematic in environments where the file already exists,
 as it will be blindly overwritten.
-Because it is obvious from the sequence of communications
+The sequence of communications
 the application makes when writing to the file
-that this check has been neglected,
+will make it obvious that this check has been neglected.
+As such,
 no simulation is required to identify the presence of a bug.
+In cases like this,
+there is no need to complete the other two steps in AES
 
-The third step in RBS
+The third step
 involves interposing on communications
 and making the modifications necessary
 to simulate the presence
@@ -132,79 +134,77 @@ to access the clock
 be correctly modified
 to reflect the chosen aberration.
 
-Lastly, the fourth RBS step
+Lastly, the fourth AES step
 is to analyze an application's response
 to a simulated anomaly.
-This is accomplished by evaluating an application's
-communications after it has been exposed
-to a simulated anomaly.
+This is accomplished
+by evaluating an application's communications
+after the exposure is completed.
 The simplest conclusion to draw
 is whether or not the application
 has made an effort to respond
-to the anomaly.
-This determination can be made based
-on the assumption that the way an
-application deals with the anomaly will yield
-different program paths (and therefore different communications) than
-it would execute absent the anomaly.
+to the anomaly,
+a determination that can be made based
+on the assumption
+that such a response will yield
+different program paths (and therefore different communications).
 If the application
 does not alter its behavior, it has not
-correctly handled this flaw --- a failing result.
+correctly handled this flaw.
 Alternatively,
 if the application does deviate,
-it is likely that the application is taking some
-action to handle the injected condition --- an indication of possibly
-correct behavior.
-This approach is often sufficient
+it is likely
+an action has occurred to handle the simulated condition.
+This simple yes or no approach
+is often sufficient
 to classify application behavior.
-As with traditional tests,
-CrashSimulator does not tell us that an application
-is bug free in a given situation;
-instead,
-it asserts that an application
-has incorrectly handled a given situation.
 
-A limitation of the above strategy
+One limitation of the above strategy
 is that it can result in false negatives
-when application's change their behavior
-but do not handle the anomaly correctly.
+should an application change its behavior
+but still not handle the anomaly correctly.
 These false negatives can be addressed
 by more detailed analysis
 of the application's post simulation behavior.
-This more detailed analysis
-depends upon knowing what a correct response
+Before testing,
+a user must know
+what a correct response
 to an anomaly looks like.
 This ``known good'' behavior can be found
-in a number of ways
-including looking at standards and documentation
+by looking at standards and documentation
 that describe best practices for handling an anomaly
-in a given environment
-and examining how applications that correctly
+in a given environment,
+or by examining how applications that correctly
 deal with the anomaly do so.
-Consider the case where the system call {\tt close()} fails.
-Whether or not retrying the call is correct
-depends upon what environment is being simulated.
-Instead, the application's post-simulation communications
-must be examined in enough detail to identify a repeated {\tt close()}
-call taking into account
-what is correct for the environment being simulated.
+Consider the case where a {\tt close()} system call fails.
+Retrying the call may not be the correct action,
+depending upon the environment in question.
+AES can be used to determine if an application
+has handled the failure correctly
+by examining the application's post-simulation communications in detail,
+and taking into account the correctness of retrying the call.
 
-\subsection{CrashSimulator: A Concrete RBS Implementation}
+\subsection{CrashSimulator: A Concrete AES Implementation}
 
-Evaluating RBS in a real-world fashion
+Evaluating AES in a real-world fashion
 requires a concrete implementation of its four components.
-We built this implementation
-into a tool we call CrashSimulator,
-the details of which are described below.
+We built this implementation into a tool we call CrashSimulator.
+Here, we explain the key decisions that guided the manner in which we
+developed this tool.
 
-The first decision made was to implement RBS by manipulating an
-applications communications at the system call level.
-Operating at this level provides a few key
-advantages.  First, there is already robust tooling in the Linux kernel
+The first decision was
+to operate at the system call level
+rather than manipulating
+calls to library functions,
+memory accesses,
+or other points where we could influence an application's
+communications.
+Making this choice provided us a few key advantages.
+First, there is already robust tooling in the Linux kernel
 that allows for the interception and modification of system call results
 and side effects.  Additionally, Linux system call semantics are well
 defined which simplifies implementation.  Finally, operating at this level
-allows CrashSimulator to test applications written any language that can
+allows CrashSimulator to test applications written in any language that can
 execute Linux system calls.
 
 Work then turned to gathering a corpus of anomalies to test applications
@@ -214,21 +214,23 @@ were collected by examining public bug trackers,
 the source code of major portable applications, and the capabilities of
 tools like NetCheck~\cite{Zhuang_NSDI_2014}
 and CheckAPI~\cite{rasley2015detecting}.  These anomalies were converted
-into sets of modifications that simulate the presence of an anomaly when
-appropriately applied to the results of the system calls an application
+into sets of modified responses
+that simulate the presence of an anomaly when
+appropriately presented as the results of system calls an application
 makes.
 This process required manual effort and expertise.  However,
 much like
 the effort involved in constructing a unit test to check for correct
 behavior in a piece of code, this initial outlay of
-user skill and effort was be paid back, as it was
+user skill and effort was paid back, as its products were
 used repeatedly over time to test many different applications.
 
-The second step of RBS, communication monitoring, was achieved by
-application executions using a modified version of the {\tt rr}!!CITE!!
+We carried out the second step of AES, communication monitoring, by
+recording application executions
+using a modified version of the {\tt rr}!!CITE!!
 record-and-replay debugger.  The specific modification that allowed this
-capability was an enhancement that allowed  a {\tt strace} style
-system call recording being output alongside {\tt rr's} normal recording
+capability was an enhancement that allowed  a {\tt strace}-style
+system call recording to be output alongside {\tt rr's} normal recording
 format.
 This enhancement provided
 a complete log of an applications system call activity
@@ -237,49 +239,44 @@ discussed earlier, simply observing these system calls was enough to
 identify bugs-of-omission in many applications.  This is discussed further
 in Section~\ref{SEC:evaluation}.
 
-Anomaly simulation
-was implemented in CrashSimulator
-using a novel technique
-referred to as {\tt process set cloning}.  This technique uses the second
+In implementing the anomaly simulation of AES,
+CrashSimulator, we actually developed
+a novel technique
+we called {\tt process set cloning}.  This technique uses the second
 modification we made to rr -- the ability to generate copies of the set of
 processes underlying an application at opportune moments during replay.
-{\tt rr} manages
-the full set of processes an application requires and offers the ability to
+The {\tt rr} debugger manages
+the full set of processes underlying an application
+and offers the ability to
 make a copy of it so that users can test debugging
-hypotheses without damaging the originals.  Our modified version of {\tt
-rr} extends this capability to allow process sets to be liberated from {\tt
+hypotheses without damaging the original processes.
+Our modified version
+extends this capability, liberating process sets from {\tt
 rr} so that they can be exposed to simulated anomalies.
 This means that we can rely on {\tt rr}
-to store the information necessary to perform the bulk of
-replay that must take place before the application reaches the point in
-execution where testing will be performed.  When this point is reached we
-take advantage of these combined capabilities
-to create a
-copy of the set of processes being replayed and liberate them so our
-CrashSimulator process supervisor can take over replay responsibilities.
+to store the information necessary to perform enough of the
+replay that must take place before the application reaches the
+testing point.
 
-Process sets generated by {\tt rr} are created in a stopped state and
-remain until they are attached to and utilized by a CrashSimulator
+Process sets generated in this fashion are created in a stopped state and
+remain that way until they are attached to and utilized by a CrashSimulator
 supervisor.  Each process set has its own supervisor process to test
 its configured environmental anomaly.  The
 supervisor wakes up the process set it is managing and simulates any
 subsequent system calls it makes.
-At this point the strace-style recording generated by {\tt rr} once again
-proves useful as a medium onto which the modifications necessary to
-simulate an anomaly can be applied.  This modified version of the recording
-is replayed by the process supervisor, exposing the processes to the
-simulated anomaly.
+During the course of this simulation, the modified responses created in
+step one are supplied where appropriate exposing the processes to the
+anomaly being tested.
 Supervisors can complete this
 process independently of one another, which lends a
 high degree of speed and
 parallelism to the whole CrashSimulator testing process.
 
-Once an anomaly has been simulated CrashSimulator monitor's its response by
-examining the system calls it makes.  The primary means by which
-CrashSimulator diagnoses bugs is observing whether or not the application
-performs a different set of system calls than is expected based on the
+The primary means by which
+CrashSimulator diagnoses bugs is observing whether or not an application
+performs a different set of system calls than what is expected based on the
 recording being replayed.  A "divergence" from the recording indicates
-the application has changed its behavior meaning it it might be handling
+the application has changed its behavior and might be handling
 the anomaly in question.  Following the recording precisely, in spite of
 the simulated anomaly signals the possibility of a bug.
 
@@ -287,7 +284,7 @@ In cases where more detailed analysis of an application's response
 is required, CrashSimulator can use a
 technique called ``execution preservation'' to allow a process set to run
 ``off the end'' of the recording supporting it.  This technique uses
-heuristics to generate false data which is used to populate the results and
+heuristics to generate false data to populate the results and
 side effects of system calls the application makes in this state.  This
 effort is necessary because resources like files on disk, file descriptors,
 and sockets do not exist due to the nature of replay execution.  While
