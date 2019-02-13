@@ -2,13 +2,12 @@
 
 A common problem for software developers is that applications tend to
 exhibit new bugs \textit{after} they have been deployed.
-To this point,
-preventing bugs related to
+Preventing bugs related to
 network,
 operating system,
 file system,
 and other similar environmental features
-has proven difficult
+has proven difficult in the past
 largely because there is no way to
 know how an application will react to every environment without
 time-consuming and expensive testing.
@@ -16,19 +15,23 @@ Enter CrashSimulator, a tool that uses
 information about how environmental differences
 affect applications
 to identify incorrect behavior \textit{before} deployment.
-The tool utilizes \textit{Anomalous Environment Simulation},
-a novel technique based
+The key to the tool
+is a technique called
+\textit{Anomalous Environment Simulation},
+which is based
 on the key insight that unusual environmental properties can
-be transformed into a set modified responses
-the application would receive
-were it interacting with the environment in question.
+be transformed into a set of modified responses
+that mirror the conditions
+the application would experience
+when interacting with the environment in question.
 The tool is able
 simulate these modified responses
 to impose anomalous environmental conditions
 on an application.
 If the application does not respond correctly to a given scenario,
 the tool reports that a bug may exist.
-We evaluated CrashSimulator against a set of the most popular
+To test the tool,
+we evaluated CrashSimulator against a set of the most popular
 Linux applications selected
 from the Coreutils project and the Debian popularity contest.
 Our tests found a total of XXXX bugs in YYYY applications,
