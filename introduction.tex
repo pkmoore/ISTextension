@@ -4,14 +4,15 @@
 
 No matter how well an application is tested before being released,
 new bugs always seem emerge after deployment.
-One reason is that these applications will run in a diverse set of
+One reason is that these applications will operate within a diverse set of
 deployment \emph{environments},
 and variations between these environments tend to
 reveal previously undiscovered flaws.
 These flaws emerge from subtle but critical environmental differences
-caused by sunch situations as
-APIs provided by operating systems changing across versions~\cite{LinuxGlibcChanges},
-or file systems exhibiting subtle but critical
+caused by such factors as
+operating system APIs changing across versions
+~\cite{LinuxGlibcChanges},
+or small variations in file systems exhibiting subtle but critical
 differences~\cite{EXT4Layout, AppleHFS}.
 Even if the network and adapter are identical,
 network behavior can still diverge from what is expected~\cite{vbox}.
@@ -54,29 +55,29 @@ by presenting a new technique for catching environmental bugs
 so expensive and time consuming post-deployment fixes can be avoided.
 Guiding our efforts
 is a technique
-we call \textit{anomalous environment simulation}.
+we call \textit{Anomalous Environment Simulation} (AES).
 It is founded upon the key insight
 that problematic environmental properties
 (which we refer to as \textit{anomalies})
 can be detected in the communications
 between an application and its environment.
-When employing \textit{anomalous environment simulation},
+When employing AES,
 the anomalies in a given environment
 are identified by
 observing results from the communications of other applications.
 That is,
 the function calls,
 system calls,
-or other communications an applications makes in an environment provide
+or other communications an application makes in an environment provide
 a record of probable issues.
-These communications can be intercepted
+The communications of the application being tested can be intercepted
 and modified in such a way
 that the observed anomalies are present.
 Then, the way the application responds to the simulated anomalies
-indicates the potential for bugs once it is actually deployed
-to the target environment.
+will indicate any potential for bugs upon deployment
+within the target environment.
 
-To test the ability of this technique to expose environmental
+To verify the ability of this technique to reveal environmental
 bugs, we built and tested a proof of concept tool
 called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
@@ -120,10 +121,10 @@ The main contributions in this work can be summarized as follows:
 that previously unanticipated flaws can be created by the interaction
 between an application and its environment.}
 
-\item{It introduces \textit{anomalous environment simulation}
+\item{It introduces \textit{Anomalous Environment Simulation}
 as an easy-to-use method of simulating environments
-so an applications' behavior in those environments
-can be assessed before deployment
+so an application's behavior in those environments
+can be assessed before deployment---
 without the time and resource costs of
 testing each environment individually.}
 
@@ -132,8 +133,10 @@ which implements anomalous environment simulation
 in order to find previously-undiscovered environmental bugs
 in widely deployed and highly tested code.}
 
-\item{It shows that developers are able
-to use {\em CrashSimulator}
-to find real bugs in real applications.}
+\item{It proves the effectiveness
+of {\em CrashSimulator}
+by presenting results
+in which developers
+were able to find real bugs in real applications.}
 
 \end{enumerate}
