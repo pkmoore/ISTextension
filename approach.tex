@@ -4,7 +4,8 @@
 \begin{figure}[t]
   \center{}
   \fbox{\includegraphics[scale=.37]{images/approach}}
-  \caption{Diagram illustrating CrashSimulator's approach}
+  \caption{Diagram illustrating CrashSimulator's approach to identifying
+    bugs by simulating anomalous condtions}
   \label{figure:approach}
 \end{figure}
 
@@ -49,7 +50,7 @@ through public bug trackers,
 or by using other tools that can identify
 potentially problematic behavior in other domains~\cite{Zhuang_NSDI_2014,
 rasley2015detecting}.
-Selecting bugs public trackers
+Selecting bugs from public trackers
 is ideal if you wish to determine
 whether or not an application
 is vulnerable to a widely publicized bug.
@@ -66,10 +67,11 @@ As an example,
 consider an anomalous environment
 where access to a required file is denied because of
 the environment's file security configuration.
-This anomaly results in attempts to access the file,
+With this anomaly,
+attempts to access the file
 such as calls to {\tt fread()},
 or the {\tt read()} system call,
-which fail with an error stating that access to the file is denied.
+will fail with an error stating that access to the file is denied.
 The ``modification'' required to simulate this anomaly
 is to change the results of similar accesses
 in a test execution
@@ -144,7 +146,7 @@ Lastly, the fourth AES step
 is to analyze an application's response
 to a simulated anomaly.
 This is accomplished
-by evaluating an its communications
+by evaluating its communications
 after exposure is completed.
 The simplest conclusion to draw
 is whether or not the application
@@ -192,17 +194,16 @@ and taking into account the correctness of retrying the call.
 
 \subsection{CrashSimulator: A Concrete AES Implementation}
 
-Evaluating AES in a real-world fashion requires a concrete implementation
-of its four components.  Evaluating AES in a real-world fashion requires a
-concrete implementation of its four components. We built this
-implementation into a tool we call CrashSimulator. To be able to evaluate
-how effectively CrashSimulator performs—and to test, a series of tests were
-conducted using a prototype build on rr version 5.2.0 running on a
-32-bit Linux kernel running distributed with Ubuntu 16.04 LTS. Our
-modifications to rr were carried out in C++ and the CrashSimulator
+Evaluating AES in a real-world fashion requires a
+concrete implementation of its four components.
+We built this implementation into a tool we call CrashSimulator.  The
+prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
+distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
+explained in this section, were carried out in C++ and the CrashSimulator
 supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
 line C extension that allows it to interact with processes using the Ptrace
-API. This version of CrashSimulator is available as a Docker container and,
+API.
+This version of CrashSimulator is available as a Docker container and,
 due to some operating system configuration being necessary, is most easily
 installed in this fashion.
 
