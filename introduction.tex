@@ -77,6 +77,27 @@ Then, the way the application responds to the simulated anomalies
 will indicate any potential for bugs upon deployment
 within the target environment.
 
+AES allows knowledge
+about what causes a bug
+in a given environment
+to be preserved programmatically
+so it can automatically assist
+in preventing future failures.
+This is an improvement over situations
+where this knowledge would be lost or,
+at best,
+preserved as easy-to-overlook documentation
+and institutional knowledge.
+Further,
+the universal nature of the technique means this information
+can be shared between development efforts
+allowing one parties failures to spare others
+from conditions they have not directly experienced.
+Through this preservation and collaboration
+a corpus of environmental anomalies can be assembled
+that can act as a sort of universal test suite
+ensuring future applications do not suffer from bugs of the past.
+
 To verify the ability of this technique to reveal environmental
 bugs, we built and tested a proof of concept tool
 called {\em CrashSimulator}\footnote{Our approach is
