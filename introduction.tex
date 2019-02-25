@@ -63,7 +63,7 @@ can be detected in the communications
 between an application and its environment.
 When employing AES,
 the anomalies in a given environment
-are identified by
+can be identified by
 observing results from the communications of other applications.
 That is,
 the function calls,
@@ -73,26 +73,26 @@ a record of probable issues.
 The communications of the application being tested can be intercepted
 and modified in such a way
 that the observed anomalies are present.
-Then, the way the application responds to the simulated anomalies
+This exposes the application to the anomalies
+and the way it responds
 will indicate any potential for bugs upon deployment
 within the target environment.
+In a sense, it provides developers
+an easy and inexpensive way
+to learn from the mistakes of others,
+saving money and programming hours
+that otherwise would be devoted to finding and fixing
+environmental bugs.
 
-AES allows knowledge
-about what causes a bug
-in a given environment
-to be preserved programmatically
-so it can automatically assist
-in preventing future failures.
-This is an improvement the typical case
-where findings are lost or,
-at best,
-preserved as easy-to-overlook documentation
-and institutional knowledge.
-Further,
-the universal nature of the technique means this information
-can be shared between development efforts
-allowing one party's failures to spare others
-from conditions they have not directly experienced.
+By using the AES technique,
+developers can preserve and catalog
+knowledge about what causes a bug
+in a given environment.
+This is an improvement over current practices,
+where findings are often lost or,
+at best, preserved as
+institutional knowledge
+that may not survive developer turnover.
 Through this preservation and collaboration
 a corpus of environmental anomalies can be assembled
 that acts as a sort of universal test suite
@@ -130,9 +130,6 @@ that were missed by the applications' existing testing strategies.
 Additionally, the
 participants were able to find bugs
 in environments with which they had only a limited amount of experience.
-
-\preston{I kept contribution 1 because I think we make this case pretty
-strongly in section II.}
 
 The main contributions in this work can be summarized as follows:
 
