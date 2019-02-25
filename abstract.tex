@@ -11,25 +11,30 @@ has proven difficult in the past
 largely because there is no way to
 know how an application will react to every environment without
 time-consuming and expensive testing.
-Enter CrashSimulator, a tool that uses
-information about how environmental differences
-affect applications
-to identify incorrect behavior \textit{before} deployment.
+Enter CrashSimulator, a tool that utilizes
+evidence of an application's failure
+in a given environment
+as a predictor of the same inadequacy in other applications.
 The key to the tool
 is a technique called
 \textit{Anomalous Environment Simulation},
-which is based
-on the insight that unusual environmental properties can
-be transformed into a set of modified responses
-that mirror the conditions
-the application would experience
-when interacting with the environment in question.
-The tool is able
-to simulate these modified responses
-to impose anomalous environmental conditions
-on an application.
+which allows
+unusual environmental properties
+found in the interactions between an application
+and its environment to be
+be transformed into a set of responses
+that recreate the environment in question.
+Simulating these responses
+on a running application
+imposes anomalous environmental conditions
+on it.
 If the application does not respond correctly to a given scenario,
 the tool reports that a bug may exist.
+Over time,
+the tool's library of modified responses can be expanded
+allowing developers to learn of potential bugs
+in new applications
+before deployment.
 To test the tool,
 we evaluated CrashSimulator against a set of the most popular
 Linux applications selected
