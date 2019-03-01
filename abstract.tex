@@ -14,26 +14,32 @@ time-consuming and expensive testing.
 Enter CrashSimulator, a tool that utilizes
 evidence of an application's failure
 in a given environment
-as a predictor of the same inadequacy in other applications.
+as a predictor of
+potential inadequacies
+in others.
 The key to the tool
 is a technique called
 \textit{Anomalous Environment Simulation},
-which allows
+which can extract
 unusual environmental properties
 found in the interactions between an application
-and its environment to be
-be transformed into a set of responses
-that recreate the environment in question.
-Simulating these responses
+and its environment
+and use them to
+recreate the environment in question.
+Simulating these features
 on a running application
 imposes anomalous environmental conditions
 on it.
 If the application does not respond correctly to a given scenario,
 the tool reports that a bug may exist.
-Over time,
-the tool's library of modified responses can be expanded
-allowing developers to learn of potential bugs
-in new applications
+These anomalies can then be stored in the tool,
+so,
+over time,
+a developer will be able
+to test
+new applications
+for an increasingly wider range
+of potential bugs
 before deployment.
 To test the tool,
 we evaluated CrashSimulator against a set of the most popular
