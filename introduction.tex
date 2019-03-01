@@ -15,11 +15,11 @@ operating system APIs changing across versions
 or small variations in file systems exhibiting subtle but critical
 differences~\cite{EXT4Layout, AppleHFS}.
 Even if the network and adapter are identical,
-network behavior can still diverge from what is expected~\cite{vbox}.
-These environmental differences greatly exacerbate
+network behavior can still diverge from what is expected~\cite{vbox},
+and these environmental differences greatly exacerbate
 the chance that an application will function incorrectly when deployed.
 
-These unforeseeable environmental bugs
+These unforeseeable bugs
 complicate the work of application developers who, according to a
 recent survey conducted by ClusterHQ~\cite{ClusterHQSurvey},
 spend a significant portion of their time
@@ -36,10 +36,10 @@ that attempt to hide these differences,
 such as the Java Runtime Environment,
 are not perfect,
 leading them to be rechristened ``Write-Once, Debug Everywhere''~\cite{WODE}.
-A more direct approach is
+A more direct approach would be
 to identify and fix deficiencies before deployment,
 but history has shown that,
-even if enormous developer effort is put forward,
+even if enormous effort is put forward,
 it may be insufficient to uncover these bugs.
 Microsoft employs thousands of engineers with nearly a
 1:1 ratio of testers to developers~\cite{Page2009}.
@@ -52,51 +52,46 @@ being rendered unbootable~\cite{kb4056892}.
 The work documented in this paper
 seeks to move the needle in the developer's favor
 by presenting a new technique for catching environmental bugs
-so expensive and time consuming post-deployment fixes can be avoided.
+before deployment.
 Guiding our efforts
 is a technique
 we call \textit{Anomalous Environment Simulation} (AES).
-It is founded upon the key insight
-that problematic environmental properties
-(which we refer to as \textit{anomalies})
-can be detected in the communications
-between an application and its environment.
-When employing AES,
-the anomalies in a given environment
-can be identified by
-observing results from the communications of other applications.
-That is,
-the function calls,
+This technique is founded upon the key insight
+that problematic environmental properties,
+which we refer to as \textit{anomalies},
+can be detected
+in the function calls,
 system calls,
-or other communications an application makes in an environment provide
-a record of probable issues.
-The communications of the application being tested can be intercepted
-and modified in such a way
-that the observed anomalies are present.
-This exposes the application to the anomalies
-and the way it responds
-will indicate any potential for bugs upon deployment
-within the target environment.
-In a sense, it provides developers
+or other communications an application makes with an environment.
+When employing AES,
+the anomalies
+unique to a given environment
+can be substituted into
+the communications of the application being tested
+in such a way
+that its response to them will indicate any potential
+for bugs upon deployment
+into the environment.
+In this way, it provides developers
 an easy and inexpensive way
 to learn from the mistakes of others,
 saving money and programming hours
 that otherwise would be devoted to finding and fixing
 environmental bugs.
-
-By using the AES technique,
+Furthermore,
+by using the AES technique,
 developers can preserve and catalog
-knowledge about what causes a bug
-in a given environment.
+these anomalies,
+giving them a formal and reproducible strategy for testing applications.
 This is an improvement over current practices,
 where findings are often lost or,
 at best, preserved as
 institutional knowledge
 that may not survive developer turnover.
-Through this preservation and collaboration
+Eventually,
 a corpus of environmental anomalies can be assembled
-that acts as a sort of universal test suite
-ensuring future applications do not suffer from bugs of the past.
+that can help ensure
+future applications do not suffer from bugs of the past.
 
 To verify the ability of this technique to reveal environmental
 bugs, we built and tested a proof of concept tool
@@ -133,18 +128,23 @@ in environments with which they had only a limited amount of experience.
 
 The main contributions in this work can be summarized as follows:
 
-\begin{enumerate}
+\begin{itemize}
 
 \item{It provides evidence
 that previously unanticipated flaws can be created by the interaction
 between an application and its environment.}
 
 \item{It introduces \textit{Anomalous Environment Simulation}
-as an easy-to-use method of simulating environments
+as an easy-to-use method for simulating environments
 so an application's behavior in those environments
 can be assessed before deployment---
 without the time and resource costs of
 testing each environment individually.}
+
+\item{It allows developers to build a corpus of extracted anomalies, so
+    application testing does not have to rely on trial and error,
+    or institutional knowledge,
+    that disappears with developer turnover.}
 
 \item{It demonstrates a new tool, {\em CrashSimulator},
 which implements anomalous environment simulation
@@ -157,4 +157,4 @@ by presenting results
 in which developers
 were able to find real bugs in real applications.}
 
-\end{enumerate}
+\end{itemize}
