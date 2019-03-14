@@ -74,10 +74,9 @@ environmental bugs?}
 The most crucial question to ask about CrashSimulator is how readily it can
 identify environmental bugs from a wide variety of causes.  To evaluate the
 tool in this regard we configured the tool to look for bugs from the
-categories discussed in Section~\ref{SEC:background}.  These bugs included
-a filesystem bug involving unusual file types of files on Linux systems, a
-network bug based on unhandled long network timeouts, and bug derived from
-operating system differences in the behavior of failed {\tt close} calls.
+categories discussed in Section~\ref{SEC:background}. \texbf{CHECK THIS} These bugs included
+a filesystem bug involving unusual filesystem and network situations under
+Linux.
 All of these bugs relied on common API calls, and thus had the potential to
 appear in many programs.  We selected the tested applications either
 because they were deemed ``popular'' by Debian's Popularity
@@ -85,15 +84,29 @@ Contest~\cite{DebPopCon}, or were from GNU Coreutils.  Coreutils
 applications were chosen because of their widespread inclusion in many
 Linux distributions.
 
-\preston{need paragraph here talking about finding bugs after step 2}
+
+\subsubsection{Bugs Related to Moving Files}
+
+As was discussed in Section~\ref{SEC:background}, the first bug finding
+opportunity offered by AES is after analyzing an applications unmodified
+system call behavior.  To evaluate CrashSimulator's ability to find bugs at
+this point, we employed it in analyzing applications as they move files
+about on the filesystem.  In many cases this operation can be handled
+atomically by the operating system through the {\tt rename()} system call.
+However, in situations where the source file and destination file are on
+different storage devices, the application performing the operation must
+manually perform all of the steps required to successfully move a file.
+This is a situation that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
-{\bf Method.}  To identify the correct steps for moving a file,
-we examined several libraries and found that {\tt mv} seemed
+{\bf Method.}  Catching this particular bug requires CrashSimulator to use
+a checker that encodes the correct steps involved in moving a file from one
+storage device to another. To identify these steps
+we examined several libraries and applications and found that {\tt mv} seemed
 to handle cases that other tools failed to consider.  Following this, we
-used the trace of {\tt mv} as a template and created instructions to modify
-the trace to simulate the anomalies for which this program tests.
-The resulting anomalies that could be detected were as follows:
+used the trace of {\tt mv} as a template to create an checker that
+evaluates whether or not the application performs the following
+checks and operations:
 
 \paragraph{Source Replaced}
 
