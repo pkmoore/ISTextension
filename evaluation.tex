@@ -209,14 +209,15 @@ CrashSimulator is effective at finding the anomalous behaviors in these
 cases.
 
 
-\preston{Need paragraph here talking about finding bugs by injecting}
-
 \subsubsection{Unexpected File Types}
 \label{sec-file-type-bugs}
-Providing unexpected types of files to
-applications.
 
-The first anomaly investigated occurs when an application has to retrieve
+The second bug finding opportunity offered by AES is available after some
+unusual condition has been injected into the running application.  To test
+CrashSimulator's capabilities at this point we needed an environmental
+anomaly that could be used against a wide variety of applications.  We
+selected one that occurs
+when an application running on a Linux system has to retrieve
 and process data from a file.  Linux supports several ``special'' file
 types apart from the standard ``regular'' file type, such as
 directories, symbolic links, character devices, block devices, sockets, and
