@@ -85,6 +85,119 @@ Contest~\cite{DebPopCon}, or were from GNU Coreutils.  Coreutils
 applications were chosen because of their widespread inclusion in many
 Linux distributions.
 
+\preston{need paragraph here talking about finding bugs after step 2}
+frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
+
+{\bf Method.}  To identify the correct steps for moving a file,
+we examined several libraries and found that {\tt mv} seemed
+to handle cases that other tools failed to consider.  Following this, we
+used the trace of {\tt mv} as a template and created instructions to modify
+the trace to simulate the anomalies for which this program tests.
+The resulting anomalies that could be detected were as follows:
+
+\paragraph{Source Replaced}
+
+An application should make an effort to ensure that the file being copied is not
+replaced between the time it is initially examined and the time it is opened
+for copying.  Otherwise it could have been replaced by a file of a different
+type, such as a character device.
+
+To test whether applications are robust to anomalies involving source file replacement,
+we developed a checker that monitors whether a series of safety checks
+are performed and applied it to traces that simulated a cross-device move.
+Failing to perform these checks often results in corruption of the file~\cite{PythonShutilBug}.
+
+\paragraph{Preserve Xattrs}
+
+Extended file attributes are used by modern
+operating systems to store descriptive information about a file that cannot be
+held by normal filesystem fields.  For example, an operating system can use
+extended file attributes to record whether or not a file was downloaded from the
+Internet -- important security information that warn
+users if they are about to open a potentially unsafe file.  Apple's Gatekeeper
+relies on extended file attributes to prevent the execution of applications downloaded from
+untrusted developers without explicit user action~\cite{AppleCodeSigning}.
+When copying a file,
+an application should retrieve extended file attributes from the source
+file and, later, apply them to the destination file.
+In this case, CrashSimulator used a checker
+that watches for the application to make system calls
+that read the extended file attributes from the source file (i.e. {\tt
+  getxattr()}, {\tt lgetxattr()}, or {\tt fgetxattr()}) followed by system calls
+that re-apply the attributes to the destination file (i.e. {\tt setxattr()},
+{\tt lsetxattr()}, or {\tt fsetxattr()}).
+
+\paragraph{Preserve Timestamps}
+
+In order to truly copy a file from one device
+to another an application needs to ensure that its metadata (such as the
+creation, modification, and access times) are preserved in the destination
+file.
+In this case, the checker monitors
+whether when replaying a trace modified to simulate cross-device move,
+the application applies
+the appropriate timestamps to the destination file as part of moving a file
+across devices by monitoring for a system call from the {\tt stat()} family to
+retrieve the timestamps and system call from the {\tt utime()} family to apply
+the retrieved timestamps to the destination file.
+Failure to preserve timestamps has obvious
+implications in records-keeping and archival situations as well as any situation
+where a chronological record of file manipulations is important.  This can
+cause odd behavior in Makefiles, archival programs, and similar
+software~\cite{NautilusTimestamps, SudoTimestamp}.
+
+\paragraph{Copying Devices}
+
+It is also important to check if a move would attempt to copy a special
+character file like {\tt /dev/urandom} across disks.  As was discussed in the
+previous section, many applications fail to examine the nature of a file before
+operating on it.  So the file must be moved by creating a new device of the same
+type at the destination, instead of reading from a potentially infinite device.
+In our experience, applications that fail to perform this check end up
+completely filling a disk or exhausting available memory -- sometimes causing the
+system to become unresponsive.
+
+
+ \begin{table}[t]
+    \scriptsize{}
+    \begin{tabular}{l p{1cm} p{1cm} p{1.2cm} p{1cm}}
+    \toprule{}
+        Application     & Source Replaced & Preserve Xattrs & Preserve Timestamps & Copying Devices\\
+\hline
+        {\tt mv}              & Correct             & Correct         & Correct             & Correct\\
+        {\tt mmv}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & Correct\\
+        {\tt install}         & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt perl File::Copy} & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt shutils}         & {\bf Corrupt}	& {\bf Sec. Flaw} 	& Correct             & Correct\\
+        {\tt rust}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt boost::copyfile} & {\bf Corrupt}	      & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+    \bottomrule{}
+    \end{tabular}
+    \caption{Applications and libraries analyzed to determine whether or not
+      they are able to correctly move a file from one device to another.
+Incorrect entries are either missing the needed check or were ineffective.}
+    \label{table:crossdevice}
+\end{table}
+
+{\bf Findings.}
+As can be seen from the results in Table~\ref{table:crossdevice}, each of the
+applications tested fails to perform one or more of the steps required to
+successfully complete a cross-device move.  This is an unfortunate situation
+because a failure to perform any one of these steps can result in negative
+outcomes for the system as a whole.
+
+Our results indicate that CrashSimulator is able to identify whether complex
+operations are performed correctly in anomalous situations in
+an array of popular programs.
+This includes the standard libraries for the programming languages Python,
+Perl, and Rust, along with other widely used software.  This is true even
+when many libraries have correct behavior in some cases, but not others.
+CrashSimulator is effective at finding the anomalous behaviors in these
+cases.
+
+
+\preston{Need paragraph here talking about finding bugs by injecting}
+
 \subsubsection{Unexpected File Types}
 \label{sec-file-type-bugs}
 Providing unexpected types of files to
@@ -253,6 +366,10 @@ Overall, the results of this ``real world'' analysis
 support the claim that CrashSimulator can identify real bugs that can have
 damaging consequences.
 
+\preston{Need paragraph here talking about how CrashSimulator is not
+limited to filesystem bugs.  We can find this network bug with at both
+points}
+
 \subsubsection{Slowloris attack} Delaying network applications for extended
 periods.
 \label{sec-timeout-bugs}
@@ -349,7 +466,7 @@ CrashSimulator are able to use it to find new bugs in real world
 applications.  Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
 was helpful in identifying the area of
-code responsible for the bug decreasing the time required to produce a fix. 
+code responsible for the bug decreasing the time required to produce a fix.
 Observation showed that familiarity with operating systems concepts
 very beneficial when working with CrashSimulator.  At
 the same time, most participants were
@@ -407,7 +524,7 @@ unsupported system calls should they encounter
 them while using the tool.  As a result exposure to a wider range of
 applications support for ten new system calls was added.  Adding support
 for these system calls was simple a relatively pain free process with the
-bulk of the difficulty coming down to 
+bulk of the difficulty coming down to
 understanding the details of the system calls themselves rather than from
 the effort of implementing support for these system calls once they were
 understood.
@@ -535,6 +652,9 @@ removed with more efficient mechanisms like {\tt eBPF} or a loadable kernel
 module.  In addition, starting up the Python interpreter increases the
 startup time of our prototype's supervisor.
 
+\preston{Rewrite this paragraph to say "we found good stuff, it runs quick
+enough, along we way we made a performance improvement. Mention eliding
+time for I/O to happen}
 Though aspects of our performance were less efficient than desired, its
 ability to execute many tests throughout the course of one replay and the
 lack of blocking while waiting for test completion somewhat makes up for
@@ -542,18 +662,3 @@ this slowness. In some cases CrashSimulator will be more efficient than
 running the program natively since {\tt rr's} replay does not require
 actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
-
-\preston{We probably want to keep this point, but I agree that it doesn't fit
-here}
-Note also that natively testing the timeout of networked applications (not
-shown) would take an extended period of time, at least as long as the
-allowed timeout value.  CrashSimulator avoids this cost by simulating the
-fact that time has progressed for future system calls.
-
-Overall, these results indicate that CrashSimulator is able to replay
-executions in a performant manner.  Figure~\ref{figure:performance} shows
-that the majority of the above executions completed around an order of
-magnitude slower than their native counterparts.  CrashSimulator's
-asynchronous testing means that enabling additional tests does not
-significantly degrade performance as long as multiprocessing resources are
-available on the system.
