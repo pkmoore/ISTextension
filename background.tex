@@ -9,14 +9,13 @@ An application's environment consists of
 all of the components an application depends upon
 that its developers do not control.
 In practice, this is everything other than the code and data packaged
-within the application itself.  Anything other than this code and data is
-external to the application and can be
+within the application itself.
+Anything external to the application can be
 influenced in unexpected ways by the configuration of the
 deployment environment.
-For example, library search rules can result in system libraries being
-loaded instead of versions of the same library that were
-deployed alongside the
-application.
+For example, library search rules can result in system libraries
+being loaded instead of
+the versions deployed alongside the application.
 These external resources can be thought of as
 providing implicit inputs to the program that affect its flow of execution.
 An investigation of bug reports has shown that environmental bugs in the
@@ -44,9 +43,9 @@ depth
 of directories supported, all of which lead to errors when programs
 do not account for these issues~\cite{EXT4Layout, AppleHFS}.
 
-\item {\bf Network.}  Aspects of the network environment, be it local or
-remote, also have a
-substantial impact on the behavior of an application.
+\item {\bf Network.} Both local and remote network nodes
+can have specific characteristics that could influence the behavior of an
+application.
 For example, POSIX operating
 systems support the notion of limiting the kernel buffer set aside for a
 socket.  However, many other popular operating
@@ -72,12 +71,13 @@ how to execute complex instructions~\cite{Microarch}.
 In this work, we chose to focus on operating system,
 file system, and network
 environmental issues.
-Due to the fashion in which we chose to implement Results Based Simulation,
+Due to the fashion in which we chose 
+to implement Anomalous Environment Simulation,
 we are specifically concerned with issues from the above sources
-that are visible in the results an side effects of the system calls
+that are visible in the results and side effects of the system calls
 made by an application.
 In our evaluation we take a deeper look at anomalies from
-these categories in order to assess technique's effectiveness.
+these three categories in order to assess the technique's effectiveness.
 We leave processor-based environmental differences as such
 bugs are being handled by other
 work~\cite{Alglave:2018:FSC:3173162.3177156}.

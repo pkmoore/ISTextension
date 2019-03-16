@@ -2,14 +2,14 @@
 \label{SEC:introduction}
 \textit{No Battle Plan Survives Contact With the Enemy --- Helmuth von Moltke}
 
-No matter how well an application is tested before being released,
+No matter how well an application is tested before its release,
 new bugs always seem emerge after deployment.
 One reason is that these applications will operate within a diverse set of
 deployment \emph{environments},
 and variations between these environments tend to
 reveal previously undiscovered flaws.
-These flaws emerge from environmental differences
-caused by such factors as
+These flaws emerge from
+such factors as
 operating system APIs changing across versions
 ~\cite{LinuxGlibcChanges},
 or small variations in file systems exhibiting subtle but critical
@@ -62,14 +62,14 @@ which we refer to as \textit{anomalies},
 can be detected
 in the function calls,
 system calls,
-or other communications an application makes with an environment.
+or other communications an application makes within an environment.
 When employing AES,
 the anomalies
 unique to a given environment
-can be substituted into
-the communications of the application being tested
+can be inserted into
+the communications of an application under test
 in such a way
-that its response to them will indicate any potential
+that its responses will indicate any potential
 for bugs upon deployment.
 In this way, it provides developers
 an easy and inexpensive way
@@ -78,8 +78,8 @@ saving money and programming hours
 that otherwise would be devoted to finding and fixing
 environmental bugs.
 Furthermore,
-by using the AES technique,
-developers can preserve and catalog
+the AES technique
+developers to preserve and catalog
 these anomalies,
 giving them a formal and reproducible strategy for testing applications.
 This is an improvement over current practices,
@@ -153,7 +153,7 @@ in widely deployed and highly tested code.}
 \item{It proves the effectiveness
 of {\em CrashSimulator}
 by presenting results
-in which developers
-were able to find real bugs in real applications.}
+showing developers
+could use the tool to find real bugs in real applications.}
 
 \end{itemize}
