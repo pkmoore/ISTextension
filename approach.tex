@@ -64,6 +64,11 @@ these differences delineate
 a set of modifications
 that must be made to an application's communications
 in order to simulate the chosen anomaly or anomalies.
+Describing anomalies in this fashion
+allows them to be recorded systematically and cataloged for future use.
+Once captured, they can be used to repeatably test applications preventing
+future deployments from falling victim to the same problem multiple
+times.
 As an example,
 consider an anomalous environment
 where access to a required file is denied because of
@@ -77,6 +82,9 @@ The ``modification'' required to simulate this anomaly
 is to change the results of similar accesses
 in a test execution
 to return ``access denied.''
+Since the effects of this anomaly have been identified, they can be saved
+and used to evaluate future application's ability to handle the same
+problem.
 
 The second step in AES
 is identifying
