@@ -492,30 +492,33 @@ applications?}
 \label{sec-new-anom-app}
 
 \subsubsection{Supporting New Applications}
-{\bf Discussion.} Work using our prototype of CrashSimulator showed that
+
+Work using our prototype of CrashSimulator showed that
 it is able to test most
-applications that are able to run on a setup that supports CrashSimulator
+applications that are able to tested with CrashSimulator
 regardless of common testing impediments like programming language
-differences or dependency issues.  This is primarily due to such
-applications interacting with their environment through system calls.
-CrashSimulator supports YYYY of the most commonly utilized system calls and
-provides helpful output when an unsupported system call is encountered.
-Adding support for system calls as they are encountered has been successful
-because the set of system calls used by an application is small and
-static~\cite{Tsai:2016:SML:2901318.2901341}.  Using this iterative process
+differences or dependency issues.
+The majority of cases where CrashSimulator failed to test
+an application were because some previously-unsupported system call was
+encountered.
+The strategy of improving CrashSimulator by adding support for
+system calls as they are encountered has been successful
+as system calls used by an application is small and
+static~\cite{Tsai:2016:SML:2901318.2901341}.  This process
 has allowed us to improve our prototype to the point that it can support a
 large number of popular, complex applications.
 
-{\bf Findings.}During the
-course of this evaluation participants were encouraged to report
+During the
+course of this our user study participants were encouraged to report
 unsupported system calls should they encounter
-them while using the tool.  As a result exposure to a wider range of
-applications support for ten new system calls was added.  Adding support
+them while using the tool.
+The wider exposure provided by our new users necessitated the addition of
+ten new system calls.
+Support
 for these system calls was simple a relatively pain free process with the
 bulk of the difficulty coming down to
 understanding the details of the system calls themselves rather than from
-the effort of implementing support for these system calls once they were
-understood.
+the effort of implementing support.
 
 \subsubsection{Supporting New Anomalies}
 
@@ -525,7 +528,7 @@ the needs of its users.
 The effort and skill involved in
 this process is similar to that involved in writing a unit test or
 integration test using a modern testing framework.  However, unlike a unit
-test or integration test, a CrashSimuator test can be run
+test or integration test, a CrashSimulator test can be run
 against multiple
 applications without concern for dependencies like the language in which
 they were
