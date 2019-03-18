@@ -542,10 +542,10 @@ value for the effort they put in.
 The primary source of false positives in CrashSimulator is an application
 using a different sequence of system calls to implement a given operation
 than a mutator was anticipating. CrashSimulator's approach allows these
-situations to be easily corrected, once identified through analysis of the
-incorrect test results.  This is similar to the circumstance where an
+situations to be easily corrected, once identified.
+This is similar to the circumstance where an
 application's test suite is missing a test, necessitating action by the
-developer to construct the missing test.
+developer to construct it.
 
 For example, consider GNOME's {\tt glib} file handling facilities.  When an
 application makes use of these facilities to move a file across storage
@@ -616,10 +616,11 @@ test executions in an acceptable time frame.
 {\bf Method.} To determine the efficiency of CrashSimulator as a testing tool,
 we examined the completion
 times for executions of the specified application in both
-native and replay execution modes.
+native and under CrashSimulator configured to test using the ``Unusual File
+Types'' anomaly discussed earlier.
+Figure~\ref{figure:performance} shows these results.
 
-
-    \begin{figure}[t]
+    \begin{figure}[T]
         \center{}
         \fbox{\includegraphics[scale=.75]{images/performance.png}}
         \caption{\emph{This shows the run time difference between the
@@ -635,21 +636,14 @@ native program and CrashSimulator in seconds.  Each dot indicates an
 
 {\bf Findings.} Overall, the performance of CrashSimulator is usually
 about an order of magnitude slower than if the original program is executed
-natively.  This is largely due to performance problems in our (unoptimized)
-prototype, primarily our utilization of Python and {\tt ptrace} once
-process sets have been liberated from {\tt rr}.  Tracing the program
-with {\tt ptrace} adds up to a factor of 5x in overhead,  which could be
-removed with more efficient mechanisms like {\tt eBPF} or a loadable kernel
-module.  In addition, starting up the Python interpreter increases the
-startup time of our prototype's supervisor.
-
-\preston{Rewrite this paragraph to say "we found good stuff, it runs quick
-enough, along we way we made a performance improvement. Mention eliding
-time for I/O to happen}
-Though aspects of our performance were less efficient than desired, its
-ability to execute many tests throughout the course of one replay and the
-lack of blocking while waiting for test completion somewhat makes up for
-this slowness. In some cases CrashSimulator will be more efficient than
+natively.  It should be noted that in most cases
+this slowdown is somewhat mitigated by CrashSimulator's ability to process
+tests asynchronously and in other situations it will be more efficient than
 running the program natively since {\tt rr's} replay does not require
 actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
+Even without these improvements, CrashSimulator's runtime is insignificant
+compared to the value it offers. During this examination, a single replay
+resulted in YYY tests finding ZZZ bugs
+(already included in Table~\ref{table:unexpectedtypes}).
+Given this success, the longer runtime is worth the wait.
