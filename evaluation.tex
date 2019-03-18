@@ -74,7 +74,7 @@ environmental bugs?}
 The most crucial question to ask about CrashSimulator is how readily it can
 identify environmental bugs from a wide variety of causes.  To evaluate the
 tool in this regard we configured the tool to look for bugs from the
-categories discussed in Section~\ref{SEC:background}. \textbf{CHECK THIS} These bugs included
+categories discussed in Section~\ref{SEC:background}.  These bugs included
 a filesystem bug involving unusual filesystem and network situations under
 Linux.
 All of these bugs relied on common API calls, and thus had the potential to
@@ -87,10 +87,10 @@ Linux distributions.
 
 \subsubsection{Bugs Related to Moving Files}
 
-As was discussed in Section~\ref{SEC:background}, the first bug finding
+As was discussed in Section~\ref{SEC:approach}, the first bug finding
 opportunity offered by AES is after analyzing an applications unmodified
 system call behavior.  To evaluate CrashSimulator's ability to find bugs at
-this point, we employed it in analyzing applications as they move files
+this point, we decided to analyze applications as they moved files
 about on the filesystem.  In many cases this operation can be handled
 atomically by the operating system through the {\tt rename()} system call.
 However, in situations where the source file and destination file are on
@@ -104,8 +104,8 @@ a checker that encodes the correct steps involved in moving a file from one
 storage device to another. To identify these steps
 we examined several libraries and applications and found that {\tt mv} seemed
 to handle cases that other tools failed to consider.  Following this, we
-used the trace of {\tt mv} as a template to create an checker that
-evaluates whether or not the application performs the following
+used {\tt mv}'s behavior as a template to create a set of checkers that
+evaluate whether or not the application performs the following
 checks and operations:
 
 \paragraph{Source Replaced}
@@ -147,8 +147,7 @@ to another an application needs to ensure that its metadata (such as the
 creation, modification, and access times) are preserved in the destination
 file.
 In this case, the checker monitors
-whether when replaying a trace modified to simulate cross-device move,
-the application applies
+whether the application applies
 the appropriate timestamps to the destination file as part of moving a file
 across devices by monitoring for a system call from the {\tt stat()} family to
 retrieve the timestamps and system call from the {\tt utime()} family to apply
@@ -162,8 +161,8 @@ software~\cite{NautilusTimestamps, SudoTimestamp}.
 \paragraph{Copying Devices}
 
 It is also important to check if a move would attempt to copy a special
-character file like {\tt /dev/urandom} across disks.  As was discussed in the
-previous section, many applications fail to examine the nature of a file before
+character file like {\tt /dev/urandom} across disks.
+Many applications fail to examine the nature of a file before
 operating on it.  So the file must be moved by creating a new device of the same
 type at the destination, instead of reading from a potentially infinite device.
 In our experience, applications that fail to perform this check end up
@@ -205,23 +204,29 @@ an array of popular programs.
 This includes the standard libraries for the programming languages Python,
 Perl, and Rust, along with other widely used software.  This is true even
 when many libraries have correct behavior in some cases, but not others.
-CrashSimulator is effective at finding the anomalous behaviors in these
-cases.
 
 
 \subsubsection{Unexpected File Types}
 \label{sec-file-type-bugs}
 
-The second bug finding opportunity offered by AES is available after some
-unusual condition has been injected into the running application.  To test
-CrashSimulator's capabilities at this point we needed an environmental
-anomaly that could be used against a wide variety of applications.  We
-selected one that occurs
-when an application running on a Linux system has to retrieve
-and process data from a file.  Linux supports several ``special'' file
-types apart from the standard ``regular'' file type, such as
-directories, symbolic links, character devices, block devices, sockets, and
-First-In-First-Out (FIFO) pipes.  While these special files
+CrashSimulator's ability
+to inject anomalous situations into an application
+provides a second opportunity to identify bugs.
+To test
+CrashSimulator's capabilities
+at this point we needed
+an anomaly
+that arises during a common situation --
+a Linux application retrieving
+and processing data from a file.  Linux supports several ``special'' file
+types including the standard ``regular'' file type,
+directories,
+symbolic links,
+character devices,
+block devices,
+sockets, and
+First-In-First-Out (FIFO) pipes.
+While these special files
 use the same system calls as regular files (such as {\tt read()} and
 {\tt write()}), they behave in very different ways.  For example, {\tt
 /dev/urandom} is a character device that produces an infinite amount of
@@ -233,13 +238,13 @@ Correct execution in these situations often requires applications
 to examine the files in order to ensure they are of an appropriate type.
 
 {\bf Method.}  Identifying these bugs involves changing an application's
-execution trace to induce its response to an unexpected file type.  For
+execution to induce its response to an unexpected file type.  For
 example, the {\tt sed} application, which modifies the contents of a text
 file according to a provided command string, could be provided a symbolic
 link, a directory, or a character device instead.  CrashSimulator
 accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
 or {\tt lstat()} that an application makes to examine the file, and then
-changes the trace to simulate
+changes their results to simulate
 one of the special file types.  If the application responds to
 this injected information then there is the possibility that the special
 file will be handled correctly.  On the other hand, if there is no
@@ -250,24 +255,28 @@ being handled correctly.
 The results of this round of tests were shown in
 Table~\ref{table:unexpectedtypes}.
 
-For each application, CrashSimulator was invoked multiple times,and
-the trace was modified
-to simulate each of the non-standard file type anomalies.  Some
+For each application,
+CrashSimulator was configured to simulate each of the non-standard file
+types.
+Some
 of the applications opened multiple files; in these cases each anomaly was
 simulated for each of the file arguments to the application.
 Table~\ref{table:unexpectedtypes} also shows the values that CrashSimulator
-inserts into the return value of the {\tt stat()}-like call,
+inserts into the results of the {\tt stat()}-like call,
 in response to
 different file type anomalies.  A result of ``Initial Value'' indicates
-that this is the file type the application was provided when the replayed
-execution trace was recorded -- that is, a file of the type the application
-was expecting.  A result of ``Recognizes'' indicates that the application
+that this is the file type the application was provided
+when the application was initially recorded -- that is,
+a file of the type the application was expecting.
+A result of ``Recognizes'' indicates that the application
 identified that it was being provided with an unexpected file type and its
-execution diverged, indicating that it was potentially handling the
-unexpected file type correctly.  A result of ``Fail'' indicates that the
+execution diverged,
+indicating that it was potentially handling the
+unexpected file type correctly.
+A result of ``Fail'' indicates that the
 application failed to recognize the presence of the unusual file type
-because execution never diverged from the trace being replayed.  We
-manually examined a subset of the listed application behaviors simulated by
+because execution never diverged from the trace being replayed.
+We manually examined a subset of the listed application behaviors simulated by
 CrashSimulator and verified they were consistent with the actual behavior
 on the given file type.
 
@@ -316,19 +325,7 @@ as if an application blocks forever waiting for a {\tt read()}
 call to retrieve non-existent data from an empty FIFO, or harmfully, as
 when an application attempts to read in and process an
 ``infinitely large'' file, that will eventually fill all
-available memory or disk
-space~\cite{Cappos_CCS_08}.
-
-Of particular interest is the behavior we see in the last two applications
-listed in Table~\ref{table:unexpectedtypes}.  Each application correctly
-recognized when an unexpected file type was encountered, as they
-are simply ``dumb'' wrappers around the system calls
-with which they share a name.  As such, they essentially,
-they just hand the specified
-file to their corresponding system call and, in the case of an error, use
-{\tt perror()} to print the correct localized error message.  In short,
-these applications pass their error handling responsibilities to the
-kernel.
+available memory or disk space~\cite{Cappos_CCS_08}.
 
 \begin{table}[t]
     \scriptsize{}
@@ -370,26 +367,13 @@ application detected the anomalous condition and the application manages to
 do so in practice,  as when we evaluated {\tt wc}'s response to
 being run on a directory.
 
-There were however, a few times when CrashSimulator and the
-application's response disagreed.  This
-happened when we evaluated {\tt ptx}'s response to an
-infinite-sized character device.  CrashSimulator reported that {\tt ptx}
-had correctly responded to the anomaly.  But in reality, {\tt ptx} filled the
-disk of the the test machine.
-Overall, the results of this ``real world'' analysis
-support the claim that CrashSimulator can identify real bugs that can have
-damaging consequences.
-
-\preston{Need paragraph here talking about how CrashSimulator is not
-limited to filesystem bugs.  We can find this network bug with at both
-points}
-
-\subsubsection{Slowloris attack} Delaying network applications for extended
-periods.
+\subsubsection{Slowloris attack -  Delaying network applications for extended
+periods.}
 \label{sec-timeout-bugs}
 
 
-The second anomaly we examined involves an application's behavior when it
+CrashSimulator is not limited to simulating filesystem based anomalies.
+The third anomaly we examined involves an application's behavior when it
 attempts to communicate over a network with extremely long (on the order of
 minutes) response times.  At a low level, applications retrieve data from a
 network socket by waiting for data to be available and then reading it.  A
@@ -397,23 +381,24 @@ key aspect of this approach is handling the situation where communication
 takes too long and should time out.
 
 {\bf Method.} CrashSimulator can detect whether an application is
-vulnerable to this attack by modifying the trace to simulate large
-amounts of time elapsing between network operations.  In this approach,
-CrashSimulator determines whether or not the application makes any effort
+vulnerable to this attack by examining how an application would react to
+large amounts of time elapsing between network operations.
+The first step in this process
+is allowing CrashSimulator to observe an executing application
+in order to determine whether or not it makes any effort
 to configure its network communications with a timeout value. This is done
 by examining the presence or absence of {\tt setsockopt()}, {\tt poll()}
 and {\tt select()} calls as well as the timeout values that may or may not
 have been passed to them. Applications that do not set the timeout are
 subject to the operating system-defined protocol timeout value (19 minutes
-on Linux).  Note that by properly manipulating the results of all
-time-returning calls, CrashSimulator can simulate an execution where close
+on Linux).  CrashSimulator's evaluation then goes further by manipulating
+the results of all
+time-returning calls, simulating an execution where close
 to the maximum timeout value occurs, without actually spending any time
-waiting.
-
-
-Again, our selection of network applications and libraries were based on
-those that were
-most popular on Debian's ratings~\cite{DebPopCon}.
+waiting.  Applications that do not appropriately handle this situation are
+vulnerable to slowloris-style attacks.  We employed this analysis on a
+selection of popular network applications and libraries chosen based on
+Debian's ratings~\cite{DebPopCon}.
 
 \begin{table}[t]
   \scriptsize{}
@@ -440,7 +425,7 @@ most popular on Debian's ratings~\cite{DebPopCon}.
 
 {\bf Findings.} As Table~\ref{table:slowloris} shows, all of these
 applications were vulnerable to this sort of anomaly, with timeouts taking
-hours or even days in some cases to resolve.
+hours in some cases to resolve.
 What's more, in the vast majority of
 cases, the problem occurs because the application makes no effort to
 specify a timeout value.  This means an attacker can transmit one byte of
@@ -465,16 +450,14 @@ clients, leaving them vulnerable to compromise~\cite{Cappos_TR_08}.
 
 Another topic of relevance in answering this question is how well new users are
 able to find bugs with CrashSimulator.
-To answer this question we can examine the bug finding results from our user
-study.
-A total of eleven bugs further bugs were found by participants using
+To this end we conducted a user study with YYY undergraduate and
+graduate students that involved them receiving instruction on the tool and
+using it to find bugs in applications. This study resulted in a total of
+eleven bugs being found by participants using
 CrashSimulator.  Of these, nine were found using the ``Unusual Filetype.''
 Five of these bugs have been reported to the appropriate maintainers.
 Three of these reports contained patches constructed by the submitter.
-
-{\bf Discussion. }
-
-The above results indicate that participants
+These results indicate that participants
 not involved in the development of
 CrashSimulator are able to use it to find new bugs in real world
 applications.  Participants commented that narrowing the source of a bug
@@ -484,10 +467,8 @@ code responsible for the bug decreasing the time required to produce a fix.
 Observation showed that familiarity with operating systems concepts
 very beneficial when working with CrashSimulator.  At
 the same time, most participants were
-able to identify bugs by using its built in corpus of
-anomalies. ~\ref{table:fig-tool-anomaly} shows which
-of these anomalies most commonly
-resulted in application bugs.
+able to identify bugs using built in
+anomalies.
 
 This effort revealed shortcomings with the tool.  First,  there can be
 confusion around what application behaviors constitute a bug.  For example,
@@ -499,14 +480,7 @@ unfamiliar what a result means.  Both of these issues are being corrected
 by improving the CrashSimulator's output so that it more clearly describes
 the nature of a given result and why the user should be concerned.
 
-\begin{figure}[t]
-  \center{}
-  \fbox{\includegraphics[scale=.75]{images/bugsfound}}
-  \caption{\emph{Bugs Found Using CrashSimulator Organized by Anomaly}}
-  \label{fig-tool-anomaly}
-\end{figure}
-
-{\bf Concluding Thoughts} The results of the above analysis show that
+\subsubsection{Concluding Thoughts} The results of the above analysis show that
 CrashSimulator is readily able to identify novel bugs in widely used
 applications, including security-focused applications like gnu-gpg, and a host
 of popular network applications, by following a repeatable and principled
