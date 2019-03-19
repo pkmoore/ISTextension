@@ -511,13 +511,12 @@ test executing for the one whose prerequisites are met.
 
 One key attribute of successful testing tools is that they are able to
 complete their tests in a timely manner.  If a tool takes too long,
-users will be less likely to run it, which reduces its
-usefulness dramatically. To this end, the performance of CrashSimulator was
+users will be less likely to run it.
+To address this concern, the performance of CrashSimulator was
 evaluated in order to determine whether or not it was able to complete its
 test executions in an acceptable time frame.
 
-{\bf Method.} To determine the efficiency of CrashSimulator as a testing tool,
-we examined the completion
+{\bf Method.} We examined the completion
 times for executions of the specified application in both
 native and under CrashSimulator configured to test using the ``Unusual File
 Types'' anomaly discussed earlier.
@@ -537,16 +536,16 @@ native program and CrashSimulator in seconds.  Each dot indicates an
     \end{figure}
 
 
-{\bf Findings.} Overall, the performance of CrashSimulator is usually
-about an order of magnitude slower than if the original program is executed
+{\bf Findings.} Overall, the performance of CrashSimulator is around
+an order of magnitude slower than the original program being executed
 natively.  It should be noted that in most cases
 this slowdown is somewhat mitigated by CrashSimulator's ability to process
 tests asynchronously and in other situations it will be more efficient than
 running the program natively since {\tt rr's} replay does not require
 actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
-Even without these improvements, CrashSimulator's runtime is insignificant
-compared to the value it offers. During this examination, a single replay
-resulted in YYY tests finding ZZZ bugs
-(already included in Table~\ref{table:unexpectedtypes}).
-Given this success, the longer runtime is worth the wait.
+Even without these improvements, however, CrashSimulator's runtime is more
+than manageable when the value it provides is taken into account.  The
+cumulative runtime required to execute the tests required to find the QQQ
+bugs listed in Table~\ref{table:unexpectedtypes} is around HHHH minutes.
+Given this success, the increased runtime is worth the wait.
