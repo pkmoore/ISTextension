@@ -31,11 +31,11 @@ environmental bugs?}
 
 The most crucial question to ask about CrashSimulator is how readily it can
 identify environmental bugs from a wide variety of causes.  To evaluate the
-tool in this regard we configured the tool to look for bugs from the
-categories discussed in Section~\ref{SEC:background}.  These bugs included
-a filesystem bug involving unusual filesystem and network situations under
+tool in this regard we configured it  to look for bugs from the
+categories discussed in Section~\ref{SEC:background}.  These included
+bugs related to unusual filesystem conditions and network situations under
 Linux.
-All of these bugs relied on common API calls, and thus had the potential to
+All of these bugs relied on common sysem calls, and thus had the potential to
 appear in many programs.  We selected the tested applications either
 because they were deemed ``popular'' by Debian's Popularity
 Contest~\cite{DebPopCon}, or were from GNU Coreutils.  Coreutils
@@ -46,23 +46,23 @@ Linux distributions.
 \subsubsection{Bugs Related to Moving Files}
 
 As was discussed in Section~\ref{SEC:approach}, the first bug finding
-opportunity offered by AES is after analyzing an applications unmodified
+opportunity offered by AES occurs through analyzing an applications unmodified
 system call behavior.  To evaluate CrashSimulator's ability to find bugs at
-this point, we decided to analyze applications as they moved files
+this point, we decided to test applications that move files
 about on the filesystem.  In many cases this operation can be handled
 atomically by the operating system through the {\tt rename()} system call.
 However, in situations where the source file and destination file are on
-different storage devices, the application performing the operation must
-manually perform all of the steps required to successfully move a file.
-This is a situation that even well-tested applications
+different storage devices, the application must
+manually perform all of the required steps.
+This is an process that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
 {\bf Method.}  Catching this particular bug requires CrashSimulator to use
-a checker that encodes the correct steps involved in moving a file from one
+checkers that encodes the correct steps involved in moving a file from one
 storage device to another. To identify these steps
 we examined several libraries and applications and found that {\tt mv} seemed
 to handle cases that other tools failed to consider.  Following this, we
-used {\tt mv}'s behavior as a template to create a set of checkers that
+used its behavior as a template to create a set of checkers that
 evaluate whether or not the application performs the following
 checks and operations:
 
@@ -72,10 +72,9 @@ An application should make an effort to ensure that the file being copied is not
 replaced between the time it is initially examined and the time it is opened
 for copying.  Otherwise it could have been replaced by a file of a different
 type, such as a character device.
-
 To test whether applications are robust to anomalies involving source file replacement,
 we developed a checker that monitors whether a series of safety checks
-are performed and applied it to traces that simulated a cross-device move.
+are performed.
 Failing to perform these checks often results in corruption of the file~\cite{PythonShutilBug}.
 
 \paragraph{Preserve Xattrs}
@@ -84,7 +83,7 @@ Extended file attributes are used by modern
 operating systems to store descriptive information about a file that cannot be
 held by normal filesystem fields.  For example, an operating system can use
 extended file attributes to record whether or not a file was downloaded from the
-Internet -- important security information that warn
+Internet -- important security information that is used to warn
 users if they are about to open a potentially unsafe file.  Apple's Gatekeeper
 relies on extended file attributes to prevent the execution of applications downloaded from
 untrusted developers without explicit user action~\cite{AppleCodeSigning}.
@@ -155,7 +154,6 @@ applications tested fails to perform one or more of the steps required to
 successfully complete a cross-device move.  This is an unfortunate situation
 because a failure to perform any one of these steps can result in negative
 outcomes for the system as a whole.
-
 Our results indicate that CrashSimulator is able to identify whether complex
 operations are performed correctly in anomalous situations in
 an array of popular programs.
