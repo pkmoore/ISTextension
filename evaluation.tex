@@ -442,17 +442,18 @@ the nature of a given result and why the user should be concerned.
 
 The primary source of false positives in CrashSimulator is an application
 using a different sequence of system calls to implement a given operation
-than a mutator was anticipating. CrashSimulator's approach allows these
+than a mutator or checker was anticipating.
+CrashSimulator's approach allows these
 situations to be easily corrected, once identified.
 This is similar to the circumstance where an
 application's test suite is missing a test, necessitating action by the
 developer to construct it.
 
-For example, consider GNOME's {\tt glib} file handling facilities.  When an
+For example, consider GNOME's {\tt glib} file handling functions.  When an
 application makes use of these facilities to move a file across storage
 devices the library itself correctly performs a
 file move operation.  When we used CrashSimulator with
-mutators that expected a calls to {\tt read()} and {\tt write()}
+checkers that expected a calls to {\tt read()} and {\tt write()}
 for a cross-device move, we got reports stating that the
 application {\em did not} perform the system calls necessary to inject
 an anomaly.  By manually
@@ -460,21 +461,22 @@ examining a system call trace, we found that, while {\tt glib} correctly
 performs the requested move operation,
 it does so using alternative system call
 sequences.  Rather than using a sequence of {\tt read()} and {\tt write()}
-calls, as our mutator expected, {\tt glib} creates a pipe and uses the {\tt
+calls, as our checker expected, {\tt glib} creates a pipe and uses the {\tt
 splice()} system call to copy the contents out of the source file, through
 the pipe and into the destination file.
 
 Fortunately, as soon as issues like this are discovered,
-CrashSimulator's mutators can be modified to deal with alternative
-approaches to handling an anomaly.  This approach is viable because there
+CrashSimulator's checkers can be modified to include the alternative
+approach.  This is viable because there
 are a finite number of system calls, and a given operation can be mapped to
-a manageable subset of system calls.  Given the above example around moving
+a manageable subset.  Given the above example around moving
 files, consider the mapping from high level ``operation'' to the set of
 system calls that can implement it in Table~\ref{table:stepsandcalls}.
 Each of the steps in the operation map to a small number of system calls
-and, in most cases, only one of these system calls is necessary.  In
+and,
+in
 situations where two system call sequences can correctly implement the same
-operation, CrashSimulator simply runs two mutators in parallel resulting in a
+operation, CrashSimulator simply runs two checkers in parallel resulting in a
 test executing for the one whose prerequisites are met.
 
 \begin{table}[t]
