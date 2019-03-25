@@ -63,27 +63,39 @@ by many Linux distributions,
 such as those provided
 by the GNU Coreutils project.
 
-\subsubsection{Bugs Related to Moving Files}
+\subsubsection{The simplest case - A Filesystem Bug Found With the Null Mutator}
 
-As was discussed in Section~\ref{SEC:approach}, the first bug finding
-opportunity offered by AES occurs through analyzing an applications unmodified
-system call behavior.  To evaluate CrashSimulator's ability to find bugs at
-this point, we decided to test applications that move files
-about on the filesystem.  In many cases this operation can be handled
-atomically by the operating system through the {\tt rename()} system call.
-However, in situations where the source file and destination file are on
-different storage devices, the application must
+As was discussed in Section~\ref{SEC:approach},
+the simplest case for finding bugs
+using AES is by employing the null mutator.
+This gives checkers
+a chance to evaluate an application's behavior
+as it carries out a potentially-buggy operation unhindered.
+To evaluate CrashSimulator's ability to find bugs
+in this fashion, we decided to evaluate applications
+as they move files about on the filesystem.
+In many cases this operation can be handled
+atomically by the operating system
+through the {\tt rename()} system call.
+However,
+in situations where the source file and destination file
+are on different storage devices,
+the application must
 manually perform all of the required steps.
-This is an process that even well-tested applications
+This is an process
+that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
 {\bf Method.}  Catching this particular bug requires CrashSimulator to use
-checkers that encodes the correct steps involved in moving a file from one
-storage device to another. To identify these steps
-we examined several libraries and applications and found that {\tt mv} seemed
-to handle cases that other tools failed to consider.  Following this, we
-used its behavior as a template to create a set of checkers that
-evaluate whether or not the application performs the following
+checkers that encode the correct steps involved in moving a file from one
+storage device to another.
+After examining several libraries and applications,
+we found that
+{\tt mv} seemed to handle cases that other tools failed to consider.
+Following this, we
+used its behavior as a template to create a set of checkers
+that evaluate whether or not
+the application performs the following
 checks and operations:
 
 \paragraph{Source Replaced}
