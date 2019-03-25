@@ -165,13 +165,15 @@ which apply the retrieved timestamps to the destination file.
 
 \paragraph{Copying Devices}
 
-It is also important to check if a move would attempt to copy a special
+It is also important to check if a move
+would attempt to copy a special
 character file like {\tt /dev/urandom} across disks.
-Many applications fail to examine the nature of a file before
-operating on it.  So the file must be moved by creating a new device of the same
-type at the destination, instead of reading from a potentially infinite device.
-In our experience, applications that fail to perform this check end up
-completely filling a disk or exhausting available memory -- sometimes causing the
+Files of this variety must be moved
+by creating a new device of the same type at the destination,
+instead of reading from a potentially infinite device.
+In our experience, applications that fail to perform this check
+end up completely filling a disk or exhausting available memory --
+sometimes causing the
 system to become unresponsive.
 
 
