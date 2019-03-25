@@ -117,13 +117,19 @@ often corrupting the file~\cite{PythonShutilBug}.
 
 \paragraph{Preserve Xattrs}
 
-Extended file attributes are used by modern
-operating systems to store descriptive information about a file that cannot be
-held by normal filesystem fields.  For example, an operating system can use
-extended file attributes to record whether or not a file was downloaded from the
-Internet -- important security information that is used to warn
-users if they are about to open a potentially unsafe file.  Apple's Gatekeeper
-relies on extended file attributes to prevent the execution of applications downloaded from
+Extended file attributes
+are used by modern operating systems
+to store descriptive information about a file
+that cannot be held by normal filesystem fields
+due to their strictly defined and limited structure.
+For example,
+an operating system can use extended file attributes
+to record whether or not a file was downloaded from the Internet.
+This is important security information
+that is used to warn users
+if they are about to open a potentially unsafe file.
+Apple's Gatekeeper relies on extended file attributes
+to prevent the execution of applications downloaded from
 untrusted developers without explicit user action~\cite{AppleCodeSigning}.
 When copying a file,
 an application should retrieve extended file attributes from the source
