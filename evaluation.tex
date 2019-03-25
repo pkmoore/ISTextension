@@ -212,12 +212,14 @@ Perl, and Rust, along with other widely used software.  This is true even
 when many libraries have correct behavior in some cases, but not others.
 
 
-\subsubsection{Unexpected File Types}
+\subsubsection{A More Complex Case - The Unexpected File Types Mutator}
 \label{sec-file-type-bugs}
 
-CrashSimulator's ability
-to inject anomalous situations into an application
-provides a second opportunity to identify bugs.
+Employing a more complex (than the NullMutator) mutator allows
+CrashSimulator to inject anomalous situations into an application.
+This forces applications
+into an encounter with problematic situations
+that elicit a response that we can evaluate.
 To test
 its capabilities
 at this point we needed
@@ -226,7 +228,7 @@ that arises during a common situation --
 a Linux application retrieving
 and processing data from a file.  Linux supports several special file
 types other than the standard ``regular'' file type.
-These types include
+These include
 directories,
 symbolic links,
 character devices,
@@ -241,8 +243,10 @@ pseudo-random data when read.  If an application that reads the full
 contents of a file before processing it is provided {\tt /dev/urandom}, it
 will fill memory or disk space and could
 crash the system~\cite{YumAptEndless}.
-Correct execution in these situations often requires applications
-to examine the files in order to ensure they are of an appropriate type.
+Correct execution in these situations
+requires applications
+to examine the files so they do not
+interact inappropriately with a given file type.
 
 {\bf Method.}  Identifying these bugs involves changing an application's
 execution to induce its response to an unexpected file type.  For
@@ -251,7 +255,7 @@ file according to a provided command string, could be provided a symbolic
 link, a directory, or a character device instead.  CrashSimulator
 accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
 or {\tt lstat()} that an application makes to examine the file, and then
-changes their results to simulate
+changing their results to simulate
 one of the special file types.  If the application responds to
 this injected information then there is the possibility that the special
 file will be handled correctly.  On the other hand, if there is no
@@ -259,13 +263,29 @@ alteration in the behavior of the application,  then the condition is not
 being handled correctly.
 
 {\bf Findings.}
-The results of this round of tests were shown in
-Table~\ref{table:unexpectedtypes}.
+
+The frequency of failed executions in our results,
+which are shown in Table 2,
+indicates that many
+applications make the assumption that they will only be used to process
+regular files.  When this assumption does not hold, execution results
+can be hard to predict.
+In many cases a denial of
+service condition occurs in the form of the application ``hanging,'' as it
+attempts to incorrectly process the file.
+This may happen harmlessly, such
+as if an application blocks forever waiting for a {\tt read()}
+call to retrieve non-existent data from an empty FIFO,
+or harmfully,
+as when an application attempts to read in and process an
+``infinitely large'' file,
+that will eventually fill all
+available memory or disk space~\cite{Cappos_CCS_08}.
 
 For each application,
 CrashSimulator was configured to simulate all of the non-standard file
-types.
-Table~\ref{table:unexpectedtypes} also shows the values that CrashSimulator
+types and 
+Table~\ref{table:unexpectedtypes} shows the values that CrashSimulator
 inserted into the results of the {\tt stat()}-like calls made by the
 application.
 A result of ``Initial Value'' indicates
@@ -273,7 +293,7 @@ that this is the file type the application was provided
 when the application was initially recorded -- that is,
 a file of the type the application was expecting.
 A result of ``Recognizes'' indicates that the application
-identified that it was being provided with an unexpected file type and its
+identified it was being provided with an unexpected file type and its
 execution diverged,
 indicating that it was potentially handling the
 unexpected file type correctly.
@@ -319,17 +339,6 @@ Application & Condition Tested           & IFREG        & IFDIR        &
     \label{table:unexpectedtypes}
 \end{table*}
 
-The frequency of failed executions in our results indicates that many
-applications make the assumption that they will only be used to process
-regular files.  When this assumption does not hold, execution results
-can be hard to predict.  In many cases a denial of
-service condition occurs in the form of the application ``hanging,'' as it
-attempts to incorrectly process the file.  This may happen harmlessly, such
-as if an application blocks forever waiting for a {\tt read()}
-call to retrieve non-existent data from an empty FIFO, or harmfully, as
-when an application attempts to read in and process an
-``infinitely large'' file, that will eventually fill all
-available memory or disk space~\cite{Cappos_CCS_08}.
 
 \begin{table}[t]
     \scriptsize{}
@@ -355,7 +364,7 @@ available memory or disk space~\cite{Cappos_CCS_08}.
 
 
 In order to confirm the accuracy of CrashSimulator's assessments we manually
-exposed a subset of the Coreutils applications we tested to the unusual file
+exposed a subset of the Coreutils applications tested to the unusual file
 types to get an idea of how they would respond.
 Table~\ref{table:applicationresponses} contains the results of this test.
 CrashSimulator's evaluation of an application can map to real world bug behavior
