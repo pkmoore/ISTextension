@@ -1,15 +1,27 @@
 \section{Evaluation}
 \label{SEC:evaluation}
 
-Satisfied that we had a implementation of AES our efforts turned to
-demonstrating that it could effectively test real world applications.  To
-this end, we extensively evaluated CrashSimulator against a variety of
-applications and anomalies in a laboratory environment.
-Additionally, we conducted a user study in which undergraduate and
-graduate computer science students got a chance to test applications of
-their choosing using CrashSimulator with the goal of identifying new bugs
-and reporting to the application's developers.
-We used the results from both these efforts to answer the following questions:
+CrashSimulator was designed
+as a way to reduce the considerable effort
+required of developers 
+in implementing and maintaining applications.
+Therefore,
+we needed to prove its effectiveness in "the wild."
+To this end,
+we planned two rounds of
+evaluation for CrashSimulator.
+We started by exposing
+a series of real-world applications
+to a library of collected anomalies in a laboratory environment.
+These tests,
+conducted by the research team,
+were followed by a user study
+in which undergraduate and graduate computer science students
+got a chance to use CrashSimulator
+to identify new environmental bugs
+in tests of applications of their choosing.
+We used the results from both these efforts
+to answer the following questions:
 
 \begin{enumerate}
 
@@ -17,7 +29,7 @@ We used the results from both these efforts to answer the following questions:
     bugs?
 (Subsection~\ref{sec-env-bugs})}
 
-\item{Do tests using CrashSimulator make yield too many false positives?
+\item{Do tests using CrashSimulator yield too many false positives?
       (Subsection~\ref{sec-sorts-errors})}
 
 \item{Can CrashSimulator
@@ -437,7 +449,7 @@ by improving CrashSimulator's output so that it more clearly describes
 the nature of a given result and why the user should be concerned.
 
 
-\subsection{What sorts of errors does CrashSimulator make?}
+\subsection{Do tests using CrashSimulator yield too many false positives?}
 \label{sec-sorts-errors}
 
 The primary source of false positives in CrashSimulator is an application
