@@ -41,19 +41,27 @@ to answer the following questions:
 environmental bugs?}
 \label{sec-env-bugs}
 
-The most crucial question to ask about CrashSimulator is how readily it can
-identify environmental bugs from a wide variety of causes.  To evaluate the
-tool in this regard we configured it  to look for bugs from the
-categories discussed in Section~\ref{SEC:background}.  These included
-bugs related to unusual filesystem conditions and network situations under
-Linux.
-All of these bugs relied on common sysem calls, and thus had the potential to
-appear in many programs.  We selected the tested applications either
-because they were deemed ``popular'' by Debian's Popularity
-Contest~\cite{DebPopCon}, or were from GNU Coreutils.  Coreutils
-applications were chosen because of their widespread inclusion in many
-Linux distributions.
-
+The most crucial question to ask about CrashSimulator
+is how readily it can
+identify environmental bugs
+from a wide variety of causes.
+We have already established
+that these bugs can arise from
+by unusual filesystem and network situations,
+so we configured the tool to look
+for bugs that could be triggered by these features.
+These bugs rely on common system calls,
+and thus had the potential to
+appear in many programs.
+As we wanted to test
+the most commonly used applications,
+our selections were made
+from those deemed ``popular''
+by Debian's Popularity Contest~\cite{DebPopCon},
+or were in widespread use
+by many Linux distributions,
+such as those provided
+by the GNU Coreutils project.
 
 \subsubsection{Bugs Related to Moving Files}
 
