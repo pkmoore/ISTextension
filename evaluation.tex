@@ -474,45 +474,72 @@ allowing them to keep the application alive instead of quitting.
 
 \subsubsection{Bugs Found By Participants}
 
-Another topic of relevance in answering this question is how well new users are
-able to find bugs with CrashSimulator.
-To this end we conducted a user study with 12 undergraduate and
-graduate students that involved them receiving instruction on the tool and
-using it to find bugs in applications. This study resulted in a total of
-eleven bugs being found by participants using
-CrashSimulator.  Of these, nine were found using the ``Unusual Filetype.''
-Five of these bugs have been reported to the appropriate maintainers.
-Three of these reports contained patches constructed by the submitter.
-These results indicate that participants
-not involved in the development of
-CrashSimulator are able to use it to find new bugs in real world
-applications.  Participants commented that narrowing the source of a bug
+Another topic of relevance
+in evaluating CrashSimulator
+is how well developers are able to use the tool
+to find bugs.
+To investigate this angle
+we conducted a user study
+with 12 undergraduate and graduate students.
+These students had varying levels
+of operating systems experience
+and minimal training with the tool.
+Still, study participants found a total of 11 bugs using CrashSimulator.
+Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
+Five of these bugs have since been reported to the appropriate maintainers,
+and three of these reports included patches built by the reporting student
+that correct the bug.
+
+These results are important
+because they confirm
+users other than the original development team
+for CrashSimlator
+can use it to find new bugs in real world applications.
+Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
 was helpful in identifying the area of
 code responsible for the bug -- a feature
 that decreased the time required to produce a fix.
-Observation of the participants showed
-that familiarity with operating systems concepts
-very beneficial when working with CrashSimulator.  At
-the same time, participants without this background were
-able to identify bugs using built in
-anomalies.
+Though observation of study participants
+showed that familiarity with operating systems concepts
+made it easier to work with CrashSimulator,
+those without this background were still able to identify bugs using the
+built in anomalies.
 
-This effort revealed shortcomings with the tool.  First,  there can be
-confusion around what application behaviors constitute a bug.  For example,
-it may be the intention of an application's developer that the application
-run forever when processing an ``infinitely long'' file.  Second, it
-demonstrated that
-simply reporting an application did or did not change its behavior in
-the presence of an anomaly is insufficient if CrashSimulator's user is
-unfamiliar what each result means.  Both of these issues are being corrected
-by improving CrashSimulator's output so that it more clearly describes
-the nature of a given result and why the user should be concerned.
+
+On a less positive note,
+the study did reveal
+some shortcomings
+of the tool.
+First,
+it revealed that the tool
+does not have a clear mechanism
+for determining
+what application behaviors constitute a bug.
+For example,
+it may be the intention of an application's developer
+to have the application
+run forever when processing an ``infinitely long'' file.
+Second,
+it demonstrated that
+simply reporting an application did or did not change its behavior
+in the presence of an anomaly is insufficient
+if CrashSimulator's user is unfamiliar what each result means.
+Both of these issues are being corrected
+by improving CrashSimulator's output
+so that it more clearly describes
+the nature of a given result
+and why the user should be concerned.
 
 
 \subsection{Do tests using CrashSimulator yield too many false positives?}
 \label{sec-sorts-errors}
 
+Like most other testing tools, CrashSimulator occasionally makes
+false positive reports.
+Because these errors waste developer time and effort,
+being able to adjust CrashSimulator to eliminate them when they are
+encountered is a key concern.
 The primary source of false positives in CrashSimulator is an application
 using a different sequence of system calls to implement a given operation
 than a mutator or checker was anticipating.
@@ -578,6 +605,24 @@ test executing for the one whose prerequisites are met.
       the system call or calls that can implement it}
     \label{table:stepsandcalls}
 \end{table}
+
+A second source of false positives is a test being configured such that not
+enough of the application's execution is included in the test.
+One implementation detail of CrashSimulator is that,
+by default,
+its tests evaluate an application's behavior
+within a defined (but configurable) number of
+We found in some cases
+that an application's error handling or recovery code
+may take place outside of this span of execution.
+False positives
+of this sort
+are easily corrected
+by expanding the length of execution
+covered by the test.
+The low number of occurrences of this
+type of false positive gives us confidence that the default configuration
+is satisfactory in the majority of cases.
 
 \subsection{Can CrashSimulator execute tests efficiently?}
 \label{sec-perf}
