@@ -98,16 +98,22 @@ that evaluate whether or not
 the application performs the following
 checks and operations:
 
-\paragraph{Source Replaced}
+\paragraph{Source Replaced.}
 
-An application should make an effort to ensure that the file being copied is not
-replaced between the time it is initially examined and the time it is opened
-for copying.  Otherwise it could have been replaced by a file of a different
-type, such as a character device.
-To test whether applications are robust to anomalies involving source file replacement,
+An application should make an effort
+to ensure that the file being copied
+is not replaced between the time it is initially examined
+and the time it is opened for copying.
+Otherwise,
+it could have been replaced by a file of a different type,
+such as a character device.
+To test whether applications are robust
+to anomalies involving source file replacement,
 we developed a checker that monitors whether a series of safety checks
 are performed.
-Failing to perform these checks often results in corruption of the file~\cite{PythonShutilBug}.
+Failing to perform these checks
+means the application will proceed with its operations,
+often corrupting the file~\cite{PythonShutilBug}.
 
 \paragraph{Preserve Xattrs}
 
