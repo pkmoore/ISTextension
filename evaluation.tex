@@ -380,37 +380,64 @@ application detected the anomalous condition and the application manages to
 do so in practice,  as when we evaluated {\tt wc}'s successful response to
 being run on a directory.
 
-\subsubsection{Slowloris attack -  Delaying network applications for extended
-periods.}
+\subsubsection{Beyond Filesystem Bugs - Poorly Configured Network Timeouts}
 \label{sec-timeout-bugs}
 
-CrashSimulator is not limited to simulating filesystem based anomalies.
-The third anomaly we examined involves an application's behavior when it
-attempts to communicate over a network with extremely long (on the order of
-minutes) response times.  At a low level, applications retrieve data from a
-network socket by waiting for data to be available and then reading it.  A
-key aspect of this approach is handling the situation where communication
+CrashSimulator is not limited
+to identifying filesystem-based anomalies.
+The third anomaly we examined
+involves an application's behavior
+when it attempts to communicate
+over a network with extremely long
+(on the order of minutes) response times.
+At a low level,
+applications retrieve data from a network socket
+by waiting for data to be available and then reading it.
+However,
+this approach needs to be able to handle
+a situation where communication
 takes too long and should time out.
 
-{\bf Method.} CrashSimulator can detect whether an application is
-vulnerable to this attack by examining how an application would react to
-large amounts of time elapsing between network operations.
-The first step in this process
-is allowing CrashSimulator to observe an executing application
-in order to determine whether or not it makes any effort
-to configure its network communications with a timeout value. This is done
+{\bf Method.} CrashSimulator can detect
+whether an application is vulnerable to this attack
+by employing the null mutator and a network timeout checker
+in order to determine if it makes any effort
+to configure its network communications with a timeout value.
+This is done
 by examining the presence or absence of {\tt setsockopt()}, {\tt poll()}
 and {\tt select()} calls as well as the timeout values that may
 have been passed to them. Applications that do not set the timeout are
 subject to the operating system-defined protocol timeout value (19 minutes
-on Linux).  CrashSimulator's evaluation then goes further by manipulating
-the results of all
-time-returning calls, simulating an execution where close
-to the maximum timeout value occurs, without actually spending any time
-waiting.  Applications that do not appropriately handle this situation are
-vulnerable to slowloris-style attacks.  We employed this analysis on a
-selection of popular network applications and libraries chosen based on
-Debian's ratings~\cite{DebPopCon}.
+on Linux).
+CrashSimulator is able to take this analysis a step further by employing a
+Long Network Response Time mutator
+that manipulates
+the results of all time-returning calls,
+simulating an execution where close
+to the maximum timeout value occurs,
+without actually spending any time
+waiting.
+
+An application's failure
+to time out responsibly
+is not just an inconvenience --
+it can be taken advantage of by attackers
+to consume resources and potentially cause a denial of service situation.
+This failure was exploited by the slowloris~\cite{Slowloris} tool
+to enhance the ability
+of a small number of computers to prevent access
+to vulnerable web servers
+by opening and maintaining connections to the servers
+for extremely long periods of time.
+As these servers could only handle a set number of connections
+due to resource constraints,
+legitimate traffic was easily crowded out by the attackers.
+Additionally, similar attacks can be used to
+indefinitely delay security updates to
+clients, leaving them vulnerable to compromise~\cite{Cappos_TR_08}.
+We used CrashSimulator to determine which applications and
+libraries from a selection based on Debian's ratings~\cite{DebPopCon}
+could be vulnerable to this sort of attack.
 
 \begin{table}[t]
   \scriptsize{}
@@ -436,27 +463,14 @@ Debian's ratings~\cite{DebPopCon}.
 
 
 {\bf Findings.} As Table~\ref{table:slowloris} shows, all of these
-applications were vulnerable to this sort of anomaly, with timeouts taking
-hours in some cases to resolve.
+applications were vulnerable to this sort of anomaly,
+and in some cases,
+the timeouts took hours to resolve.
 What's more, in the vast majority of
 cases, the problem occurs because the application makes no effort to
 specify a timeout value.  This means an attacker can transmit one byte of
 data per timeout period (per Linux's value of 19 minutes for TCP sockets),
 allowing them to keep the application alive instead of quitting.
-
-
-This attack technique has been effectively exploited in the wild.  The {\tt
-slowloris} tool allows a single attacking host to successfully deny service
-to a vulnerable web server with minimal bandwidth usage by simply
-introducing delays between the headers sent to the victim by an attacking
-HTTP client.  Because many web servers at the time  of {\tt slowloris's} release
-allowed large timeouts
-between messages from the clients, one web client could effectively tie up
-the resources of a web server for a long period of time.
-This can cause a slow buildup of unending or long lived jobs that consume
-resources and cause detrimental system behavior~\cite{Slowloris}.
-Similar attacks can be used to indefinitely delay security updates to
-clients, leaving them vulnerable to compromise~\cite{Cappos_TR_08}.
 
 \subsubsection{Bugs Found By Participants}
 
