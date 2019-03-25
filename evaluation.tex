@@ -143,21 +143,25 @@ that re-apply the attributes to the destination file (i.e. {\tt setxattr()},
 
 \paragraph{Preserve Timestamps}
 
-In order to truly copy a file from one device
-to another an application needs to ensure that its metadata (such as the
-creation, modification, and access times) are preserved in the destination
-file.
-In this case, the checker monitors
-whether the application applies
-the appropriate timestamps to the destination file as part of moving a file
-across devices by monitoring for a system call from the {\tt stat()} family to
-retrieve the timestamps and system call from the {\tt utime()} family to apply
-the retrieved timestamps to the destination file.
-Failure to preserve timestamps has obvious
-implications in records-keeping and archival situations as well as any situation
-where a chronological record of file manipulations is important.  This can
-cause odd behavior in Makefiles, archival programs, and similar
+Failure to preserve timestamps has obvious implications
+in records-keeping and archival situations
+as well as any situation where
+a chronological record of file manipulations is important.
+Incorrect timestamps can cause odd behavior
+in Makefiles, archival programs, and similar
 software~\cite{NautilusTimestamps, SudoTimestamp}.
+Given these issues, it is important to ensure
+that time related metadata
+(such as creation, modification, and access times)
+are preserved when copying a file.
+To evaluate identify failures on this front,
+we used a checker that determines
+whether the application applies
+the appropriate timestamps to the destination file
+by monitoring for system calls from the {\tt stat()} family,
+which are used to retrieve the timestamps,
+and system calls from the {\tt utime()} family,
+which apply the retrieved timestamps to the destination file.
 
 \paragraph{Copying Devices}
 
