@@ -226,7 +226,8 @@ well defined which simplifies implementation. Finally, operating at this
 level allows CrashSimulator to test applications written in any language
 that can execute Linux system calls.
 
-Work then turned to gathering a corpus of anomalies to test applications
+In implementing CrashSimulator, our first task was
+gathering a corpus of anomalies to test applications
 against.  These anomalies (which are further discussed
 in Section~\ref{SEC:evaluation})
 were collected by examining public bug trackers,
@@ -250,7 +251,8 @@ user skill and effort was paid back, as
 we were able to use its products
 repeatedly over time to test many different applications.
 
-Our implementation of CrashSimulator 
+We then turned to implementing a way to monitor and manipulate an
+application's communications.  We achieved monitoring by
 recording application executions
 using a modified version of the {\tt rr}!!CITE!!
 debugger.  This modification allowed
@@ -291,10 +293,10 @@ its configured environmental anomaly.  The
 supervisor wakes up its designated process set
 and simulates any
 subsequent system calls.
-During the course of this simulation, the modified responses identified
-as part of the initial search for anomalies
-are supplied where appropriate,
-thus exposing the processes to the
+During the course of this simulation, a mutator is used to
+apply the modified responses identified
+as part of the initial search for anomalies,
+exposing the processes to the
 anomaly being tested.
 Supervisors can complete this
 process independently of one another, which lends a
