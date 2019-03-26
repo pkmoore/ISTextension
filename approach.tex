@@ -60,12 +60,10 @@ which we built as a concrete implementation of AES.
 
 \subsection{Identifying and Encoding Anomalies}
 
-When getting started with AES, the first
-is selecting an anomaly or anomalies
-against which you wish to test an application.
-Subsequent applications will build on this set,
-improving the breath of environmental
-aspects against which applications can be tested.
+At the core of AES's operation is the body of anomalies that
+is used to test applications.
+Building this corpus is an ongoing process that improves the technique's
+effectiveness by extending the set of environments it can simulate.
 Anomalies can be sourced
 in a number of ways,
 such as
@@ -110,10 +108,12 @@ and used to evaluate future application's ability to handle the same
 problem.
 
 
-\textbf{Monitoring an Application's Communications}
-Because an anomaly simulated at the correct point in execution
-it is necessary to monitor an application's communication
-with its environment.
+\textbf{Monitoring and Manipulating Communications}
+Simulating an environmental anomaly requires specific interventions at the
+correct moments during an execution.  As a result, AES requires
+functionality with
+which an application's communications with its environment can be
+monitored.
 This can be implemented
 by such means as
 redirecting function calls,
@@ -127,14 +127,12 @@ of an application's communications
 can indicate
 when would be an appropriate time to simulate an anomaly.
 
-
-\textbf{Simulating Anomalies by Manipulating Communications}
 Once an opportune moment to simulate an anomaly has arisen,
-the implementer must
+the technique requires that its implementer
 interpose on the application's communications
 and makes the modifications necessary
 to simulate the presence
-of an environmental anomaly.
+of the anomaly.
 This could be accomplished by
 influencing the results of function calls or system calls,
 strategically altering memory values,
@@ -154,10 +152,8 @@ to access the clock
 be modified to reflect the chosen aberration.
 
 \textbf{Analyzing an Application's Response}
-After an anomaly has been simulated
-it is time
-to analyze an application's response
-to a simulated anomaly.
+AES provides a flexible approach to assessing the way an application
+behaves after it as encountered an anomaly.
 The simplest conclusion to draw
 is whether or not the application
 has made an effort to respond
@@ -177,7 +173,7 @@ This simple yes or no approach
 is often sufficient
 to classify application behavior.
 
-One limitation of the above strategy
+One limitation of the above decision making rule
 is that it can result in false negatives
 should an application change its behavior
 but still not handle the anomaly correctly.
