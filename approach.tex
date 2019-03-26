@@ -28,20 +28,28 @@ offers a reliable way to identify bugs
 that could arise from interaction with a given environment.
 It does this by providing a systematic way of storing and utilizing the
 insights gleaned from the work that went into debugging previous failures
-in a given environment.  This is a boon for software developers because
-this information is difficult to preserve in an accessible manner as
-documentation easily goes out of date or is forgotten about.  Taking
-advantage of the information that does persist requires additional effort
-on the part of developers to construct and execute tests that check for the
-documented issues.  Additionally, tests constructed in this manner are
-usually tightly coupled to the application and programming language in
-question.  AES cuts through all of these difficulties by allowing this
-information to be stored in a systematic manner that can be consumed
-programmatically and used to test applications as if they were running in a
-problematic environment in a language agnostic fashion.  These features
-mean information abut the problematic portions of an environment can be
-accumulated and used to test future applications before deployment,
-preventing situations where applications fall victim to the same conditions
+in a given environment.
+Preserving this information in an accessible manner
+is a boon for software developers because,
+in a typical scenario, the materials documenting it
+go out of date or are forgotten about.
+Additionally,
+taking advantage of the documentation that maintains relevance
+requires additional effort
+to construct and execute tests
+that check for the documented issues.
+Further, tests constructed in this manner are
+usually tightly coupled
+to the application and the programming language in which it was written --
+limiting their re usability.
+AES cuts through all of these difficulties by allowing this
+information to be stored in a manner that can be consumed
+programmatically and used to test applications automatically.
+Over time, the body of problematic environments it can simulate
+grows increasing the technique's effectiveness at
+evaluating applications before deployment.
+This helps prevent situations
+where applications fall victim to the same conditions
 that afflicted applications in the past.
 In this section,
 we will break down the components
