@@ -43,16 +43,20 @@ accumulated and used to test future applications before deployment,
 preventing situations where applications fall victim to the same conditions
 that afflicted applications in the past.
 In this section,
-we will break down the steps of the technique,
-and then introduce a tool called CrashSimulator,
+we will break down the components
+that allow for these improvements
+and introduce a tool called CrashSimulator,
 which we built as a concrete implementation of AES.
 
 
-\subsection{Stepping through AES}
+\subsection{Identifying and Encoding Anomalies}
 
-The first step in implementing AES
+When getting started with AES, the first
 is selecting an anomaly or anomalies
 against which you wish to test an application.
+Subsequent applications will build on this set,
+improving the breath of environmental
+aspects against which applications can be tested.
 Anomalies can be sourced
 in a number of ways,
 such as
@@ -96,9 +100,10 @@ Since the effects of this anomaly have been identified, they can be saved
 and used to evaluate future application's ability to handle the same
 problem.
 
-The second step in AES
-is identifying
-a way to monitor an application's communication
+
+\textbf{Monitoring an Application's Communications}
+Because an anomaly simulated at the correct point in execution
+it is necessary to monitor an application's communication
 with its environment.
 This can be implemented
 by such means as
@@ -112,33 +117,12 @@ and orderings
 of an application's communications
 can indicate
 when would be an appropriate time to simulate an anomaly.
-Monitoring communications
-in this fashion
-has the added benefit
-of allowing us to find obvious situations
-where an application will fail
-to handle certain environmental features.
-Consider an application that fails to check whether or not
-a file already exists
-before destructively writing to it.
-The absence of this check
-would be problematic in environments where the file already exists,
-as it will be blindly overwritten.
-The sequence of communications
-the application makes when writing to the file
-will make it obvious that this check has been neglected.
-As such,
-no simulation is required to identify the presence of a bug.
 
-In cases such as the one described above,
-the AES technique could stop at this point.
-However, in most scenarios,
-the last two steps ---
-simulation and response analysis ---
-will be required.
-In the third step,
-the implementer
-interposes on communications
+
+\textbf{Simulating Anomalies by Manipulating Communications}
+Once an opportune moment to simulate an anomaly has arisen,
+the implementer must
+interpose on the application's communications
 and makes the modifications necessary
 to simulate the presence
 of an environmental anomaly.
@@ -160,8 +144,10 @@ requires that all efforts
 to access the clock
 be modified to reflect the chosen aberration.
 
-Lastly, the fourth AES step
-is to analyze an application's response
+\textbf{Analyzing an Application's Response}
+After an anomaly has been simulated
+it is time
+to analyze an application's response
 to a simulated anomaly.
 The simplest conclusion to draw
 is whether or not the application
@@ -207,6 +193,7 @@ has handled the failure correctly
 by examining post-simulation communications in detail,
 and taking into account the correctness of retrying the call.
 
+
 \subsection{CrashSimulator: A Concrete AES Implementation}
 
 Evaluating AES in a real-world fashion requires a
@@ -244,7 +231,13 @@ and CheckAPI~\cite{rasley2015detecting}.  These anomalies were converted
 into sets of modified responses
 that simulate the presence of an anomaly when
 appropriately presented as the results of system calls.
-This process required manual effort and expertise.  However,
+From a technical perspective, this involved constructing finite automata,
+referred to as mutators, that, when provided with the sequence of system
+calls an application makes, can identify the correct points at which to
+simulate anomalies and specify the transformations required to actually
+carry the simulation out.
+This process required manual effort and expertise.
+However,
 much like
 the effort involved in constructing a unit test to check for correct
 behavior in a piece of code, we found that this initial outlay of
@@ -252,7 +245,7 @@ user skill and effort was paid back, as
 we were able to use its products
 repeatedly over time to test many different applications.
 
-We carried out the second step of AES, communication monitoring, by
+Our implementation of CrashSimulator 
 recording application executions
 using a modified version of the {\tt rr}!!CITE!!
 debugger.  This modification allowed
@@ -293,8 +286,9 @@ its configured environmental anomaly.  The
 supervisor wakes up its designated process set
 and simulates any
 subsequent system calls.
-During the course of this simulation, the modified responses created in
-step one are supplied where appropriate,
+During the course of this simulation, the modified responses identified
+as part of the initial search for anomalies
+are supplied where appropriate,
 thus exposing the processes to the
 anomaly being tested.
 Supervisors can complete this
@@ -302,8 +296,12 @@ process independently of one another, which lends a
 high degree of speed and
 parallelism to the whole CrashSimulator testing process.
 
-The primary means by which
-CrashSimulator diagnoses bugs is
+CrashSimulator analyses an application's behavior post-anomaly through the
+use of a second form of finite automata we refer to as a ``checker.''  The
+purpose of a checker is to encode correct application behavior and compare
+this encoding to what the application actually does.
+The primary checker, known as the ``Default Checker''
+diagnoses bugs
 by observing whether or not an application
 performs a different set of system calls than what is expected based on the
 recording being replayed.  A ``divergence'' from the recording indicates
@@ -314,7 +312,6 @@ the simulated anomaly signals the possibility of a bug.
 In cases where more detailed analysis of an application's response
 is required, CrashSimulator can attempt to preserve a replay execution
 past the end of its recording.  This provides an opportunity for
-finite automata known as ``checkers`` to examine
+more complex checkers``checkers`` to examine
 the system calls the application makes in order to make more detailed claims about
-its response.  These checkers are discussed in more detail in our
-evaluation.
+its response.
