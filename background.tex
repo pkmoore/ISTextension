@@ -11,8 +11,7 @@ that its developers do not control.
 In practice, this is everything other than the code and data packaged
 within the application itself.
 Anything external to the application can be
-influenced in unexpected ways by the configuration of the
-deployment environment.
+may be configured in unexpected ways.
 For example, library search rules can result in system libraries
 being loaded instead of
 the versions deployed alongside the application.
@@ -23,8 +22,8 @@ following categories have been found in major applications.
 
 \begin{itemize}
 
-\item {\bf Operating Systems.} Difference in the way operating systems
-implement system call scan influence the behavior of applications.  For
+\item {\bf Operating Systems.} Differences in the way operating systems
+implement system calls can influence the behavior of applications.  For
 example, on Linux it is possible to remove an open file, yet this is not
 allowed on Windows systems~\cite{UnlinkStandard}.  An application
 written without this difference in mind could fail if it relies on one
@@ -40,8 +39,8 @@ File systems can have varying limits or behaviors for other items as well,
 including file name length (popularized due to the 8.3 limitations of the
 FAT file system), maximum file length, number of directory entries, or
 depth
-of directories supported, all of which lead to errors when programs
-do not account for these issues~\cite{EXT4Layout, AppleHFS}.
+of directories supported, all of which can lead to errors when programs
+do not account for these variations~\cite{EXT4Layout, AppleHFS}.
 
 \item {\bf Network.} Both local and remote network nodes
 can have specific characteristics that could influence the behavior of an
@@ -50,20 +49,26 @@ For example, POSIX operating
 systems support the notion of limiting the kernel buffer set aside for a
 socket.  However, many other popular operating
 systems (Windows, Linux, and Mac)
-implement this quite differently.  For example, in Linux, if a UDP datagram
-larger than the specified buffer size is received it will be dropped.  In
-Windows, however, such
-UDP datagrams are
-received, but system calls that retrieve data from the buffer in which
+implement this quite differently.
+If a UDP datagram
+larger than the specified buffer size is received by a Linux system,
+it will be dropped.
+Windows,
+however,
+will receive these datagrams,
+but it will influence data retrieval.
+Any system calls that retrieve data from the buffer in which
 they are
 stored will only return a number of bytes less than or equal to the
 buffer size at one time~\cite{Zhuang_NSDI_2014}.
 
-\item {\bf Processor.}  The processor can also influence the
+\item {\bf Processor.}  The processor used can also influence the
 behavior of an application.  This is very frequently
-evidenced through the variety of different floating point behaviors on
-processors~\cite{ArbitraryPrecision}.  In addition, bugs are fairly common
-in processors and cause variances, as does differences in interpreting
+evidenced through the variety of different floating point behaviors a
+processor may exhibit~\cite{ArbitraryPrecision}.
+In addition, bugs are fairly common
+in processors and will cause variances, as will
+differences in interpreting
 how to execute complex instructions~\cite{Microarch}.
 
 \end{itemize}
@@ -71,7 +76,7 @@ how to execute complex instructions~\cite{Microarch}.
 In this work, we chose to focus on operating system,
 file system, and network
 environmental issues.
-Due to the fashion in which we chose 
+Due to the fashion in which we chose
 to implement Anomalous Environment Simulation,
 we are specifically concerned with issues from the above sources
 that are visible in the results and side effects of the system calls
