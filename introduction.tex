@@ -77,11 +77,13 @@ to learn from the mistakes of others,
 saving money and programming hours
 that otherwise would be devoted to finding and fixing
 environmental bugs.
+
 Furthermore,
 the AES technique
-developers to preserve and catalog
+allows developers to preserve and catalog
 these anomalies,
-giving them a formal and reproducible strategy for testing applications.
+giving them a formal and reproducible strategy for future application
+tests.
 This is an improvement over current practices,
 where findings are often lost or,
 at best, preserved as
@@ -109,6 +111,9 @@ question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total,
 \textbf{!!!!RECOUNT!!!!} 84
 bugs were identified in this manner.
+The effort required to actually test applications against the
+these conditions far exceeded the time required to evaluate them
+using simulation -- further illustrating the time savings offered by AES.
 
 In addition to proving CrashSimulator could find bugs, we were also able to
 show that developers with varying backgrounds
