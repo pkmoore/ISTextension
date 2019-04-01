@@ -65,9 +65,9 @@ by the GNU Coreutils project.
 
 \subsubsection{The simplest case - A Filesystem Bug Found With the Null Mutator}
 
-As was discussed in Section~\ref{SEC:approach},
-the simplest case for finding bugs
-using AES is by employing the null mutator.
+In our first test we decided to evaluate the tool in its simplest possible
+configuration -- employing the null mutator.
+This mutator takes no action and simulates no anomalous conditions.
 This gives checkers
 a chance to evaluate an application's behavior
 as it carries out a potentially-buggy operation unhindered.
@@ -284,7 +284,7 @@ available memory or disk space~\cite{Cappos_CCS_08}.
 
 For each application,
 CrashSimulator was configured to simulate all of the non-standard file
-types and 
+types and
 Table~\ref{table:unexpectedtypes} shows the values that CrashSimulator
 inserted into the results of the {\tt stat()}-like calls made by the
 application.
