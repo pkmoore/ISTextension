@@ -24,11 +24,47 @@
 
 As mentioned earlier,
 the anomalous environment simulation(AES) technique
-offers a reliable way to identify bugs
-that could arise from interaction with a given environment.
-It does this by providing a systematic way of storing and utilizing the
-insights gleaned from the work that went into debugging previous failures
-in a given environment.
+offers a reliable way to identify bugs that could arise from interaction
+with a given environment.
+It does this by providing a systematic way of
+capturing, storing and utilizing the insights gleaned from the work that
+went into debugging previous failures in a given environment.
+In a nutshell,
+here is how the technique works.
+An application is run
+in a particular environment and fails.
+In debugging the failure,
+we identify and “trap” the particular environmental feature
+~\ref{SUBSUB:IdentifyingAndEncoding},
+which we call $X$,
+that caused the crash.
+We verify that when $X$ is present,
+communication with the
+environment is different,
+sometimes in a barely perceptible manner,
+and other times in a radically contrary manner.
+We call this difference $X'$.
+$X'$ can be extracted and preserved,
+and later used in testing other systems
+thanks to a pair of components referred to as a mutator and a checker.
+The mutator describes the exact set of changes
+that must be made to an application’s communications
+in order to simulate an anomaly,
+while the checker describes how an
+application should respond once the anomaly has been encountered.
+To test if other applications also have a problem with $X$, mutators,
+can insert $X'$ into their
+communications~\ref{SUBSUB:MonitoringAndManipulating}.
+A checker will then determine whether the
+application has responded correctly to $X$~\ref{SUBSUB:AnalyzingResponse}.
+If the checker accepts the application behavior
+after the anomaly is simulated,
+we report it has been handled.
+If the checker doesn’t accept we report that it hasn’t.
+Once created,
+these pieces act as the persistent medium in which the details of
+a given anomaly are stored.
+
 Preserving this information in an accessible manner
 is a boon for software developers because,
 in a typical scenario, the materials documenting it
@@ -42,26 +78,16 @@ Further, tests constructed in this manner are
 usually tightly coupled
 to the application and the programming language in which it was written --
 limiting their re usability.
-
 AES cuts through all of these difficulties by
 storing this information in a manner that can be consumed
 and used to test applications programmatically.
-Capturing problematic features allows
-the body of environments it can simulate
-to grow over time,
-increasing the technique's effectiveness.
-This helps prevent situations
-where applications fall victim to the same conditions
-that afflicted applications in the past.
-In this section,
-we will break down the components
-that allow for these improvements
-and introduce a tool called CrashSimulator,
-which we built as a concrete implementation of AES.
+In this section, we discuss each of the components
+required to implement AES
+and detail our concrete implementation,
+CrashSimulator~\ref{SUBSEC:ApproachCrashSim}.
 
-
-\subsection{Identifying and Encoding Anomalies}
-
+\subsubsection{Identifying and Encoding Anomalies}
+\label{SUBSUB:IdentifyingAndEncoding}
 At the core of AES's operation is the body of anomalies that
 is used to test applications.
 Building this corpus is an ongoing process that improves the technique's
@@ -87,13 +113,18 @@ these differences delineate
 a set of modifications
 that must be made to an application's communications
 in order to simulate the chosen anomaly or anomalies.
+The details of the anomaly are then used to
+construct a both a mutator,
+which contains the modifications in question,
+and a checker
+(or set of checkers)
+which encodes how the application should respond.
 Describing anomalies in this fashion
 allows them to be recorded systematically and cataloged for future use.
-Once captured, they can be used to repeatably test applications preventing
-future deployments from falling victim to the same problem multiple
-times.
-As an example,
-consider an anomalous environment
+
+Consider,
+for example,
+an anomalous environment
 where access to a required file is denied because of
 the environment's file security configuration.
 With this anomaly,
@@ -105,18 +136,19 @@ The ``modification'' required to simulate this anomaly
 is to change the results of similar accesses
 in a test execution
 to return ``access denied.''
-Since the effects of this anomaly have been identified, they can be saved
-and used to evaluate future application's ability to handle the same
-problem.
+This anomaly can be preserved by constructing a mutator that describes how
+a failing read call differs from a normal one and a checker that checks for
+the application altering its behavior in response.
 
-
-\textbf{Monitoring and Manipulating Communications}
+\subsubsection{Monitoring and Manipulating Communications}
+\label{SUBSUB:MonitoringAndManipulating}
 Simulating an environmental anomaly requires specific interventions at the
-correct moments during an execution.  As a result, AES requires
-functionality with
-which an application's communications with its environment can be
-monitored.
-This can be implemented
+correct moments during an execution.
+As a result,
+AES requires functionality
+with which an application's communications
+with its environment
+can be monitored
 by such means as
 redirecting function calls,
 observing memory access,
@@ -129,17 +161,17 @@ of an application's communications
 can indicate
 when would be an appropriate time to simulate an anomaly.
 
-Once an opportune moment to simulate an anomaly has arisen,
+Once an opportune moment has arisen,
 the technique requires that its implementer
 interpose on the application's communications
-and makes the modifications necessary
+and make the modifications necessary
 to simulate the presence
 of the anomaly.
-This could be accomplished by
-influencing the results of function calls or system calls,
-strategically altering memory values,
-or some other method
-of presenting modified communications to an application.
+This could be accomplished
+a number of ways,
+such as
+by influencing the results of function calls or system calls,
+strategically altering memory values.
 In the simplest case,
 simulating an anomaly only requires
 the modification of a single value.
@@ -153,14 +185,26 @@ requires that all efforts
 to access the clock
 be modified to reflect the chosen aberration.
 
-\textbf{Analyzing an Application's Response}
-AES provides a flexible approach to assessing the way an application
-behaves after it as encountered an anomaly.
-The simplest conclusion to draw
-is whether or not the application
+\subsubsection{Analyzing an Application's Response}
+\label{SUBSUB:AnalyzingResponse}
+AES relies on checkers
+to provide a flexible approach to assess the way an application
+behaves after it has encountered an anomaly.
+A checker is constructed to store
+some behavior that the application should undertake
+in response to the anomaly being simulated.
+It looks for this behavior by examining an application's communications
+before, during, and after the simulation of an anomaly.
+The checker then reports whether the application has handled
+the anomaly based on whether or not it observed the behavior for which it
+was built to look.
+
+As an example, consider the ``default checker'' from CrashSimulator.
+It draws a conclusion based on
+whether or not the application
 has made an effort to respond
-to the anomaly,
-a determination that can be made based
+to the anomaly.
+This determination is made based
 on the assumption
 that such a response will yield
 different program paths (and therefore different communications).
@@ -202,9 +246,9 @@ and taking into account the correctness of retrying the call.
 
 
 \subsection{CrashSimulator: A Concrete AES Implementation}
-
+\label{SUBSEC:ApproachCrashSim}
 Evaluating AES in a real-world fashion requires a
-concrete implementation of its four components.
+concrete implementation of its three components.
 We built this implementation into a tool we call CrashSimulator.  The
 prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
 distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
