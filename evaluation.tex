@@ -3,7 +3,7 @@
 
 CrashSimulator was designed
 as a way to reduce the considerable effort
-required of developers 
+required of developers
 in implementing and maintaining applications.
 Therefore,
 we needed to prove its effectiveness in "the wild."
@@ -68,7 +68,7 @@ by the GNU Coreutils project.
 In our first test we decided to evaluate the tool in its simplest possible
 configuration -- employing the null mutator.
 This mutator takes no action and simulates no anomalous conditions.
-It simply checkers
+It simply allows checkers
 a chance to evaluate an application's behavior
 as it carries out a potentially-buggy operation unhindered.
 To test CrashSimulator's ability to find bugs
@@ -88,7 +88,7 @@ frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
 {\bf Method.}  For this portion of our evaluation
 CrashSimulator was configured
-to test each of the applications listed in Table{table:crossdevice}
+to test each of the applications listed in Table~\ref{table:crossdevice}
 using the Null Mutator and a set of checkers constructed find applications
 that fail to correctly move a file from one disk to another.
 Catching this particular class of bugs requires
@@ -214,7 +214,7 @@ when many libraries have correct behavior in some cases, but not others.
 \subsubsection{A More Complex Case - The Unexpected File Types Mutator}
 \label{sec-file-type-bugs}
 
-Employing a more complex (than the NullMutator) mutator allows
+Employing a more complex (than the null mutator) mutator allows
 CrashSimulator to inject anomalies into an application.
 This introduces problematic scenarios
 so that the way an application responds
