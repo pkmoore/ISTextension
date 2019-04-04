@@ -34,8 +34,8 @@ here is how the technique works.
 An application is run
 in a particular environment and fails.
 In debugging the failure,
-we identify and “trap” the particular environmental feature
-~\ref{SUBSUB:IdentifyingAndEncoding},
+we identify and ``trap'' the particular environmental feature
+(sec.~\ref{SUBSUB:IdentifyingAndEncoding}),
 which we call $X$,
 that caused the crash.
 We verify that when $X$ is present,
@@ -44,7 +44,7 @@ environment is different,
 sometimes in a barely perceptible manner,
 and other times in a radically contrary manner.
 We call this difference $X'$.
-$X'$ can be extracted and preserved,
+$X'$ can be extracted, preserved,
 and later used in testing other systems
 thanks to a pair of components referred to as a mutator and a checker.
 The mutator describes the exact set of changes
@@ -54,13 +54,14 @@ while the checker describes how an
 application should respond once the anomaly has been encountered.
 To test if other applications also have a problem with $X$, mutators,
 can insert $X'$ into their
-communications~\ref{SUBSUB:MonitoringAndManipulating}.
+communications (sec.~\ref{SUBSUB:MonitoringAndManipulating}).
 A checker will then determine whether the
-application has responded correctly to $X$~\ref{SUBSUB:AnalyzingResponse}.
+application has responded correctly to
+$X$(sec.~\ref{SUBSUB:AnalyzingResponse}).
 If the checker accepts the application behavior
 after the anomaly is simulated,
 we report it has been handled.
-If the checker doesn’t accept we report that it hasn’t.
+If the checker doesn't accept we report that it hasn't.
 Once created,
 these pieces act as the persistent medium in which the details of
 a given anomaly are stored.
@@ -77,7 +78,7 @@ that check for the documented issues.
 Further, tests constructed in this manner are
 usually tightly coupled
 to the application and the programming language in which it was written --
-limiting their re usability.
+limiting their reusability.
 AES cuts through all of these difficulties by
 storing this information in a manner that can be consumed
 and used to test applications programmatically.
@@ -137,7 +138,7 @@ is to change the results of similar accesses
 in a test execution
 to return ``access denied.''
 This anomaly can be preserved by constructing a mutator that describes how
-a failing read call differs from a normal one and a checker that checks for
+a failing {\tt read()} call differs from a normal one and a checker that checks for
 the application altering its behavior in response.
 
 \subsubsection{Monitoring and Manipulating Communications}
@@ -145,10 +146,10 @@ the application altering its behavior in response.
 Simulating an environmental anomaly requires specific interventions at the
 correct moments during an execution.
 As a result,
-AES requires functionality
-with which an application's communications
+AES requires
+an application's communications
 with its environment
-can be monitored
+be monitored
 by such means as
 redirecting function calls,
 observing memory access,
@@ -272,7 +273,7 @@ well defined which simplifies implementation. Finally, operating at this
 level allows CrashSimulator to test applications written in any language
 that can execute Linux system calls.
 
-In implementing CrashSimulator, our first task was
+Our first task was
 gathering a corpus of anomalies to test applications
 against.  These anomalies (which are further discussed
 in Section~\ref{SEC:evaluation})
@@ -283,11 +284,19 @@ and CheckAPI~\cite{rasley2015detecting}.  These anomalies were converted
 into sets of modified responses
 that simulate the presence of an anomaly when
 appropriately presented as the results of system calls.
-From a technical perspective, this involved constructing finite automata,
-referred to as mutators, that, when provided with the sequence of system
-calls an application makes, can identify the correct points at which to
-simulate anomalies and specify the transformations required to actually
-carry the simulation out.
+From a technical perspective,
+this involved constructing 
+both checkers and mutators using finite automata.
+In CrashSimulator, mutators work by receiving the sequence of system calls
+an application makes and accepting situations where the sequence indicates
+it is appropriate to simulate an anomaly.  It then uses its stored
+description of its anomaly to carry out its simulation.  In the same vein,
+we implemented checkers as finite automata that receive the sequence of
+system calls made by the application.  Because checkers encode what a
+correct response by the application should look like, they were constructed
+to accept situations where they observed sequences indicative  of such a
+response.  We discuss this decision making process in more detail in
+section~\ref{SUBSUB:AnalyzingResponse}.
 This process required manual effort and expertise.
 However,
 much like
@@ -307,10 +316,7 @@ system call recording to be output alongside {\tt rr's} normal recording
 format, providing
 a complete log of an applications system call activity.
 With this information, we could
-easily identify opportunities to simulate anomalies.  As was
-discussed earlier, simply observing these system calls was enough to
-identify bugs-of-omission in many applications
-(see Section~\ref{SEC:evaluation} for a more detailed explanation).
+easily identify opportunities to simulate anomalies.
 
 In implementing the anomaly simulation of AES
 we actually developed
@@ -361,10 +367,3 @@ recording being replayed.  A ``divergence'' from the recording indicates
 the application has changed its behavior and might be handling
 the anomaly in question.  Following the recording precisely, in spite of
 the simulated anomaly signals the possibility of a bug.
-
-In cases where more detailed analysis of an application's response
-is required, CrashSimulator can attempt to preserve a replay execution
-past the end of its recording.  This provides an opportunity for
-more complex checkers``checkers`` to examine
-the system calls the application makes in order to make more detailed claims about
-its response.
