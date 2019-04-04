@@ -285,18 +285,18 @@ into sets of modified responses
 that simulate the presence of an anomaly when
 appropriately presented as the results of system calls.
 From a technical perspective,
-this involved constructing 
+this involved constructing
 both checkers and mutators using finite automata.
 In CrashSimulator, mutators work by receiving the sequence of system calls
 an application makes and accepting situations where the sequence indicates
 it is appropriate to simulate an anomaly.  It then uses its stored
-description of its anomaly to carry out its simulation.  In the same vein,
-we implemented checkers as finite automata that receive the sequence of
-system calls made by the application.  Because checkers encode what a
-correct response by the application should look like, they were constructed
+description of its anomaly to carry out its simulation.  Checkers operate
+similarly,
+but, because they encode what a
+correct response by the application should look like,
+they were constructed
 to accept situations where they observed sequences indicative  of such a
-response.  We discuss this decision making process in more detail in
-section~\ref{SUBSUB:AnalyzingResponse}.
+response.
 This process required manual effort and expertise.
 However,
 much like
@@ -306,37 +306,25 @@ user skill and effort was paid back, as
 we were able to use its products
 repeatedly over time to test many different applications.
 
-We then turned to implementing a way to monitor and manipulate an
-application's communications.  We achieved monitoring by
-recording application executions
+CrashSimulator monitors an application by
+recording recording it
 using a modified version of the {\tt rr}!!CITE!!
-debugger.  This modification allowed
+debugger.  Our version allowed
 a {\tt strace}-style
 system call recording to be output alongside {\tt rr's} normal recording
 format, providing
 a complete log of an applications system call activity.
-With this information, we could
-easily identify opportunities to simulate anomalies.
 
-In implementing the anomaly simulation of AES
-we actually developed
+To simulate anomalies we developed
 a second new technique
 called {\it process set cloning}.
-With the modification made to rr described above,
-we now can generate copies of the set of
-processes underlying an application at opportune moments during replay.
 The {\tt rr} debugger manages
 and can copy
-the full set of these
+the full set of processes underlying an application
 so that users can test debugging
 hypotheses without damaging the original.
-Our modified version
-extends this capability, by liberating process sets from {\tt
+We extended this capability, by liberating process sets from {\tt
 rr} so that they can be exposed to simulated anomalies.
-This means that we can rely on {\tt rr}
-to store the information necessary to perform enough of the
-replay that must take place before the application reaches the
-testing point.
 
 Process sets generated in this fashion are created in a stopped state and
 remain that way until they are attached to and utilized by a CrashSimulator
@@ -345,25 +333,12 @@ its configured environmental anomaly.  The
 supervisor wakes up its designated process set
 and simulates any
 subsequent system calls.
-During the course of this simulation, a mutator is used to
-apply the modified responses identified
-as part of the initial search for anomalies,
-exposing the processes to the
-anomaly being tested.
+During the course of this simulation, a mutator
+simulates the anomaly being tested and the corresponding checker
+monitors the application's response.
 Supervisors can complete this
 process independently of one another, which lends a
 high degree of speed and
-parallelism to the whole CrashSimulator testing process.
-
-CrashSimulator analyses an application's behavior post-anomaly through the
-use of a second form of finite automata we refer to as a ``checker.''  The
-purpose of a checker is to encode correct application behavior and compare
-this encoding to what the application actually does.
-The primary checker, known as the ``Default Checker''
-diagnoses bugs
-by observing whether or not an application
-performs a different set of system calls than what is expected based on the
-recording being replayed.  A ``divergence'' from the recording indicates
-the application has changed its behavior and might be handling
-the anomaly in question.  Following the recording precisely, in spite of
-the simulated anomaly signals the possibility of a bug.
+parallelism to the whole CrashSimulator testing process.  The results of
+these many tests are aggregated and reported back to the user after testing
+concludes.
