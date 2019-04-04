@@ -290,55 +290,59 @@ both checkers and mutators using finite automata.
 In CrashSimulator, mutators work by receiving the sequence of system calls
 an application makes and accepting situations where the sequence indicates
 it is appropriate to simulate an anomaly.  It then uses its stored
-description of its anomaly to carry out its simulation.  Checkers operate
+description of the anomaly to carry out its simulation.  Checkers operate
 similarly,
 but, because they encode what a
 correct response by the application should look like,
 they were constructed
-to accept situations where they observed sequences indicative  of such a
-response.
-This process required manual effort and expertise.
-However,
-much like
-the effort involved in constructing a unit test to check for correct
-behavior in a piece of code, we found that this initial outlay of
-user skill and effort was paid back, as
-we were able to use its products
-repeatedly over time to test many different applications.
+to accept situations where they observed sequences indicative of such
+behavior.
+%This process required manual effort and expertise.
+%However,
+%much like
+%the effort involved in constructing a unit test to check for correct
+%behavior in a piece of code, we found that this initial outlay of
+%user skill and effort was paid back, as
+%we were able to use its products
+%repeatedly over time to test many different applications.
 
 CrashSimulator monitors an application by
-recording recording it
+recording it
 using a modified version of the {\tt rr}!!CITE!!
-debugger.  Our version allowed
+debugger.
+The modifications allow
 a {\tt strace}-style
 system call recording to be output alongside {\tt rr's} normal recording
 format, providing
-a complete log of an applications system call activity.
+a complete log of an applications system call activity. Mutators and
+checkers operate on this log to find opportunities to simulate
+anomalies and evaluate an application's response.
 
-To simulate anomalies we developed
-a second new technique
-called {\it process set cloning}.
-The {\tt rr} debugger manages
-and can copy
+Actually simulating anomalies
+is done using
+a technique
+we call {\it process set cloning}.
+The {\tt rr} debugger manages,
+and can copy,
 the full set of processes underlying an application
 so that users can test debugging
 hypotheses without damaging the original.
-We extended this capability, by liberating process sets from {\tt
-rr} so that they can be exposed to simulated anomalies.
-
+We extended this capability,
+by liberating process set copies from {\tt rr}.
 Process sets generated in this fashion are created in a stopped state and
 remain that way until they are attached to and utilized by a CrashSimulator
-supervisor.  Each process set has its own supervisor process to test
-its configured environmental anomaly.  The
-supervisor wakes up its designated process set
-and simulates any
-subsequent system calls.
-During the course of this simulation, a mutator
-simulates the anomaly being tested and the corresponding checker
-monitors the application's response.
-Supervisors can complete this
-process independently of one another, which lends a
+supervisor.
+
+Once a supervisor has attached to a process set, it uses the above {\tt
+strace} log and the output of a mutator to service any future
+system calls the application makes.  In this way, the mutator is able to
+influence system call results and simulate its anomaly.
+During this process,
+a corresponding checker
+monitors the application's behavior allow it to report on its correctness.
+Many supervisors can complete
+their tests independently of one another, which lends a
 high degree of speed and
-parallelism to the whole CrashSimulator testing process.  The results of
+parallelism to the testing process.  The results of
 these many tests are aggregated and reported back to the user after testing
 concludes.
