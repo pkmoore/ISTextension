@@ -48,16 +48,16 @@ $X'$ can be extracted, preserved,
 and later used in testing other systems
 thanks to a pair of components referred to as a mutator and a checker.
 The mutator describes the exact set of changes
-that must be made to an application’s communications
+that must be made to an application's communications
 in order to simulate an anomaly,
 while the checker describes how an
 application should respond once the anomaly has been encountered.
 To test if other applications also have a problem with $X$, mutators,
 can insert $X'$ into their
-communications (sec.~\ref{SUBSUB:MonitoringAndManipulating}).
+communications (sec.~\ref{SUBSUB:MutatingCommunications}).
 A checker will then determine whether the
 application has responded correctly to
-$X$(sec.~\ref{SUBSUB:AnalyzingResponse}).
+$X$(sec.~\ref{SUBSUB:CheckingResponse}).
 If the checker accepts the application behavior
 after the anomaly is simulated,
 we report it has been handled.
@@ -141,8 +141,8 @@ This anomaly can be preserved by constructing a mutator that describes how
 a failing {\tt read()} call differs from a normal one and a checker that checks for
 the application altering its behavior in response.
 
-\subsubsection{Monitoring and Manipulating Communications}
-\label{SUBSUB:MonitoringAndManipulating}
+\subsubsection{Mutating Communications}
+\label{SUBSUB:MutatingCommunications}
 Simulating an environmental anomaly requires specific interventions at the
 correct moments during an execution.
 As a result,
@@ -186,8 +186,8 @@ requires that all efforts
 to access the clock
 be modified to reflect the chosen aberration.
 
-\subsubsection{Analyzing an Application's Response}
-\label{SUBSUB:AnalyzingResponse}
+\subsubsection{Checking an Application's Response}
+\label{SUBSUB:CheckingResponse}
 AES relies on checkers
 to provide a flexible approach to assess the way an application
 behaves after it has encountered an anomaly.
@@ -280,18 +280,21 @@ in Section~\ref{SEC:evaluation})
 were collected by examining public bug trackers,
 the source code of major portable applications, and the capabilities of
 tools like NetCheck~\cite{Zhuang_NSDI_2014}
-and CheckAPI~\cite{rasley2015detecting}.  These anomalies were converted
+and CheckAPI~\cite{rasley2015detecting}.
+We converted them
 into sets of modified responses
 that simulate the presence of an anomaly when
 appropriately presented as the results of system calls.
 From a technical perspective,
 this involved constructing
 both checkers and mutators using finite automata.
-In CrashSimulator, mutators work by receiving the sequence of system calls
+Mutators work by receiving the sequence of system calls
 an application makes and accepting situations where the sequence indicates
-it is appropriate to simulate an anomaly.  It then uses its stored
-description of the anomaly to carry out its simulation.  Checkers operate
-similarly,
+it is appropriate to simulate an anomaly.
+It then uses its stored
+description of an anomaly
+to carry out its simulation.
+Checkers operate similarly,
 but, because they encode what a
 correct response by the application should look like,
 they were constructed
@@ -327,7 +330,7 @@ and can copy,
 the full set of processes underlying an application
 so that users can test debugging
 hypotheses without damaging the original.
-We extended this capability,
+We extended this capability
 by liberating process set copies from {\tt rr}.
 Process sets generated in this fashion are created in a stopped state and
 remain that way until they are attached to and utilized by a CrashSimulator
