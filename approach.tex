@@ -29,6 +29,12 @@ with a given environment.
 It does this by providing a systematic way of
 capturing, storing and utilizing the insights gleaned from the work that
 went into debugging previous failures in a given environment.
+In this section, we offer a high-level look at how AES works, followedb by
+a more in-depth look at tits primary operations.
+Finally, we detail our concrete implementation, CrashSimulator.
+
+\subsection{AES in a Nutshell}
+\label{SEC:AESNutshell}
 In a nutshell,
 here is how the technique works.
 An application is run
@@ -36,8 +42,7 @@ in a particular environment and fails.
 In debugging the failure,
 we identify and ``trap'' the particular environmental feature
 (sec.~\ref{SUBSUB:IdentifyingAndEncoding}),
-which we call $X$,
-that caused the crash.
+that caused the crash,  which we call $X$.
 We verify that when $X$ is present,
 communication with the
 environment is different,
@@ -52,8 +57,8 @@ that must be made to an application's communications
 in order to simulate an anomaly,
 while the checker describes how an
 application should respond once the anomaly has been encountered.
-To test if other applications also have a problem with $X$, mutators,
-can insert $X'$ into their
+To test if other applications also have a problem with $X$,
+mutators can insert $X'$ into their
 communications (sec.~\ref{SUBSUB:MutatingCommunications}).
 A checker will then determine whether the
 application has responded correctly to
@@ -68,15 +73,20 @@ a given anomaly are stored.
 
 Preserving this information in an accessible manner
 is a boon for software developers because,
-in a typical scenario, the materials documenting it
-go out of date or are forgotten.
+in a typical scenario, the material documenting
+the discovery of flaws
+either goes out of date or
+is preserved only as ``institutional memory,''
+and therefore forgotten as staffs change.
 Additionally,
-taking advantage of the documentation that maintains relevance
-requires additional effort
-to construct and execute tests
-that check for the documented issues.
-Further, tests constructed in this manner are
-usually tightly coupled
+the mere existence of documentation
+describing past failures
+does not prevent bugs
+if developers don't use it
+to construct and execute tests,
+an effort that is easily neglected.
+Further, unit and integration test suites
+are typically tightly coupled
 to the application and the programming language in which it was written --
 limiting their reusability.
 AES cuts through all of these difficulties by
@@ -87,10 +97,21 @@ required to implement AES
 and detail our concrete implementation,
 CrashSimulator~\ref{SUBSEC:ApproachCrashSim}.
 
+\section{Primary Operations}
+\label{SEC:PrimaryOperations}
+
+To take a closer look at how AES functions,
+we divide the technique
+into its three primary operations.
+These are:
+identifying and trapping anomalies,
+mutating application communications,
+and checking application responses.
+
 \subsubsection{Identifying and Encoding Anomalies}
 \label{SUBSUB:IdentifyingAndEncoding}
-At the core of AES's operation is the body of anomalies that
-is used to test applications.
+At the core of AES's operation is the body of anomalies
+used to test applications.
 Building this corpus is an ongoing process that improves the technique's
 effectiveness by extending the set of environments it can simulate.
 Anomalies can be sourced
@@ -114,12 +135,12 @@ these differences delineate
 a set of modifications
 that must be made to an application's communications
 in order to simulate the chosen anomaly or anomalies.
-The details of the anomaly are then used to
-construct a both a mutator,
+The details of the anomaly are used to
+construct both a mutator,
 which contains the modifications in question,
 and a checker
 (or set of checkers)
-which encodes how the application should respond.
+which encodes how the application should respond to that modification.
 Describing anomalies in this fashion
 allows them to be recorded systematically and cataloged for future use.
 
@@ -172,7 +193,7 @@ This could be accomplished
 a number of ways,
 such as
 by influencing the results of function calls or system calls,
-strategically altering memory values.
+or strategically altering memory values.
 In the simplest case,
 simulating an anomaly only requires
 the modification of a single value.
@@ -225,7 +246,7 @@ to classify application behavior.
 \subsection{CrashSimulator: A Concrete AES Implementation}
 \label{SUBSEC:ApproachCrashSim}
 Evaluating AES in a real-world fashion requires a
-concrete implementation of its three components.
+concrete implementation of its components.
 We built this implementation into a tool we call CrashSimulator.  The
 prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
 distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
@@ -251,19 +272,16 @@ that can execute Linux system calls.
 
 Our first task was
 gathering a corpus of anomalies to test applications
-against.  These anomalies (which are further discussed
+against.  These anomalies (which are discussed
 in Section~\ref{SEC:evaluation})
 were collected by examining public bug trackers,
 the source code of major portable applications, and the capabilities of
 tools like NetCheck~\cite{Zhuang_NSDI_2014}
 and CheckAPI~\cite{rasley2015detecting}.
-We converted them
-into sets of modified responses
-that simulate the presence of an anomaly when
-appropriately presented as the results of system calls.
-From a technical perspective,
-this involved constructing
-both checkers and mutators using finite automata.
+From these anomalies,
+we constructed
+checkers and mutators
+using finite automata.
 Mutators work by receiving the sequence of system calls
 an application makes and accepting situations where the sequence indicates
 it is appropriate to simulate an anomaly.
