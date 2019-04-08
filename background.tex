@@ -11,8 +11,8 @@ that its developers do not control.
 In practice, this is everything other than the code and data packaged
 within the application itself.
 Anything external to the application can be
-may be configured in unexpected ways.
-For example, library search rules can result in system libraries
+configured in unexpected ways.
+For example, library search rules can result in default system libraries
 being loaded instead of
 the versions deployed alongside the application.
 These external resources can be thought of as
@@ -58,7 +58,7 @@ however,
 will receive these datagrams,
 but it will influence data retrieval.
 Any system calls that retrieve data from the buffer in which
-they are
+datagrams are
 stored will only return a number of bytes less than or equal to the
 buffer size at one time~\cite{Zhuang_NSDI_2014}.
 
