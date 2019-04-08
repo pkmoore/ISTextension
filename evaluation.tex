@@ -82,7 +82,7 @@ in situations where the source file and destination file
 are on different storage devices,
 the application must
 manually perform all of the required steps.
-This is an process
+This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
@@ -152,15 +152,15 @@ Incorrect timestamps can impede applications like
 in {\tt make}, archival programs, and similar
 software~\cite{NautilusTimestamps, SudoTimestamp}.
 As a result, it is important to ensure
-that time related metadata
-(such as creation, modification, and access times)
+that time related metadata -- 
+such as creation, modification, and access times
 are preserved when copying a file.
-To evaluate identify failures on this front,
+To evaluate failures on this front,
 we used a checker that determines
 whether the application applies
 the appropriate timestamps to the destination file
 by monitoring for system calls from the {\tt stat()}
-and {\tt utime()} families which are used to retrieve and apply timestamps.
+and {\tt utime()} families used to retrieve and apply timestamps.
 
 \paragraph{Copying Devices}
 
@@ -214,8 +214,10 @@ when many libraries have correct behavior in some cases, but not others.
 \subsubsection{A More Complex Case - The Unexpected File Types Mutator}
 \label{sec-file-type-bugs}
 
-Employing a more complex (than the null mutator) mutator allows
-CrashSimulator to inject anomalies into an application.
+Employing a mutator
+with more complexity than the null mutator
+allows CrashSimulator to inject anomalies into an execution
+of an application.
 This introduces problematic scenarios
 so that the way an application responds
 can be evaluated.
@@ -223,9 +225,9 @@ To test
 the tool's capabilities
 at this point,
 we needed an anomaly
-that arises during a common situation,
-such as a Linux application retrieving
-and processing data from a file.
+that would arise during a common situation,
+such as when a Linux application retrieves
+and processes data from a file.
 Linux supports
 several special file types,
 including
