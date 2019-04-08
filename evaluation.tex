@@ -29,8 +29,8 @@ to answer the following questions:
     bugs?
 (Subsection~\ref{sec-env-bugs})}
 
-\item{Do tests using CrashSimulator yield too many false positives?
-      (Subsection~\ref{sec-sorts-errors})}
+\item{What Sorts of Errors Does CrashSimulator Make?
+    (Subsection~\ref{sec-sorts-errors})}
 
 \item{Can CrashSimulator
       execute tests efficiently? (Subsection~\ref{sec-perf})}
@@ -545,9 +545,10 @@ and why,
 they should be concerned.
 
 
-\subsection{Do tests using CrashSimulator yield too many false positives?}
+\subsection{What Sorts of Errors does CrashSimulator Make?}
 \label{sec-sorts-errors}
 
+\textbf{False Positives.}
 Like most other testing tools, CrashSimulator occasionally makes
 false positive reports.
 Because these errors waste developer time and effort,
@@ -636,6 +637,35 @@ covered by the test.
 The low number of occurrences of this
 type of false positive gives us confidence that the default configuration
 is satisfactory in the majority of cases.
+
+\textbf{False Negatives.}
+
+In some cases,
+using the default checker resulted
+in CrashSimulator making false negative reports.
+This happens when
+an application changes its behavior
+but still not handle an anomaly correctly.
+These false negatives can be addressed
+by more detailed analysis
+of the application's post simulation behavior.
+Before testing,
+a user must know
+what a correct response
+to an anomaly looks like.
+This ``known good'' behavior can be found
+by looking at standards and documentation
+that describe best practices for handling an anomaly
+in a given environment,
+or by examining how applications that correctly
+deal with the anomaly do so.
+Consider the case where a {\tt close()} system call fails.
+Retrying the call may not be the correct action,
+depending upon the environment in question.
+AES can be used to determine if an application
+has handled the failure correctly
+by examining post-simulation communications in detail,
+and taking into account the correctness of retrying the call.
 
 \subsection{Can CrashSimulator execute tests efficiently?}
 \label{sec-perf}

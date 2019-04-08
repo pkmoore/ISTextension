@@ -220,30 +220,6 @@ This simple yes or no approach
 is often sufficient
 to classify application behavior.
 
-One limitation of the above decision making rule
-is that it can result in false negatives
-should an application change its behavior
-but still not handle the anomaly correctly.
-These false negatives can be addressed
-by more detailed analysis
-of the application's post simulation behavior.
-Before testing,
-a user must know
-what a correct response
-to an anomaly looks like.
-This ``known good'' behavior can be found
-by looking at standards and documentation
-that describe best practices for handling an anomaly
-in a given environment,
-or by examining how applications that correctly
-deal with the anomaly do so.
-Consider the case where a {\tt close()} system call fails.
-Retrying the call may not be the correct action,
-depending upon the environment in question.
-AES can be used to determine if an application
-has handled the failure correctly
-by examining post-simulation communications in detail,
-and taking into account the correctness of retrying the call.
 
 
 \subsection{CrashSimulator: A Concrete AES Implementation}
