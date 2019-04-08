@@ -3,8 +3,9 @@
 \textit{No Battle Plan Survives Contact With the Enemy --- Helmuth von Moltke}
 
 No matter how well an application is tested before its release,
-new bugs always seem emerge after deployment.
-One reason is that these applications will operate within a diverse set of
+new bugs always seem to emerge after deployment.
+One reason for this behavior
+is that these applications will operate within a diverse set of
 deployment \emph{environments},
 and variations between these environments tend to
 reveal previously undiscovered flaws.
@@ -71,11 +72,12 @@ the communications of an application under test
 in such a way
 that its responses will indicate any potential
 for bugs upon deployment.
-In this way, it provides developers
+In this way,
+developers are given
 an easy and inexpensive way
 to learn from the mistakes of others,
-saving money and programming hours
-that otherwise would be devoted to finding and fixing
+and thus save money and programming hours
+that otherwise would be spent to find and fix
 environmental bugs.
 
 Furthermore,
@@ -111,8 +113,10 @@ question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total,
 \textbf{!!!!RECOUNT!!!!} 84
 bugs were identified in this manner.
-The effort required to actually test applications against the
-these conditions far exceeded the time required to evaluate them
+The effort required to set up real
+environments where these conditions are present
+and execute the same applications within them
+would far exceeded the time required to evaluate them
 using simulation -- further illustrating the time savings offered by AES.
 
 In addition to proving CrashSimulator could find bugs, we were also able to
