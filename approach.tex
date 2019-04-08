@@ -308,6 +308,13 @@ so that users can test debugging
 hypotheses without damaging the original.
 We extended this capability
 by liberating process set copies from {\tt rr}.
+This means that given application $Y$
+consisting of processes $a$, $b$, and $c$
+(written as $Y(a, b, c)$),
+we can generate cloned sets $Y_1(a_1, b_1, c_1)$,
+$Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b, c_n)$.
+$Y_1$, $Y_2$ ... $Y_n$ can then be used to test different scenarios leaving
+the original $Y$ to continue its execution unhindered.
 Process sets generated in this fashion are created in a stopped state and
 remain that way until they are attached to and utilized by a CrashSimulator
 supervisor.
@@ -319,9 +326,23 @@ influence system call results and simulate its anomaly.
 During this process,
 a corresponding checker
 monitors the application's behavior allow it to report on its correctness.
-Many supervisors can complete
-their tests independently of one another, which lends a
+This allows testing in the following way.
+At a given point in execution of application $Y$,
+$Y_1$ and $Y_2$ may be generated and
+used to test two scenarios where a fail access may fail:
+\begin{enumerate}
+    \item{For $Y_1$, access to the file is denied due to a permissions issue}
+    \item{For $Y_2$, access fails because of an I/O error}
+\end{enumerate}
+The simulations for both $Y_1$ and $Y_2$ are handled asynchronously and
+the results are reported.
+This approach allows many tests to be run independently of one another,
+which lends a
 high degree of speed and
-parallelism to the testing process.  The results of
-these many tests are aggregated and reported back to the user after testing
-concludes.
+parallelism to the testing process.
+At the same time, the original $Y$ execution continues unhindered to the
+next simulation opportunity where this process repeats.
+Keeping $Y$ intact (as opposed to destroying
+it by introducing an error state) avoids the penalty
+of having to restart a new execution for each
+test.
