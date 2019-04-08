@@ -328,22 +328,21 @@ a corresponding checker
 monitors the application's behavior allow it to report on its correctness.
 This allows testing in the following way.
 At a given point in execution of application $Y$,
-$Y_1$ and $Y_2$ may be generated and
+$Y_1$ and $Y_2$ are generated and
 used to test two scenarios where a file access fails:
 \begin{enumerate}
     \item{For $Y_1$, access to the file is denied due to a permissions issue}
     \item{For $Y_2$, access fails because of an I/O error}
 \end{enumerate}
 The simulations for both $Y_1$ and $Y_2$ are handled asynchronously and
-the results are reported.
+the results reported.
 This approach allows many tests to be run independently of one another,
 which lends a
 high degree of speed and
 parallelism to the testing process.
 At the same time, the original $Y$ execution continues unhindered to the
-next simulation opportunity,
-where this process repeats.
-Keeping $Y$ intact (as opposed to destroying
-it by introducing an error state) avoids the penalty
-of having to restart a new execution for each
-test.
+next simulation opportunity where this process repeats.
+Keeping $Y$ intact
+(as opposed to destroying it by introducing an error state)
+avoids the penalty
+of having to restart a new execution for each test.
