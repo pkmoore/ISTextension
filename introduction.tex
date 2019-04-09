@@ -56,7 +56,7 @@ by presenting a new technique for catching environmental bugs
 before deployment.
 Guiding our efforts
 is a technique
-we call \textit{Anomalous Environment Simulation} (AES).
+we call \textit{Simulation of Anomalous Environments} (SEA).
 This technique is founded upon the key insight
 that problematic environmental properties,
 which we refer to as \textit{anomalies},
@@ -64,7 +64,7 @@ can be detected
 in the function calls,
 system calls,
 or other communications an application makes within an environment.
-When employing AES,
+When employing SEA,
 the anomalies
 unique to a given environment
 can be inserted into
@@ -81,7 +81,7 @@ that otherwise would be spent to find and fix
 environmental bugs.
 
 Furthermore,
-the AES technique
+the SEA technique
 allows developers to preserve and catalog
 these anomalies,
 giving them a formal and reproducible strategy for future application
@@ -118,7 +118,7 @@ The effort required to set up real
 environments where these conditions are present
 and execute the same applications within them
 would far exceeded the time required to evaluate them
-using simulation -- further illustrating the time savings offered by AES.
+using simulation -- further illustrating the time savings offered by SEA.
 
 In addition to proving CrashSimulator could find bugs, we were also able to
 show that developers with varying backgrounds
@@ -143,7 +143,7 @@ The main contributions in this work can be summarized as follows:
 that previously unanticipated flaws can be created by the interaction
 between an application and its environment.}
 
-\item{It introduces \textit{Anomalous Environment Simulation}
+\item{It introduces \textit{Simulation of Anomalous Environments}
 as an easy-to-use method for simulating environments
 so an application's behavior in those environments
 can be assessed before deployment---
@@ -156,7 +156,7 @@ testing each environment individually.}
     that disappears with developer turnover.}
 
 \item{It demonstrates a new tool, {\em CrashSimulator},
-which implements anomalous environment simulation
+which implements SEA
 in order to find previously-undiscovered environmental bugs
 in widely deployed and highly tested code.}
 

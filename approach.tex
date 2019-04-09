@@ -1,10 +1,10 @@
-\section{Defining and Applying the AES Technique}
+\section{Defining and Applying the SEA Technique}
 \label{SEC:approach}
 
 \begin{figure}[t]
   \center{}
   \fbox{\includegraphics[scale=.37]{images/approach}}
-  \caption{Using AES allows developers to capture features that make an
+  \caption{Using SEA allows developers to capture features that make an
     environment problematic and use them to prevent future applications
     from falling victim to the bugs of the past.}
   \label{figure:approach}
@@ -23,18 +23,18 @@
 \end{figure*}
 
 As mentioned earlier,
-the anomalous environment simulation(AES) technique
+the Simulation of Anomalous Environments (SEA)
 offers a reliable way to identify bugs that could arise from interaction
 with a given environment.
 It does this by providing a systematic way of
 capturing, storing and utilizing the insights gleaned from the work that
 went into debugging previous failures in a given environment.
-In this section, we offer a high-level look at how AES works, followedb by
+In this section, we offer a high-level look at how SEA works, followedb by
 a more in-depth look at tits primary operations.
 Finally, we detail our concrete implementation, CrashSimulator.
 
-\subsection{AES in a Nutshell}
-\label{SEC:AESNutshell}
+\subsection{SEA in a Nutshell}
+\label{SEC:SEANutshell}
 In a nutshell,
 here is how the technique works.
 An application is run
@@ -89,18 +89,18 @@ Further, unit and integration test suites
 are typically tightly coupled
 to the application and the programming language in which it was written --
 limiting their reusability.
-AES cuts through all of these difficulties by
+SEA cuts through all of these difficulties by
 storing this information in a manner that can be consumed
 and used to test applications programmatically.
 In this section, we discuss each of the components
-required to implement AES
+required to implement SEA
 and detail our concrete implementation,
 CrashSimulator~\ref{SUBSEC:ApproachCrashSim}.
 
 \section{Primary Operations}
 \label{SEC:PrimaryOperations}
 
-To take a closer look at how AES functions,
+To take a closer look at how SEA functions,
 we divide the technique
 into its three primary operations.
 These are:
@@ -110,7 +110,7 @@ and checking application responses.
 
 \subsubsection{Identifying and Encoding Anomalies}
 \label{SUBSUB:IdentifyingAndEncoding}
-At the core of AES's operation is the body of anomalies
+At the core of SEA's operation is the body of anomalies
 used to test applications.
 Building this corpus is an ongoing process that improves the technique's
 effectiveness by extending the set of environments it can simulate.
@@ -167,7 +167,7 @@ the application altering its behavior in response.
 Simulating an environmental anomaly requires specific interventions at the
 correct moments during an execution.
 As a result,
-AES requires
+SEA requires
 an application's communications
 with its environment
 be monitored
@@ -209,7 +209,7 @@ be modified to reflect the chosen aberration.
 
 \subsubsection{Checking an Application's Response}
 \label{SUBSUB:CheckingResponse}
-AES relies on checkers
+SEA relies on checkers
 to provide a flexible approach to assess the way an application
 behaves after it has encountered an anomaly.
 A checker is constructed to store
@@ -243,9 +243,9 @@ to classify application behavior.
 
 
 
-\subsection{CrashSimulator: A Concrete AES Implementation}
+\subsection{CrashSimulator: A Concrete SEA Implementation}
 \label{SUBSEC:ApproachCrashSim}
-Evaluating AES in a real-world fashion requires a
+Evaluating SEA in a real-world fashion requires a
 concrete implementation of its components.
 We built this implementation into a tool we call CrashSimulator.  The
 prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
