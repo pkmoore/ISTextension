@@ -1,4 +1,4 @@
-\section{Defining and Applying the SEA Technique}
+\section{The SEA Technique}
 \label{SEC:approach}
 
 \begin{figure}[t]
@@ -105,7 +105,7 @@ we divide the technique
 into its three primary operations.
 These are:
 identifying and trapping anomalies,
-mutating application communications,
+mutating system call results,
 and checking application responses.
 
 \subsubsection{Identifying and Encoding Anomalies}
@@ -127,20 +127,23 @@ if you wish to determine
 whether or not an application
 is vulnerable to a widely publicized bug.
 The chosen anomalies are then examined
-to determine how they change an application's communications
-with its environment
+to determine how they change the results
+of system calls an application makes
 compared to a normal execution and why.
 Once teased out,
 these differences delineate
 a set of modifications
-that must be made to an application's communications
+that must be made
 in order to simulate the chosen anomaly or anomalies.
-The details of the anomaly are used to
-construct both a mutator,
-which contains the modifications in question,
-and a checker
+These details are used to
+construct both a mutator and a checker.
+The mutator encodes
+a description of when in execution an anomaly can be simulated
+and the details of how to simulate it.
+The checker
 (or set of checkers)
-which encodes how the application should respond to that modification.
+stores a characterization of
+how the application should respond.
 Describing anomalies in this fashion
 allows them to be recorded systematically and cataloged for future use.
 
@@ -154,55 +157,50 @@ attempts to access the file
 such as calls to {\tt fread()},
 or the {\tt read()} system call,
 will fail with an error stating that access to the file is denied.
-The ``modification'' required to simulate this anomaly
-is to change the results of similar accesses
-in a test execution
-to return ``access denied.''
-This anomaly can be preserved by constructing a mutator that describes how
-a failing {\tt read()} call differs from a normal one and a checker that checks for
-the application altering its behavior in response.
+The mutator derived from this issue would be constructed to
+identify similar accesses as opportunities to simulate the anomaly
+and to simulate the anomaly by making these
+accesses return ``access denied.''
+An associated checker would be built to
+examine the application's behavior after a simulation and assess its
+correctness.
+Preserving the details of this anomaly
+as a mutator and checker
+allows them to be
+easily used
+to see how future applications
+respond to this anomaly.
 
-\subsubsection{Mutating Communications}
+\subsubsection{Mutating System Call Results}
 \label{SUBSUB:MutatingCommunications}
 Simulating an environmental anomaly requires specific interventions at the
 correct moments during an execution.
-As a result,
-SEA requires
-an application's communications
-with its environment
-be monitored
-by such means as
-redirecting function calls,
-observing memory access,
-monitoring network activity,
-or intercepting system calls.
-Looking at the parameters,
-return values,
-and orderings
-of an application's communications
-can indicate
-when would be an appropriate time to simulate an anomaly.
-
-Once an opportune moment has arisen,
-the technique requires that its implementer
-interpose on the application's communications
-and make the modifications necessary
-to simulate the presence
-of the anomaly.
-This could be accomplished
-a number of ways,
-such as
-by influencing the results of function calls or system calls,
-or strategically altering memory values.
+These situations are identified
+with the help of the chosen anomaly's
+mutator.
+In practice,
+this means providing the
+mutator with the system calls
+the application makes
+so that it can identify sequences
+indicative of such opportunities.
+At the appropriate time,
+the application's system calls
+are intercepted
+and the mutator's anomaly description is used to
+make the modifications necessary
+to simulate the anomaly.
 In the simplest case,
 simulating an anomaly only requires
 the modification of a single value.
 In more complex cases,
-large numbers of diverse communications
+large numbers of diverse system calls
 need to be interdicted and altered
 in order to correctly simulate an anomaly.
-For example,
-simulating an erratic system clock
+The above file access scenario, for example,
+requires the modification of a single system call
+while simulating something more complex,
+like an unreliable system clock,
 requires that all efforts
 to access the clock
 be modified to reflect the chosen aberration.
@@ -215,7 +213,7 @@ behaves after it has encountered an anomaly.
 A checker is constructed to store
 some behavior that the application should undertake
 in response to the anomaly being simulated.
-It looks for this behavior by examining an application's communications
+It looks for this behavior by examining an application's system calls
 before, during, and after the simulation of an anomaly.
 The checker then reports whether the application has handled
 the anomaly based on whether or not it observed the behavior for which it
@@ -229,7 +227,7 @@ to the anomaly.
 This determination is made based
 on the assumption
 that such a response will yield
-different program paths (and therefore different communications).
+different program paths (and therefore different system calls).
 If the application
 does not alter its behavior, it has not
 correctly handled this flaw.
@@ -245,34 +243,44 @@ to classify application behavior.
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
 \label{SUBSEC:ApproachCrashSim}
-Evaluating SEA in a real-world fashion requires a
-concrete implementation of its components.
-We built this implementation into a tool we call CrashSimulator.  The
-prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
-distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
-explained in this section, were carried out in C++ and the CrashSimulator
-supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
-line C extension that allows it to interact with processes using the Ptrace
-API.
-This version of CrashSimulator is available as a Docker container and,
-due to some operating system configuration being necessary, is most easily
-installed in this fashion.
-
-Below, we explain CrashSimulator, highlighting a
-few central principles that guided our design decisions. The first such
-decision was to operate at the system call level, rather than manipulating
+The construction of CrashSimulator,
+our concrete implementation of SEA,
+was driven by two key decisions.
+The first
+was to operate at the system call level,
+rather than manipulating
 calls to library functions, memory accesses, or other points where we could
-influence an application's communications. Making this choice provided us a
-few key advantages. First, there is already robust tooling in the Linux
+influence an application's communications.
+System calls are high enough level that they allow us
+to ignore low level details that would hurt usability while still
+capturing the environmental anomalies we are interested in.
+They also provide us with a
+few technical advantages advantages.
+First, there is already robust tooling in the Linux
 kernel that allows for the interception and modification of system call
-results and side effects. Additionally, Linux system call semantics are
+results and side effects.  Additionally, Linux system call semantics are
 well defined which simplifies implementation. Finally, operating at this
 level allows CrashSimulator to test applications written in any language
 that can execute Linux system calls.
 
-Our first task was
-gathering a corpus of anomalies to test applications
-against.  These anomalies (which are discussed
+The second decision was to structure testing around recording and replaying
+applications.  This was done to make tests trivially repeatable and to ease
+the process of manipulating system calls.  Recording and replay was
+achieved using the {\tt rr} debugger~\cite{rrwebsite}.
+Some modifications to {\tt rr} were required in order to
+tailor it more closely to our needs.
+These modifications allow
+a {\tt strace}-style
+system call recording to be output alongside {\tt rr's} normal recording
+format, providing
+a complete log of an applications system call activity.
+We chose to make this
+modification because {\tt rr} is concerned with execution
+at the level of individual instructions and memory accesses while the
+anomalies we were interested in were more in terms of
+system calls.
+
+These anomalies (which are discussed
 in Section~\ref{SEC:evaluation})
 were collected by examining public bug trackers,
 the source code of major portable applications, and the capabilities of
@@ -294,26 +302,6 @@ correct response by the application should look like,
 they were constructed
 to accept situations where they observed sequences indicative of such
 behavior.
-%This process required manual effort and expertise.
-%However,
-%much like
-%the effort involved in constructing a unit test to check for correct
-%behavior in a piece of code, we found that this initial outlay of
-%user skill and effort was paid back, as
-%we were able to use its products
-%repeatedly over time to test many different applications.
-
-CrashSimulator monitors an application by
-recording it
-using a modified version of the {\tt rr}!!CITE!!
-debugger.
-The modifications allow
-a {\tt strace}-style
-system call recording to be output alongside {\tt rr's} normal recording
-format, providing
-a complete log of an applications system call activity. Mutators and
-checkers operate on this log to find opportunities to simulate
-anomalies and evaluate an application's response.
 
 Actually simulating anomalies
 is done using
@@ -365,3 +353,13 @@ Keeping $Y$ intact
 (as opposed to destroying it by introducing an error state)
 avoids the penalty
 of having to restart a new execution for each test.
+
+The prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
+distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
+explained in this section, were carried out in C++ and the CrashSimulator
+supervisor was implemented in ZZZZ lines of Python 2.7 code with a YYYY
+line C extension that allows it to interact with processes using the Ptrace
+API.
+This version of CrashSimulator is available as a Docker container and,
+due to some operating system configuration being necessary, is most easily
+installed in this fashion.
