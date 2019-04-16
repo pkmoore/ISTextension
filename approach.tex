@@ -158,8 +158,9 @@ such as calls to {\tt fread()},
 or the {\tt read()} system call,
 will fail with an error stating that access to the file is denied.
 The mutator derived from this issue would be constructed to
-identify similar accesses as opportunities to simulate the anomaly
-and to simulate the anomaly by making these
+identify similar accesses as opportunities
+to simulate the anomaly
+and the anomaly by making these
 accesses return ``access denied.''
 An associated checker would be built to
 examine the application's behavior after a simulation and assess its
@@ -198,8 +199,8 @@ large numbers of diverse system calls
 need to be interdicted and altered
 in order to correctly simulate an anomaly.
 The above file access scenario, for example,
-requires the modification of a single system call
-while simulating something more complex,
+requires the modification of a single system call.
+Simulating something more complex,
 like an unreliable system clock,
 requires that all efforts
 to access the clock
@@ -212,7 +213,7 @@ to provide a flexible approach to assess the way an application
 behaves after it has encountered an anomaly.
 A checker is constructed to store
 some behavior that the application should undertake
-in response to the anomaly being simulated.
+in response to simulated anomaly.
 It looks for this behavior by examining an application's system calls
 before, during, and after the simulation of an anomaly.
 The checker then reports whether the application has handled
@@ -255,7 +256,7 @@ System calls are high enough level that they allow us
 to ignore low level details that would hurt usability while still
 capturing the environmental anomalies we are interested in.
 They also provide us with a
-few technical advantages advantages.
+few technical advantages.
 First, there is already robust tooling in the Linux
 kernel that allows for the interception and modification of system call
 results and side effects.  Additionally, Linux system call semantics are
@@ -273,7 +274,7 @@ These modifications allow
 a {\tt strace}-style
 system call recording to be output alongside {\tt rr's} normal recording
 format, providing
-a complete log of an applications system call activity.
+a complete log of an application's system call activity.
 We chose to make this
 modification because {\tt rr} is concerned with execution
 at the level of individual instructions and memory accesses while the
