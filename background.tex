@@ -76,11 +76,15 @@ how to execute complex instructions~\cite{Microarch}.
 In this work, we chose to focus on operating system,
 file system, and network
 environmental issues.
-Due to the fashion in which we chose
-to implement Simulation of Anomalous Environments,
-we are specifically concerned with issues from the above sources
-that are visible in the results and side effects of the system calls
-made by an application.
+These issues are
+readily visible in data returned
+by the system calls
+an application makes.
+We took advantage of this in our implementation of SEA as CrashSimulator by
+intercepting and manipulating these results.
+As we will discuss, this allowed us to strike a good medium between a
+higher level approach such has hooking library functions and a lower level
+approach like directly altering memory values.
 In our evaluation we take a deeper look at anomalies from
 these three categories in order to assess the technique's effectiveness.
 We do not consider processor-based environmental differences as bugs related to those are being handled by other
