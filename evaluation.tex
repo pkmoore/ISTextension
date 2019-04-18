@@ -152,7 +152,7 @@ Incorrect timestamps can impede applications like
 in {\tt make}, archival programs, and similar
 software~\cite{NautilusTimestamps, SudoTimestamp}.
 As a result, it is important to ensure
-that time related metadata -- 
+that time related metadata --
 such as creation, modification, and access times
 are preserved when copying a file.
 To evaluate failures on this front,
@@ -255,7 +255,10 @@ requires applications
 to examine the files so they do not
 interact inappropriately with a given file type.
 
-{\bf Method.}  Identifying these bugs involves changing an application's
+{\bf Method.} In order to confirm the accuracy of CrashSimulator's assessments we manually
+exposed a subset of the Coreutils applications tested to the unusual file
+types to get an idea of how they would respond.
+Identifying these bugs involves changing an application's
 execution to induce its response to an unexpected file type.  For
 example, the {\tt sed} application, which modifies the contents of a text
 file according to a provided command string, could be provided a symbolic
@@ -329,8 +332,8 @@ available memory or disk space~\cite{Cappos_CCS_08}.
         {\tt wc}          & File being checked         & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
         {\tt du}          & Directory being checked    & Recognizes     & Initial Value  & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
         {\tt install}     & File being installed       & Initial Value  & Recognizes     & Fail       & Fail      & Fail       & Recognizes & Fail\\
-        {\tt fmt}         & File being formatted       & Initial Value  & Fail          & Recognizes  & Fail      & Fail       & Fail      & Fail\\
-        {\tt od}          & File being dumped          & Initial Value  & Fail          & Recognizes  & Fail      & Fail       & Fail      & Fail\\
+        {\tt fmt}         & File being formatted       & Initial Value  & Fail           & Recognizes  & Fail      & Fail       & Fail      & Fail\\
+        {\tt od}          & File being dumped          & Initial Value  & Fail           & Recognizes  & Fail      & Fail       & Fail      & Fail\\
         {\tt ptx}         & File being read            & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
         {\tt comm}        & Second file being compared & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
         {\tt pr}          & File being read            & Initial Value  & Fail           & Fail        & Fail       & Fail        & Fail       & Fail\\
@@ -372,9 +375,6 @@ available memory or disk space~\cite{Cappos_CCS_08}.
 \end{table*}
 
 
-In order to confirm the accuracy of CrashSimulator's assessments we manually
-exposed a subset of the Coreutils applications tested to the unusual file
-types to get an idea of how they would respond.
 Table~\ref{table:applicationresponses} contains the results of this test.
 CrashSimulator's evaluation of an application can map to real world bug behavior
 in a few different combinations
