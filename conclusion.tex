@@ -1,7 +1,7 @@
 \section{Conclusion}
 \label{SEC:conclusion}
 
-As our first round of tests proved,
+As we have discussed,
 applications often fail upon deployment because of unexpected interactions
 with its environment.
 Although finding and eliminating
@@ -9,8 +9,17 @@ faults in applications is a key concern for software developers, it is
 impractical to do actual tests in every possible
 environment it may face.
 To address this problem, we developed the SEA
-technique that can be used to determine whether an application will
-respond correctly to unexpected conditions.
+technique.
+SEA is beneficial for developers because it allows
+the effort spent debugging failures in a given environment
+to be preserved and reused programmatically to test whether
+future applications will also fail.
+As this process is repeated,
+a corpus of bug-causing aspects,
+known as ``anomalies'' can be accumulated
+resulting in an ever-increasing capability
+to test applications in situations
+that proved problematic in the past.
 
 We built a concrete implementation of SEA
 called CrashSimulator which implements
