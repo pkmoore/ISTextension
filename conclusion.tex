@@ -8,13 +8,15 @@ Although finding and eliminating
 faults in applications is a key concern for software developers, it is
 impractical to do actual tests in every possible
 environment it may face.
-To address this problem, we developed CrashSimulator
-in order to determine whether an application will
+To address this problem, we developed the SEA
+technique that can be used to determine whether an application will
 respond correctly to unexpected conditions.
 
-CrashSimulator's
-technique of
-operating on system calls gives the tool a ``universal'' way to
+We built a concrete implementation of SEA
+called CrashSimulator which implements
+the technique by simulating environmental
+anomalies visible in the system calls an application makes.
+Operating on system calls gives the tool a ``universal'' way to
 encode and inject anomalies. Consequently, a set of mutations can be
 collected from existing applications for use in testing others.
 In this way, an ever-expanding corpus of anomalies can be
@@ -28,20 +30,18 @@ XXXX new bugs were identified in popular applications.
 Of these, YYYY been reported to the
 affected parties.
 
-In the long term, we
-envision this testing strategy will yield a public repository of anomalies
+Given that the technique as proven sound
+and our has proven effective we will continue to improve upon it.
+We envision a public repository of anomalies
 that can be applied to new or existing applications.
 We are also exploring
-opportunities to further automate the discovery process.
-Beyond these logical
-evolutions of the tool, our future work
+opportunities to further automate the discovery process
+and improve the way anomalies are specified using a
+domain specific language.
+Further future work
 will focus on analyzing how an
 application attempts
 to recover from the anomalies.  This would allow
 us to determine whether
 an application is correctly recovering
 from an error, or carrying out some incorrect response.
-Second, we will work on making it possible for CrashSimulator to
-understand and mutate common data formats, allowing it to test using
-anomalies that appear within the data returned by system calls like {\tt
-read()} and {\tt recv()}.
