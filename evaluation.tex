@@ -319,33 +319,37 @@ available memory or disk space~\cite{Cappos_CCS_08}.
     \scriptsize{}
     \begin{tabular}{l  l  |  l  l  l  l  l  l  l}
     \toprule{}
-        Application & Condition Tested           & Regular File & Directory & Character Device & Block Device & Named Pipe & Symbolic Link (IFLNK)    & Socket File (IFSOCK)\\
-                    &                            &  (IFREG)     & (IFDIR)   & (IFCHR)          & (IFBLK)      & (IFIFO)    & (IFLNK)                  & (IFSOCK)\\
+        Application & Condition Tested & Regular File & Directory & Character Device & Block Device & Named Pipe & Symbolic Link & Socket File (IFSOCK)\\
+                    &                  &  (IFREG)     & (IFDIR)   & (IFCHR)          & (IFBLK)      & (IFIFO)    & (IFLNK)       & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
-        {\tt Aspell}      & File being checked         & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
-        {\tt gnu-gpg}     & secring.gpg                & Initial Value  & Fail           & Fail        & Fail       & Fail        & Fail       & Fail\\
-        {\tt vim}         & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes & Recognizes & Fail\\
-        {\tt nano}        & File being opened          & Initial Value  & Recognizes     & Recognizes  & Recognizes & Fail        & Fail       & Fail\\
-        {\tt sed}         & File being edited          & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
-        {\tt df}          & /proc                      & Fail           & Initial Value  & Fail        & Fail       & Fail        & Fail       & Fail\\
-        {\tt wc}          & File being checked         & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
-        {\tt du}          & Directory being checked    & Recognizes     & Initial Value  & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
-        {\tt install}     & File being installed       & Initial Value  & Recognizes     & Fail       & Fail      & Fail       & Recognizes & Fail\\
-        {\tt fmt}         & File being formatted       & Initial Value  & Fail           & Recognizes  & Fail      & Fail       & Fail      & Fail\\
-        {\tt od}          & File being dumped          & Initial Value  & Fail           & Recognizes  & Fail      & Fail       & Fail      & Fail\\
-        {\tt ptx}         & File being read            & Initial Value  & Recognizes     & Recognizes  & Recognizes & Recognizes  & Recognizes & Recognizes\\
-        {\tt comm}        & Second file being compared & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
-        {\tt pr}          & File being read            & Initial Value  & Fail           & Fail        & Fail       & Fail        & Fail       & Fail\\
+        {\tt Aspell}      & Dictionary File            & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt Aspell}      & File being checked         & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt gnu-gpg}     & secring.gpg                & ET        & \xmark     & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt vim}         & File being opened          & ET        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \xmark\\
+        {\tt nano}        & File being opened          & ET        & \tickmark  & \tickmark  & \tickmark & \xmark        & \xmark       & \xmark\\
+        {\tt sed}         & File being edited          & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt df}          & /proc                      & \xmark    & ET         & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt wc}          & File being checked         & ET        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
+        {\tt du}          & Directory being checked    & \tickmark & ET         & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
+        {\tt install}     & File being installed       & ET        & \tickmark  & \xmark     & \xmark    & \xmark        & \tickmark    & \xmark\\
+        {\tt fmt}         & File being formatted       & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt od}          & File being dumped          & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt ptx}         & File being read            & ET        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
+        {\tt comm}        & Second file being compared & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt pr}          & File being read            & ET        & \xmark     & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
 \hline
-        {\tt readlink}    & Link being evaluated       & \textbf{No file checks performed} & & & & & & \\
-        {\tt unlink}      & File being unlinked        & \textbf{No file checks performed} & & & & & & \\
+        \multicolumn{9}{l}{\scriptsize{\tickmark  $=$ CrashSimulator
+        predicts application will recognize anomaly}}\\
+        \multicolumn{9}{l}{\scriptsize{\xmark  $=$ CrashSimulator predicts
+        application will fail to recognize anomaly}}\\
+        \multicolumn{9}{l}{\scriptsize{ET (Expected Type)  $=$ File type expected by the
+        application}}\\
     \bottomrule{}
     \end{tabular}
     \caption{Applications tested for their handling of unexpected file types.  A
-    result of ``Recognizes'' indicates that the application identified the
+    result of ``\tickmark'' indicates that the application identified the
     presence of an unusual file and responded in some fashion.  A result of
-    ``Fail'' indicates that the application failed to recognize the presence of
+    ``\xmark'' indicates that the application failed to recognize the presence of
     an unusual file and attempted to process it.}
     \label{table:unexpectedtypes}
 \end{table*}
