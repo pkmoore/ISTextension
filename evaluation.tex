@@ -166,14 +166,13 @@ and {\tt utime()} families used to retrieve and apply timestamps.
 
 It is also important to check if a move
 would attempt to copy a special
-character file like {\tt /dev/urandom} across disks.
+device file, such as a named pipe, across disks.
 Files of this variety must be moved
 by creating a new device of the same type at the destination,
-instead of reading from a potentially infinite device.
+instead of reading exhaustively reading its contents.
 In our experience, applications that fail to perform this check
-end up completely filling a disk or exhausting available memory,
-which can cause the system
-to become unresponsive.
+can end up completely filling a disks, exhausting available memory,
+or blocking forever, which can cause the system to become unresponsive.
 
 
  \begin{table}[t]
@@ -317,8 +316,8 @@ available memory or disk space~\cite{Cappos_CCS_08}.
     \scriptsize{}
     \begin{tabular}{l  l  |  l  l  l  l  l  l  l}
     \toprule{}
-Application & Condition Tested           & IFREG        & IFDIR        &
-        IFCHR     & IFBLK    & IFIFO      & IFLNK    & IFSOCK\\
+        Application & Condition Tested           & Regular File & Directory & Character Device & Block Device & Named Pipe & Symbolic Link (IFLNK)    & Socket File (IFSOCK)\\
+                    &                            &  (IFREG)     & (IFDIR)   & (IFCHR)          & (IFBLK)      & (IFIFO)    & (IFLNK)                  & (IFSOCK)\\
 \hline
         {\tt Aspell}      & Dictionary File            & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
         {\tt Aspell}      & File being checked         & Initial Value  & Fail           & Recognizes  & Fail       & Fail        & Fail       & Fail\\
