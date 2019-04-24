@@ -24,7 +24,7 @@
 
 As mentioned earlier,
 the Simulating Environmental Anomalies(SEA)
-offers a reliable way to identify bugs that could arise from interaction
+offers a methodical way to identify bugs that could arise from interaction
 with a given environment.
 It does this by providing a systematic way of
 capturing, storing and utilizing the insights gleaned from the work that
@@ -42,7 +42,7 @@ in a particular environment and fails.
 In debugging the failure,
 we identify and ``trap'' the particular environmental feature
 (sec.~\ref{SUBSUB:IdentifyingAndEncoding}),
-that caused the crash,  which we call $X$.
+that caused the failure,  which we call $X$.
 We verify that when $X$ is present,
 communication with the
 environment is different,
@@ -113,7 +113,7 @@ and checking application responses.
 At the core of SEA's operation is the body of anomalies
 used to test applications.
 Building this corpus is an ongoing process that improves the technique's
-effectiveness by extending the set of environments it can simulate.
+effectiveness by extending the set of anomalies it can simulate.
 Anomalies can be sourced
 in a number of ways,
 such as
@@ -160,9 +160,11 @@ will fail with an error stating that access to the file is denied.
 The mutator derived from this issue would be constructed to
 identify similar accesses as opportunities
 to simulate the anomaly
-and the anomaly by making these
-accesses return ``access denied.''
-An associated checker would be built to
+and carry out this simulation
+by making these
+accesses return ``access denied''.
+As described in \ref{SUBSUB:CheckingResponse},
+an associated checker would be built to
 examine the application's behavior after a simulation and assess its
 correctness.
 Preserving the details of this anomaly
@@ -334,7 +336,7 @@ During this process,
 a corresponding checker
 monitors the application's behavior,
 allowing it to report on the correctness of the response.
-This allows testing to proceed in the following way.
+For example, testing could proceed in the following way.
 At a given point in the execution of application $Y$,
 cloned sets $Y_1$ and $Y_2$ are generated and
 used to test two scenarios where a file access could fail:
