@@ -60,7 +60,7 @@ we call \textit{Simulating Environmental Anomalies(SEA).
 This technique is founded upon the key insight
 that problematic environmental properties,
 which we refer to as \textit{anomalies},
-can be detected
+can often be detected
 in the function calls,
 system calls,
 or other communications an application makes within an environment.
@@ -70,8 +70,8 @@ unique to a given environment
 can be inserted into
 the communications of an application under test
 in such a way
-that its responses will indicate any potential
-for bugs upon deployment.
+that its responses will indicate potential
+for failures upon deployment.
 In this way,
 developers are given
 an easy and inexpensive way
@@ -96,7 +96,7 @@ a corpus of environmental anomalies can be assembled
 that can help ensure
 future applications do not suffer from bugs of the past.
 
-To verify the ability of this technique to reveal environmental
+To evaluate the ability of this technique to reveal environmental
 bugs, we built and tested a proof of concept tool
 called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
@@ -112,21 +112,21 @@ file system configurations, file types, and network delays.
 When the applications in
 question were actually exposed to these conditions a variety of failures
 including hangs, crashes, and filesystem damage occurred.  In total,
-\textbf{!!!!RECOUNT!!!!} 84
+\preston{somenumber}
 bugs were identified in this manner.
 The effort required to set up real
 environments where these conditions are present
 and execute the same applications within them
 would far exceeded the time required to evaluate them
-using simulation -- further illustrating the time savings offered by SEA.
+using simulation -- further illustrating the benefit offered by SEA.
 
-In addition to proving CrashSimulator could find bugs, we were also able to
+In addition to demonstrating that 
+CrashSimulator could find bugs, we were also able to
 show that developers with varying backgrounds
 could use the tool
-on real world applications
-with a high degree of confidence.
+on real world applications with ease.
 We conducted a user study with
-ZZZ undergraduate and graduate computer science students
+\preston{ZZZ} undergraduate and graduate computer science students
 who were asked to use CrashSimulator to test
 the same type of applications evaluated in our initial tests.
 The results show that the developers were able to find bugs
