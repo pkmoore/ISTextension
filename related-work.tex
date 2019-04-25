@@ -139,7 +139,7 @@ detection of differences between versions of external components.
 
 Such studies have helped to define the influence of the environment on
 application and thus provide a background to our work.  Our tool applies
-the idea to reliable testing of an application's response to anomalies.
+the idea to testing of an application's response to anomalies.
 
 \noindent
 {\bf Testing exception handling and conformance.}
@@ -151,20 +151,19 @@ at which they are handled in Java code. The purpose is to discover whether
 programs respond correctly to exceptional situations anticipated by the
 programmer~\cite{DBLP:journals/tse/FuMRW05}.  Koopman and DeVale developed
 a system to detect bugs in error handling code related to calls to POSIX
-functions~\cite{Koopman00theexception}.
-
+functions~\cite{Koopman00theexception}.  Miller et al. cover the kernel as
+a source of unexpected program inputs and test applications by simulating
+them~\cite{murphyslaw}.
 Other approaches to conformance checking of POSIX operations use model
 based testing~\cite{Dadeau:2008:CSM:1433121.1433137,Farchi02}.
 
 Unlike these approaches, CrashSimulator does not exclusively target error
 handling code or anomalies that only involve individual system calls.
-However, such testing techniques can help identify anomalies that can be
-added to our repository.
-
-\preston{We need to cite: Zach Miller, Todd Tannenbaum, Ben Liblit:
-Enforcing Murphy's Law for Advance Identification of Run-time Failures.
-USENIX Annual Technical Conference 2012: 203-208. R. E. feedback from ISSTA
-submission}
+Additionally, it focuses on collecting and simulating
+problematic features of specific
+deployment environments.
+That said, such testing techniques
+can help identify anomalies that can be added to our repository.
 
 %\noindent
 %{\bf Runtime verification:}
