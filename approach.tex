@@ -52,11 +52,11 @@ We call this difference $X'$.
 $X'$ can be extracted, preserved,
 and later used in testing other systems
 thanks to a pair of components referred to as a mutator and a checker.
-The mutator describes the exact set of changes
+The mutator describes $X'$ as an exact set of changes
 that must be made to an application's communications
-in order to simulate an anomaly,
+in order to simulate $X$,
 while the checker describes how an
-application should respond once the anomaly has been encountered.
+application should respond once the $X$ has been encountered.
 To test if other applications also have a problem with $X$,
 mutators can insert $X'$ into their
 communications (sec.~\ref{SUBSUB:MutatingCommunications}).
