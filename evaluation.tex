@@ -88,7 +88,7 @@ This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
-\paragraph{Method.}  For this portion of our evaluation
+{\bf Method.}  For this portion of our evaluation
 CrashSimulator was configured
 to test each of the applications listed in Table~\ref{table:crossdevice}
 using the Null Mutator and a set of checkers constructed find applications
@@ -105,9 +105,7 @@ that evaluate whether or not
 the application correctly performs the following
 types of checks and operations:
 
-{\bf Source Replaced.}
-
-An application should make an effort
+{\it Source Replaced.} An application should make an effort
 to ensure that the file being copied
 is not replaced between the time it is initially examined
 and the time it is opened for copying.
@@ -122,9 +120,7 @@ If these checks are not performed it
 means the application will proceed with its operations,
 leaving open the possibility of file corruption~\cite{PythonShutilBug}.
 
-{\bf Preserve Xattrs}
-
-Extended file attributes
+{\it Preserve Xattrs} Extended file attributes
 are used by modern operating systems
 to store descriptive information
 that the strictly defined and limited structure
@@ -148,8 +144,7 @@ that read the extended file attributes from the source file (i.e. {\tt
 that re-apply the attributes to the destination file (i.e. {\tt setxattr()},
 {\tt lsetxattr()}, or {\tt fsetxattr()}).
 
-{\bf Preserve Timestamps}
-Incorrect timestamps can impede applications like
+{\it Preserve Timestamps} Incorrect timestamps can impede applications like
 in {\tt make}, archival programs, and similar
 software~\cite{NautilusTimestamps, SudoTimestamp}.
 As a result, it is important to ensure
@@ -163,8 +158,7 @@ the appropriate timestamps to the destination file
 by monitoring for system calls from the {\tt stat()}
 and {\tt utime()} families used to retrieve and apply timestamps.
 
-{\bf Copying Devices}
-It is also important to check if a move
+{\it Copying Devices} It is also important to check if a move
 would attempt to copy a special
 device file, such as a named pipe, across disks.
 Files of this variety must be moved
@@ -196,7 +190,7 @@ Incorrect entries are either missing the needed check or were ineffective.}
     \label{table:crossdevice}
 \end{table}
 
-\paragraph{Findings.}
+{\bf Findings.}
 As can be seen from the results in Table~\ref{table:crossdevice}, each of the
 applications tested fails to perform one or more of the steps required to
 successfully complete a cross-device move.  This is an unfortunate situation
@@ -255,7 +249,7 @@ requires applications
 to examine the files so they do not
 interact inappropriately with a given file type.
 
-\paragraph{Method.}
+{\bf Method.}
 In order to confirm the accuracy of CrashSimulator's assessments we
 exposed a subset of the Coreutils applications tested to
 a simulation of the unusual file
@@ -296,7 +290,7 @@ We manually examined a subset of the listed application behaviors simulated by
 CrashSimulator and verified they were consistent with the actual behavior
 on the given file type.
 
-\paragraph{Findings.}
+{\bf Findings.}
 The frequency of failed executions in our results,
 which are shown in Table 2,
 indicates that many
@@ -416,7 +410,7 @@ this approach needs to be able to handle
 a situation where communication
 takes too long and should time out.
 
-\paragraph{Method.}
+{\bf Method.}
 CrashSimulator can detect
 whether an application is vulnerable to this attack
 by employing the null mutator and a network timeout checker
@@ -481,7 +475,7 @@ could be vulnerable to this sort of attack.
 \end{table}
 
 
-\paragraph{Findings.}
+{\bf Findings.}
 As Table~\ref{table:slowloris} shows, all of these
 applications were vulnerable to this sort of anomaly,
 and in some cases,
@@ -689,7 +683,7 @@ To address this concern, the performance of CrashSimulator was
 evaluated in order to determine whether or not it was able to complete its
 test executions in an acceptable time frame.
 
-\paragraph{Method.}
+{\bf Method.}
 We examined the completion
 times for executions of the specified application in both
 native and under CrashSimulator configured to test using the ``Unusual File
@@ -710,7 +704,7 @@ native program and CrashSimulator in seconds.  Each dot indicates an
     \end{figure}
 
 
-\paragraph{Findings.}
+{\bf Findings.}
 Overall, the performance of CrashSimulator is around
 an order of magnitude slower than the original program being executed
 natively.  It should be noted that in most cases
