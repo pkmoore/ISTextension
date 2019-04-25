@@ -588,9 +588,8 @@ the pipe and into the destination file.
 
 Fortunately, as soon as issues like this are discovered,
 CrashSimulator's checkers can be modified to include the alternative
-approach.  This is viable because there
-are a finite number of system calls, and a given operation can be mapped to
-a manageable subset.  Given the above example around moving
+approach.
+Given the above example around moving
 files, consider the mapping from high level ``operation'' to the set of
 system calls that can implement it in Table~\ref{table:stepsandcalls}.
 Each of the steps in the operation map to a small number of system calls
