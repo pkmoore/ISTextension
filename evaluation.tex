@@ -50,9 +50,11 @@ that these bugs can arise from
 unusual filesystem and network situations,
 so we configured the tool to look
 for bugs that could be triggered by these features.
-These bugs rely on common system calls,
-and thus had the potential to
-appear in many programs.
+We found the specific anomalies used for this evaluation
+by examining public bug trackers,
+the source code of major portable applications, and the capabilities of
+tools like NetCheck~\cite{Zhuang_NSDI_2014}
+and CheckAPI~\cite{rasley2015detecting}.
 As we wanted to test
 the most commonly used applications,
 our selections were made

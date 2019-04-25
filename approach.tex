@@ -284,28 +284,22 @@ at the level of individual instructions and memory accesses while the
 anomalies we were interested in were more in terms of
 system calls.
 
-These anomalies (which are discussed
-in Section~\ref{SEC:evaluation})
-were collected by examining public bug trackers,
-the source code of major portable applications, and the capabilities of
-tools like NetCheck~\cite{Zhuang_NSDI_2014}
-and CheckAPI~\cite{rasley2015detecting}.
-From these anomalies,
-we constructed
-checkers and mutators
-using finite automata.
-Mutators work by receiving the sequence of system calls
-an application makes and accepting situations where the sequence indicates
-it is appropriate to simulate an anomaly.
-It then uses its stored
-description of an anomaly
-to carry out its simulation.
-Checkers operate similarly,
-but, because they encode what a
-correct response by the application should look like,
-they were constructed
-to accept situations where they observed sequences indicative of such
-behavior.
+%From these anomalies,
+%we constructed
+%checkers and mutators
+%using finite automata.
+%Mutators work by receiving the sequence of system calls
+%an application makes and accepting situations where the sequence indicates
+%it is appropriate to simulate an anomaly.
+%It then uses its stored
+%description of an anomaly
+%to carry out its simulation.
+%Checkers operate similarly,
+%but, because they encode what a
+%correct response by the application should look like,
+%they were constructed
+%to accept situations where they observed sequences indicative of such
+%behavior.
 
 Actually simulating anomalies
 is done using
