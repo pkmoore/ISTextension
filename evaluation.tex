@@ -306,14 +306,15 @@ can be hard to predict.
 In many cases a denial of
 service condition occurs in the form of the application ``hanging,'' as it
 attempts to incorrectly process the file.
-This may happen harmlessly, such
-as if an application blocks forever waiting for a {\tt read()}
+This is typically the result of
+an application blocking forever as it waits for a {\tt read()}
 call to retrieve non-existent data from an empty FIFO,
-or harmfully,
-as when an application attempts to read in and process an
-``infinitely large'' file,
-that will eventually fill all
-available memory or disk space~\cite{Cappos_CCS_08}.
+or an application attempting
+to read in and process an
+``infinitely large'' file.
+This situation is particularly dangerous as
+it can eventually lead to
+fill all available memory or disk space being filled~\cite{Cappos_CCS_08}.
 
 
 \begin{table*}[t]
@@ -631,7 +632,7 @@ enough of the application's execution is included in the test.
 One implementation detail of CrashSimulator is that,
 by default,
 its tests evaluate an application's behavior
-within a defined (but configurable) number of
+within a defined (but configurable) number of system calls.
 We found in some cases
 that an application's error handling or recovery code
 may take place outside of this span of execution.
