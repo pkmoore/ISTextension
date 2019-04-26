@@ -1,50 +1,46 @@
 \begin{abstract}
 
-A common problem for software developers is that applications tend to
-exhibit new bugs \textit{after} they have been deployed.
+A common problem for software developers is applications
+exhibiting new bugs \textit{after} deployment.
 Preventing bugs related to
 network,
 operating system,
 file system,
 and other similar environmental features
-has proven difficult
-largely because there is no way to
+is difficult
+because there is no way to
 know how an application will react to every environment.
-Up to now,
-only time-consuming and expensive testing,
-or the painful lesson of a failed deployment
+Only extensive testing, or failed deployments
 can alert a developer to such risks.
-Enter CrashSimulator, a tool that utilizes
+Enter
+Simulation of Environmental Anomalies (SEA),
+a technique that utilizes
 evidence of one application's failure
 in a given environment
-as a predictor of
-potential inadequacies
-in others.
-The key to the tool
-is a technique called
-\textit{Simulating Environmental Anomalies} (SEA),
-which can extract
+to predict inadequacies in others.
+The technique
+can extract
 unusual properties
 found in communications between an application
 and its environment.
 Simulating these properties
 on a running application
-can expose it to conditions
+exposes it to conditions
 that caused failure in other cases.
-If the application does not respond correctly to a given scenario,
-the tool reports that a bug may exist.
-These anomalies can then be stored,
+An incorrect response to the simulation,
+is evidence that a bug may exist.
+The technique provides a way
+to store these anomalies
 so,
 over time,
-a developer will be able
-to test new applications
-against an ever increasing set of problematic conditions.
-To test the tool,
-we evaluated CrashSimulator against a set of the most popular
+applications can be tested
+against an increasing set of problematic conditions.
+We created a concrete implementation called CrashSimulator
+and evaluated it against a set of popular
 Linux applications selected
-from the Coreutils project and the Debian popularity contest.
-Our tests found a total of 65 bugs in 24 applications,
-the consequences of which range from hangs and crashes, to data loss and
-remote denial of service conditions.
+from Coreutils and the Debian popularity contest.
+Our tests found a total of 65 bugs in 24 applications
+with effects including hangs, crashes, data loss, and remote denial of
+service conditions.
 
 \end{abstract}
