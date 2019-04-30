@@ -6,20 +6,22 @@ new bugs \textit{after} deployment.
 Preventing bugs related to network,
 operating system,
 file system,
-and other similar environmental features is difficult because there
+and other similar features is difficult because there
 is no way to know how an application will react to every environment.
 Enter Simulation of Environmental Anomalies (SEA),
 a technique that utilizes evidence
 of one application’s failure
 in a given environment
-to predict inadequacies in others.
-The technique extracts unusual properties found in communications
-between an application and its environment
-and simulates them on a running
-application.
-Exposing other applications to conditions
-that caused failure in other cases and noting the response,
-offers evidence that a bug may exist.
+to generate tests
+that can be applied to {\textit other} applications,
+to see whether they suffer from analogous faults.
+In SEA, models of unusual properties extracted
+from communications between an application $A$
+and its environment guide simulations
+of another application $B$ running
+in the anomalous environment.
+This reveals faults in how $B$ interacts
+this environment without the expense of running in that environment.
 The technique provides a way to store these anomalies so,
 over time,
 applications can be tested against
