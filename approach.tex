@@ -38,7 +38,7 @@ Finally, we detail our concrete implementation, CrashSimulator.
 \label{SEC:SEAHalfshell}
 In a nutshell,
 here is how the technique works.
-An application is run
+An application, $A$, is run
 in a particular environment and fails.
 In debugging the failure,
 we identify and ``trap'' the particular environmental feature
@@ -49,22 +49,22 @@ communication with the
 environment is different,
 sometimes in a barely perceptible manner,
 and other times in a radically contrary manner.
-We call this difference $X'$.
-$X'$ can be extracted, preserved,
+We call this difference $\Delta X$.
+$\Delta X$ can be extracted, preserved,
 and later used in testing other systems
 thanks to a pair of components referred to as a mutator and a checker.
-The mutator describes $X'$ as an exact set of changes
-that must be made to an application's communications
-in order to simulate $X$,
-while the checker describes how an
+The mutator, $f\_mutX()$,
+is able to apply $\Delta X$
+to the appropriate places in an application's communications
+in order to simulate the presence of $X$.
+The checker describes how an
 application should respond once the $X$ has been encountered.
-To test if other applications also have a problem with $X$,
-mutators can insert $X'$ into their
-communications (sec.~\ref{SUBSUB:MutatingCommunications}).
+To test if another application, $B$, also has a problem with $X$,
+$f\_mutX(B)$ is used to apply $\Delta X$ to its communications
+(sec.~\ref{SUBSUB:MutatingCommunications}).
 A checker will then determine whether the
-application has responded correctly to
-$X$(sec.~\ref{SUBSUB:CheckingResponse}).
-If the checker accepts the application behavior
+$B$ has responded correctly to $X$(sec.~\ref{SUBSUB:CheckingResponse}).
+If the checker accepts the $B$'s behavior
 after the $X$ is simulated,
 we report it has been handled.
 If the checker doesn't accept we report that it hasn't.
