@@ -53,16 +53,16 @@ We call this difference $\Delta X$.
 $\Delta X$ can be extracted, preserved,
 and later used in testing other systems
 thanks to a pair of components referred to as a mutator and a checker.
-The mutator, $f\_mutX()$,
+The mutator, $mutX()$,
 is able to apply $\Delta X$
 to the appropriate places in an application's communications
 in order to simulate the presence of $X$.
-The checker describes how an
+The checker, $checkX()$ describes how an
 application should respond once the $X$ has been encountered.
 To test if another application, $B$, also has a problem with $X$,
-$f\_mutX(B)$ is used to apply $\Delta X$ to its communications
+$mutX(B)$ is used to apply $\Delta X$ to its communications
 (sec.~\ref{SUBSUB:MutatingCommunications}).
-A checker will then determine whether the
+$checkX(B)$ is then used to determine whether the
 $B$ has responded correctly to $X$(sec.~\ref{SUBSUB:CheckingResponse}).
 If the checker accepts the $B$'s behavior
 after the $X$ is simulated,
