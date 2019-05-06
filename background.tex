@@ -45,6 +45,12 @@ FAT file system), maximum file length, number of directory entries, or
 depth
 of directories supported, all of which can lead to errors when programs
 do not account for these variations~\cite{EXT4Layout, AppleHFS}.
+The layout and contents of a filesystem can also impact an application's
+execution.  Unexpected file types can result in application
+failures and multi-disk layouts impose additional requirements on
+common operations such as moving a file from one location to
+another.
+We explore the latter two situations in our evaluation~\ref{sec-env-bugs}.
 
 \item {\bf Network.} Both local and remote network nodes
 can have specific characteristics that could influence the behavior of an
