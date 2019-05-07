@@ -626,23 +626,23 @@ test executing for the one whose prerequisites are met.
     \label{table:stepsandcalls}
 \end{table}
 
-A second source of false positives is a test being configured such that not
-enough of the application's execution is included in the test.
-One implementation detail of CrashSimulator is that,
-by default,
-its tests evaluate an application's behavior
-within a defined (but configurable) number of system calls.
-We found in some cases
-that an application's error handling or recovery code
-may take place outside of this span of execution.
-False positives
-of this sort
-are easily corrected
-by expanding the length of execution
-covered by the test.
-The low number of occurrences of this
-type of false positive gives us confidence that the default configuration
-is satisfactory in the majority of cases.
+%A second source of false positives is a test being configured such that not
+%enough of the application's execution is included in the test.
+%One implementation detail of CrashSimulator is that,
+%by default,
+%its tests evaluate an application's behavior
+%within a defined (but configurable) number of system calls.
+%We found in some cases
+%that an application's error handling or recovery code
+%may take place outside of this span of execution.
+%False positives
+%of this sort
+%are easily corrected
+%by expanding the length of execution
+%covered by the test.
+%The low number of occurrences of this
+%type of false positive gives us confidence that the default configuration
+%is satisfactory in the majority of cases.
 
 \textbf{False Negatives.}
 
