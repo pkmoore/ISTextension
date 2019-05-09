@@ -279,10 +279,12 @@ system call recording to be output alongside {\tt rr's} normal recording
 format, providing
 a complete log of an application's system call activity.
 We chose to make this
-modification because {\tt rr} is concerned with execution
-at the level of individual instructions and memory accesses while the
-anomalies we were interested in were more in terms of
-system calls.
+modification because
+while {\tt rr}'s recording contains the system call information we need,
+it is stored in an opaque format that changes frequently.
+Storing a copy of this information as an {\tt strace} recording bypasses
+this shortcoming and offers the advantage of being human readable.
+
 
 %From these anomalies,
 %we constructed
