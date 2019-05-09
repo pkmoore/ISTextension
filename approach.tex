@@ -264,12 +264,22 @@ First, there is already robust tooling in the Linux
 kernel that allows for the interception and modification of system call
 results and side effects.  Additionally, Linux system call semantics are
 well defined which simplifies implementation. Finally, operating at this
-level allows CrashSimulator to test applications written in any language
-that can execute Linux system calls.
+level allows CrashSimulator to test most applications that rely on Linux
+system calls which removes dependency on any specific programming languages
+or frameworks.
 
 The second decision was to structure testing around recording and replaying
-applications.  This was done to make tests trivially repeatable and to ease
-the process of manipulating system calls.  Recording and replay was
+applications.  This was done to make tests repeatable and to ease
+the process of manipulating system calls.
+Replay makes tests repeatable by ensure applications will always execute
+code paths and present opportunities to simulate anomalies.  In a similar
+fashion, it eases the process of manipulating system calls by ensuring an
+application's state is always the same at a given point in time.
+These features mean we can easily test multiple scenarios at a given point
+in execution without having to worry about the application's preceding
+activity.
+
+Recording and replay was
 achieved using the {\tt rr} debugger~\cite{rrwebsite}.
 Some modifications to {\tt rr} were required in order to
 tailor it more closely to our needs.
