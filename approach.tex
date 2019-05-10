@@ -72,27 +72,26 @@ Once created,
 these pieces act as the persistent medium in which the details of
 a given anomaly are stored.
 
-Preserving this information in an accessible manner
-is a boon for software developers because,
-in a typical scenario, the material documenting
-the discovery of flaws
-either goes out of date or
-is preserved only as ``institutional memory,''
-and therefore forgotten as staffs change.
-Additionally,
-the mere existence of documentation
-describing past failures
-does not prevent bugs
-if developers don't use it
-to construct and execute tests,
-an effort that is easily neglected.
-Further, unit and integration test suites
-are typically tightly coupled
-to the application and the programming language in which it was written --
-limiting their reusability.
-SEA cuts through all of these difficulties by
-storing this information in a manner that can be consumed
-and used to test applications programmatically.
+Representing an anomaly in terms of mutators and checkers
+allows it to be easily reused to test other applications
+without per application effort.
+While an application's test suite is typically
+tightly coupled to the programming language
+and frameworks with which it was written,
+SEA's approach is agnostic to these features.
+This means anomalies that were useful in testing one application
+can be programmatically applied toward testing another.
+In this way, SEA is able to augment these application-specific test suites
+by both decreasing the number of tests
+that must be manually constructed
+to cover environmental concerns
+and by offering the possibility of catching
+failures that had not been considered.
+These anomalies can be accumulated from many applications
+resulting in the ability to test new applications
+against an ever increasing
+set of problematic conditions.
+
 In this section, we discuss each of the components
 required to implement SEA
 and detail our concrete implementation,
