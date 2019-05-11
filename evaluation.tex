@@ -570,7 +570,8 @@ This is similar to the circumstance where an
 application's test suite is missing a test, necessitating action by the
 developer to construct it.
 
-For example, consider GNOME's {\tt glib} file handling functions.  When an
+We encountered this situation when testing applications that used
+GNOME's {\tt glib} file handling functions.  When an
 application makes use of these facilities to move a file across storage
 devices the library itself correctly performs a
 file move operation.  When we used CrashSimulator with
@@ -588,7 +589,7 @@ the pipe and into the destination file.
 
 Fortunately, as soon as issues like this are discovered,
 CrashSimulator's checkers can be modified to include the alternative
-approach.
+sequence.
 Given the above example around moving
 files, consider the mapping from high level ``operation'' to the set of
 system calls that can implement it in Table~\ref{table:stepsandcalls}.
