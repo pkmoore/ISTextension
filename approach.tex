@@ -33,7 +33,7 @@ and the details of our concrete implementation, CrashSimulator.
 
 \subsection{SEA in a Half-shell}
 \label{SEC:SEAHalfshell}
-In a nutshell,
+In brief,
 here is how the technique works.
 An application, $A$, is run
 in a particular environment and fails.
@@ -78,7 +78,7 @@ and frameworks with which it was written,
 SEA's approach is agnostic to these features.
 This means anomalies that were useful in testing one application
 can be programmatically applied toward testing another.
-In this way, SEA is able to augment these application-specific test suites
+In this way, SEA is able to augment application-specific test suites
 by both decreasing the number of tests
 that must be manually constructed
 to cover environmental concerns
@@ -107,8 +107,6 @@ and checking application responses.
 
 \subsubsection{Identifying and Encoding Anomalies}
 \label{SUBSUB:IdentifyingAndEncoding}
-At the core of SEA's operation is the body of anomalies
-used to test applications.
 Building this corpus is an ongoing process that improves the technique's
 effectiveness by extending the set of anomalies it can simulate.
 Anomalies can be sourced
@@ -123,10 +121,11 @@ Public bug trackers are an ideal source
 if you wish to determine
 whether or not an application
 is vulnerable to a widely publicized bug.
+
 The chosen anomalies are then examined
 to determine how they change the results
 of system calls an application makes
-compared to a normal execution and why.
+compared to a normal execution.
 Once teased out,
 these differences delineate
 a set of modifications
