@@ -645,12 +645,9 @@ test executing for the one whose prerequisites are met.
 %is satisfactory in the majority of cases.
 
 \textbf{False Negatives.}
-In some cases,
-using the default checker resulted
-in CrashSimulator making false negative reports.
-This happens when
-an application changes its behavior
-but still does not handle an anomaly correctly.
+CrashSimulator occasionally registers  false negative reports
+when an application changes its behavior,
+but does not handle an anomaly correctly.
 These false negatives can be addressed
 by performing a more detailed analysis
 of the application's post simulation behavior.
@@ -704,9 +701,11 @@ native program and CrashSimulator in seconds.  Each dot indicates an
 
 
 {\bf Findings.}
-Overall, the performance of CrashSimulator is around
-an order of magnitude slower than the original program being executed
-natively.  It should be noted that in most cases
+Overall, the performance running an application
+under CrashSimulator is around
+an order of magnitude slower
+than the original program being executed without it.
+It should be noted that in most cases
 this slowdown is somewhat mitigated by CrashSimulator's ability to process
 tests asynchronously and in other situations it will be more efficient than
 running the program natively since {\tt rr's} replay does not require
