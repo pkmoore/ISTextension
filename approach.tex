@@ -129,7 +129,7 @@ compared to a normal execution.
 Once teased out,
 these differences delineate
 a set of modifications
-that must be made
+that must be made to an execution
 in order to simulate the chosen anomaly or anomalies.
 These details are used to
 construct both a mutator and a checker.
@@ -237,7 +237,9 @@ an action has occurred to handle the simulated condition.
 This simple yes or no approach
 is often sufficient
 to classify application behavior.
-
+Section~\ref{sec-move-bugs} demonstrates finding bugs using the null
+mutator while~\ref{sec-file-type-bugs} illustrates how a more complex
+mutator accomplishes the same by simulating unusual situations.
 
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
