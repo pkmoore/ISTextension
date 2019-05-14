@@ -177,7 +177,9 @@ to accept or reject a given test
 execution based on whether or not it observed certain system call behavior.
 In both cases, the tools can demonstrate whether a given code path handles a
 situation correctly but cannot prove that the code path is robust against
-other problematic inputs.
+other problematic inputs.  In the future, CrashSimulator could use smart
+fuzzing path exploration techniques to generate tests that reach relevant
+system calls apply SEA at that point.
 
 %\noindent
 %{\bf Runtime verification:}
