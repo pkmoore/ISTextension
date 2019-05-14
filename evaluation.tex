@@ -715,8 +715,9 @@ tests asynchronously and in other situations it will be more efficient than
 running the program natively since {\tt rr's} replay does not require
 actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
-Even without these improvements, however, CrashSimulator's runtime is more
+Even without these improvements, however, CrashSimulator's performance
+cost is more
 than manageable when the value it provides is taken into account.  The
 cumulative runtime required to execute the tests required to produce the
 results listed in Table~\ref{table:unexpectedtypes} is around 90 seconds.
-Given this success, the increased runtime is worth the wait.
+Given this success, the increased time is worth the wait.
