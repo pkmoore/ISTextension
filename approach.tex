@@ -238,7 +238,8 @@ This simple yes or no approach
 is often sufficient
 to classify application behavior.
 Section~\ref{sec-move-bugs} demonstrates finding bugs using the null
-mutator while~\ref{sec-file-type-bugs} illustrates how a more complex
+mutator while Section~\ref{sec-file-type-bugs}
+illustrates how a more complex
 mutator accomplishes the same by simulating unusual situations.
 
 
@@ -268,10 +269,11 @@ or frameworks.
 The second decision was to structure testing around recording and replaying
 applications.  This was done to make tests repeatable and to ease
 the process of manipulating system calls.
-Replay makes tests repeatable by ensure applications will always execute
+Replay makes tests repeatable by ensuring
+applications will always execute
 code paths and present opportunities to simulate anomalies.  In a similar
-fashion, it eases the process of manipulating system calls by ensuring an
-application's state is always the same at a given point in time.
+fashion, it eases the process of manipulating system calls by guaranteeing
+an application's state is always the same at a given point in time.
 These features mean we can easily test multiple scenarios at a given point
 in execution without having to worry about the application's preceding
 activity.
@@ -288,7 +290,7 @@ a complete log of an application's system call activity.
 We chose to make this
 modification because
 while {\tt rr}'s recording contains the system call information we need,
-it is stored in an opaque format that changes frequently.
+it is stored in an opaque format that changes frequently between versions.
 Storing a copy of this information as an {\tt strace} recording bypasses
 this shortcoming and offers the advantage of being human readable.
 
