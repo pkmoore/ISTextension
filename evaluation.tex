@@ -690,17 +690,26 @@ Figure~\ref{figure:performance} shows these results.
         {\tt pr}        & 0m0.135s              & 0m0.888s               & 0m1.017s                   & 0m0.141s        \\
     \bottomrule{}
     \end{tabular}
-    \caption{Performance caption here}
-    \label{table:crossdevice}
+    \caption{This table contains the times required to execute several coreutils applications under different conditions.
+             Native execution time is the time required to execute the application from the command line while
+             CrashSimulator Replay time is the time required to execute it under CrashSimulator using the null mutator with no checker configured.
+             Initial recording time is the time required to create an initial recording with CrashSimulator.  rr replay time is the
+             time required to replay an application using rr without CrashSimulator and is included to demonstrate the additional
+             overhead added by CrashSimulator's other components.}
+    \label{table:performance}
 \end{table}
 
 
 {\bf Findings.}
 Overall, the performance running an application
 under CrashSimulator is around
-an order of magnitude slower
+two orders of magnitude slower
 than the original program being executed without it.
-It should be noted that in most cases
+As can be seen table~\ref{table:performance}, around 20\%
+of this slow down is related to the additional overhead of {\tt rr}'s replay.
+An additional portion is caused by the need to spin up Python's interpreter
+before testing can begin.
+In most cases
 this slowdown is somewhat mitigated by CrashSimulator's ability to process
 tests asynchronously and in other situations it will be more efficient than
 running the program natively since {\tt rr's} replay does not require
@@ -708,6 +717,6 @@ actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
 Even without these improvements, however, CrashSimulator's runtime is more
 than manageable when the value it provides is taken into account.  The
-cumulative runtime required to execute the tests required to find the QQQ
-bugs listed in Table~\ref{table:unexpectedtypes} is around HHHH minutes.
+cumulative runtime required to execute the tests required to produce the
+results listed in Table~\ref{table:unexpectedtypes} is around 90 seconds.
 Given this success, the increased runtime is worth the wait.
