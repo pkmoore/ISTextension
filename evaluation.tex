@@ -663,18 +663,36 @@ native and under CrashSimulator configured to test using the ``Unusual File
 Types'' anomaly discussed earlier.
 Figure~\ref{figure:performance} shows these results.
 
-    \begin{figure}[t]
-        \center{}
-        \fbox{\includegraphics[scale=.75]{images/performance.png}}
-        \caption{\emph{This shows the run time difference between the
-native program and CrashSimulator in seconds.  Each dot indicates an
-        execution.  The X axis shows time values for native executions, and
-        executions under CrashSimulator with 0, 5, 10, and 100 tests
-        performed respectively.
-}}
-         \label{figure:performance}
+%    \begin{figure}[t]
+%        \center{}
+%        \fbox{\includegraphics[scale=.75]{images/performance.png}}
+%        \caption{\emph{This shows the run time difference between the
+%native program and CrashSimulator in seconds.  Each dot indicates an
+%        execution.  The X axis shows time values for native executions, and
+%        executions under CrashSimulator with 0, 5, 10, and 100 tests
+%        performed respectively.
+%}}
+%         \label{figure:performance}
+%
+%    \end{figure}
 
-    \end{figure}
+ \begin{table}[t]
+    \scriptsize{}
+    \begin{tabular}{l p{1cm} p{1cm} p{1.2cm} p{1cm}}
+    \toprule{}
+        Application     & Native Execution Time & Initial Recording Time & CrashSimulator Replay Time & rr Replay Time  \\
+\hline
+        {\tt wc}        & 0m0.007s              & 0m0.473s               & 0m0.668s                   & 0m0.112s        \\
+        {\tt fmt}       & 0m0.007s              & 0m0.321s               & 0m0.707s                   & 0m0.111s        \\
+        {\tt od}        & 0m0.036s              & 0m0.317s               & 0m0.689s                   & 0m0.101s        \\
+        {\tt ptx}       & 0m0.008s              & 0m0.352s               & 0m0.769s                   & 0m0.087s        \\
+        {\tt comm}      & 0m0.132s              & 0m0.371s               & 0m0.776s                   & 0m0.141s        \\
+        {\tt pr}        & 0m0.135s              & 0m0.888s               & 0m1.017s                   & 0m0.141s        \\
+    \bottomrule{}
+    \end{tabular}
+    \caption{Performance caption here}
+    \label{table:crossdevice}
+\end{table}
 
 
 {\bf Findings.}
