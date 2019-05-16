@@ -14,6 +14,7 @@ Typically testers
 focus on explicit inputs to the application
 and overlook the implicit inputs
 coming from these uncontrolled components.
+
 Anything external to the application can be
 configured in unexpected ways.
 For example, library search rules can result in default system libraries
@@ -51,7 +52,7 @@ failures and multi-disk layouts impose additional requirements on
 common operations such as moving a file from one location to
 another.
         We explore the latter two situations in our
-        evaluation(Sec.~\ref{sec-env-bugs}).
+        evaluation (Sec.~\ref{sec-env-bugs}).
 
 \item {\bf Network.} Both local and remote network nodes
 can have specific characteristics that could influence the behavior of an
@@ -94,7 +95,7 @@ an application makes.
 We took advantage of this in our implementation of SEA as CrashSimulator by
 intercepting and manipulating system call results.
 As we will discuss, this allowed us to strike a good medium between a
-higher level approach such has hooking library functions and a lower level
+higher level approach, such as hooking library functions, and a lower level
 approach like directly altering memory values.
 In our evaluation we take a deeper look at anomalies from
 these three categories in order to assess the technique's effectiveness.

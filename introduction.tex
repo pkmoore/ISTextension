@@ -53,77 +53,49 @@ in response to the Spectre Intel CPU vulnerability
 resulted in machines with certain hardware configurations
 being rendered unbootable~\cite{kb4056892}.
 
+What is needed is a methodical way to record and preserve specific features of any environment proven to have caused an incorrect response in applications. By recording,
+storing, and cataloging these features, which we call \textit{anomalies}, we offer developers a
+systematic and reproducible strategy for future application tests, without requiring per application effort. This is an improvement over current practices, where findings are often lost or, at best, preserved as institutional knowledge that may not survive developer turnover.
 
-The work documented in this paper
-seeks to move the needle in the developer's favor
-by presenting a new technique for catching environmental bugs
-before deployment.
-Guiding our efforts
-is a technique
-we call \textit{Simulating Environmental Anomalies}(SEA).
-This technique is founded upon the key insight
-that problematic environmental properties,
-which we refer to as \textit{anomalies},
-can often be detected
-in the function calls,
-system calls,
-or other communications an application makes within an environment.
-When employing SEA,
-the anomalies
-unique to a given environment
-can be inserted into
-the communications of an application under test
-in such a way
-that its responses will indicate potential
-for failures upon deployment.
-These anomalies can be preserved and cataloged
-allowing them to be reused to test other applications,
-without requiring
-per-application effort.
-Over time,
-a corpus of environmental anomalies can be assembled
-that can help ensure
-future applications do not suffer from bugs of the past.
+In  this paper, we document the development and implementation of a new
+approach to finding and preserving bugs that we call \textit{Simulating
+Environmental Anomalies}(SEA). This technique is founded upon the key
+insight that problematic environmental properties can often be detected
+in the function calls, system
+calls, or other communications an application makes within an
+environment. When employing SEA, anomalies unique to a given environment
+can be inserted into the communications of
+an application under test in such a way that its responses will indicate
+potential for failures upon deployment. In this way, developers are given
+an easy and inexpensive way to learn from the mistakes of others, and
+thus save money and programming hours that otherwise would be spent to
+find and fix environmental bugs.
 
-To evaluate the ability of this technique to reveal environmental
-bugs, we built and tested a proof of concept tool
+Tests of this technique, conducted in the form of a proof of concept tool
 called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
-variety of rare, adverse scenarios (water landings, engine failures, etc.)
-before the pilots are certified to work in practice.}
-which implements SEA
-by intercepting and manipulating an application's system calls.
-Our results showed that the tool was able to find bugs,
-both known and unknown,
-in Linux applications ranked highly on Debian's popularity
-contest~\cite{DebPopCon}.
-The applications were exposed
-to environmental anomalies present as a result of unanticipated
-file system configurations, file types, and network delays.
-When the applications in
-question were actually exposed to these conditions a variety of failures
-including hangs, crashes, and filesystem damage occurred.  In total,
-65 bugs were identified in this manner.
-The effort required to set up real
-environments where these conditions are present
-and execute the same applications within them
-would far exceeded the time required to evaluate them
-using simulation -- further illustrating the benefit offered by SEA.
+variety of rare, adverse scenarios (water landings, engine failures,
+etc.) before the pilots are certified to work in practice.}, we were
+able to find bugs, both known and unknown, in Linux applications ranked
+highly on Debian’s popularity contest~\cite{DebPopCon}. The tool proved
+its efficacy in identifying environmental anomalies attributed to
+unanticipated file system configurations, file types, and network delays
+that can cause a variety of failures, including hangs, crashes, and
+filesystem damage.  In total, the SEA technique was able to identify 65
+bugs.  Furthermore, we were able to identify these bugs with much less
+time and effort than would be required to set up real environments and
+execute the same applications within them, making SEA a more feasible
+approach for developers to use in real-world settings.
 
-In addition to demonstrating that
-CrashSimulator could find bugs, we were also able to
-show that developers with varying backgrounds
-could use the tool
-on real world applications with ease.
-We conducted a user study with
-12 undergraduate and graduate computer science students
-who were asked to use CrashSimulator to test
-the same type of applications evaluated in our initial tests.
-The results show that the developers were able to find bugs
-that were missed by the applications' existing testing strategies.
-Additionally, the
-participants were able to find bugs
-in environments with which they had only a limited amount of experience.
+Another benefit of using the SEA technique is we were able to affirm its
+useability, even for those developers with limited experience. Using the
+CrashSimulator tool, 12 undergraduate and graduate computer science
+students were able to complete tests of the same type of applications
+evaluated in our initial experiments. The results show that the
+developers were able to find bugs that had been missed by the
+applications’ existing testing strategies. Additionally, the participants
+were able to find bugs in environments with which they had only a limited
+amount of experience.
 
 The main contributions in this work can be summarized as follows:
 
@@ -154,6 +126,6 @@ in widely deployed and highly tested code.}
 of {\em CrashSimulator}
 by presenting results
 showing developers
-could use the tool to find real bugs in real applications.}
+can use the tool to find real bugs in real applications.}
 
 \end{itemize}
