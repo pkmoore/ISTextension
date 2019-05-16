@@ -16,11 +16,12 @@ reveal previously undiscovered flaws.
 These flaws emerge from
 such factors as
 operating system APIs changing across versions
-~\cite{LinuxGlibcChanges},
+~\cite{LinuxGlibcChanges, WinAPICompat, MuslDifferences},
 or small variations in file systems exhibiting subtle but critical
-differences~\cite{EXT4Layout, AppleHFS}.
+differences~\cite{EXT4Layout, AppleHFS, WindowsNTFS}.
 Even if the network and adapter are identical,
-network behavior can still diverge from what is expected~\cite{vbox},
+network behavior can still diverge from what is expected~\cite{vbox,
+NMAPOSDifferences, VMWareNATFailure},
 and these environmental differences greatly exacerbate
 the chance that an application will function incorrectly when deployed.
 
@@ -71,16 +72,20 @@ an easy and inexpensive way to learn from the mistakes of others, and
 thus save money and programming hours that otherwise would be spent to
 find and fix environmental bugs.
 
-Tests of this technique, conducted in the form of a proof of concept tool
+We found SEA capable of finding bugs,
+both known and unknown,
+in Linux applications ranked
+highly on Debian’s popularity contest~\cite{DebPopCon}
+when we constructed a proof of construct tool
 called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
 variety of rare, adverse scenarios (water landings, engine failures,
-etc.) before the pilots are certified to work in practice.}, we were
-able to find bugs, both known and unknown, in Linux applications ranked
-highly on Debian’s popularity contest~\cite{DebPopCon}. The tool proved
-its efficacy in identifying environmental anomalies attributed to
+etc.) before the pilots are certified to work in practice.}
+and evaluated it.
+These findings included bugs
+attributed to
 unanticipated file system configurations, file types, and network delays
-that can cause a variety of failures, including hangs, crashes, and
+and resulted in a variety of failures, including hangs, crashes, and
 filesystem damage.  In total, the SEA technique was able to identify 65
 bugs.  Furthermore, we were able to identify these bugs with much less
 time and effort than would be required to set up real environments and
@@ -93,7 +98,7 @@ CrashSimulator tool, 12 undergraduate and graduate computer science
 students were able to complete tests of the same type of applications
 evaluated in our initial experiments. The results show that the
 developers were able to find bugs that had been missed by the
-applications’ existing testing strategies. Additionally, it showed that
+applications’ existing testing strategies. Additionally, it indicated that
 the participants were able to find environmental bugs in
 Linux applications in spite of the
 fact that they had limited Linux experience.
