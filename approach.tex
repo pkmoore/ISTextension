@@ -59,12 +59,12 @@ application should respond once the $X$ has been encountered.
 To test if another application, $B$, also has a problem with $X$,
 $mutX(B)$ is used to apply $\Delta X$ to its communications
 (sec.~\ref{SUBSUB:MutatingCommunications}).
-$checkX(B)$ is then used to determine whether the
+$checkX(B)$ is then used to determine whether
 $B$ has responded correctly to $X$(sec.~\ref{SUBSUB:CheckingResponse}).
-If the checker accepts the $B$'s behavior
-after the $X$ is simulated,
-we report it has been handled.
-If the checker doesn't accept we report that it hasn't.
+If the checker accepts $B$'s behavior
+after $X$ is simulated,
+we report it has been handled correctly.
+If the checker doesn't accept, we report that it has not responded corrextly.
 Once created,
 these pieces act as the persistent medium in which the details of
 a given anomaly are stored.
@@ -124,7 +124,7 @@ is vulnerable to a widely publicized bug.
 
 The chosen anomalies are then examined
 to determine how they change the results
-of system calls an application makes
+of system calls an application makes as
 compared to a normal execution.
 Once teased out,
 these differences delineate
@@ -134,8 +134,8 @@ in order to simulate the chosen anomaly or anomalies.
 These details are used to
 construct both a mutator and a checker.
 The mutator encodes
-a description of when in execution an anomaly can be simulated
-and the details of how to simulate it.
+a description of when in execution an anomaly can be simulated,
+as well as details of how to conduct that simulation.
 The checker
 (or set of checkers)
 stores a characterization of
@@ -149,7 +149,7 @@ an anomalous environment
 where access to a required file is denied because of
 the environment's file security configuration.
 With this anomaly,
-attempts to access the file
+attempts to access the file,
 such as calls to {\tt fread()},
 or the {\tt read()} system call,
 will fail with an error stating that access to the file is denied.
@@ -163,12 +163,11 @@ As described in \ref{SUBSUB:CheckingResponse},
 an associated checker would be built to
 examine the application's behavior after a simulation and assess its
 correctness.
-Preserving the details of this anomaly
-as a mutator and checker
-allows them to be
+Preserving the details of anomalies like this in the form of 
+mutators and checkers
+allow them to be
 easily used
-to see how future applications
-respond to this anomaly.
+to test responses of future applications.
 
 \subsubsection{Mutating System Call Results}
 \label{SUBSUB:MutatingCommunications}
@@ -178,10 +177,10 @@ These situations are identified
 with the help of the chosen anomaly's
 mutator.
 In practice,
-this means providing the
-mutator with the system calls
-the application makes
-so that it can identify sequences
+this means providing the system calls
+an application makes to the
+mutator 
+so it can identify sequences
 indicative of such opportunities.
 At the appropriate time,
 the application's system calls
@@ -194,8 +193,8 @@ simulating an anomaly only requires
 the modification of a single value.
 In more complex cases,
 large numbers of diverse system calls
-need to be interdicted and altered
-in order to correctly simulate an anomaly.
+will need to be interdicted and altered
+in order to provide a correct simulation.
 The above file access scenario, for example,
 requires the modification of a single system call.
 Simulating something more complex,
@@ -210,12 +209,12 @@ SEA relies on checkers
 to provide a flexible approach to assess the way an application
 behaves after it has encountered an anomaly.
 A checker is constructed to store
-some behavior that the application should undertake
-in response to simulated anomaly.
+thw behavior an application should undertake
+in response to a simulated anomaly.
 It looks for this behavior by examining an application's system calls
-before, during, and after the simulation of an anomaly.
+before, during, and after simulation.
 The checker then reports whether the application has handled
-the anomaly based on whether or not it observed the behavior for which it
+the anomaly correctly, based on whether it observed the behavior for which it
 was built to look.
 
 As an example, consider the ``default checker'' from CrashSimulator.
@@ -226,7 +225,7 @@ to the anomaly.
 This determination is made based
 on the assumption
 that such a response will yield
-different program paths (and therefore different system calls).
+different program paths, and therefore different system calls.
 If the application
 does not alter its behavior, it has not
 correctly handled this flaw.
@@ -245,49 +244,24 @@ mutator accomplishes the same by simulating unusual situations.
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
 \label{SUBSEC:ApproachCrashSim}
-The construction of CrashSimulator,
-our concrete implementation of SEA,
-was driven by two key decisions.
-The first
-was to operate at the system call level,
-rather than manipulating
-calls to library functions, memory accesses, or other points where we could
-influence an application's communications.
-System calls are high enough level that they allow us
-to ignore low level details that would hurt usability while still
-capturing the environmental anomalies we are interested in.
-They also provide us with a
-few technical advantages.
-First, there is already robust tooling in the Linux
-kernel that allows for the interception and modification of system call
-results and side effects.  Additionally, Linux system call semantics are
-well defined which simplifies implementation. Finally, operating at this
-level allows CrashSimulator to test most applications that rely on Linux
-system calls which removes dependency on any specific programming languages
-or frameworks.
+Turning SEA into the concrete implementation that we named CrashSimulator
+required making a few key design decisions. The first, as mentioned in
+Section 2, was choosing to operate at the system call level, rather than
+manipulating calls to library functions, memory accesses, or other points
+where we could influence an application’s communications. Functioning on
+a system call level allowed us to ignore low level details that could
+hurt usability, while still capturing the type of environmental anomalies
+we needed. The already robust tooling in the Linux kernel made the
+interception and modification of system call results and side effects a
+fairly simple process,  and the well-defined semantics in the Linux
+system call streamlined implementation. Finally, our decision to operate
+at this level would allow a tool to test applications written in any
+language that can execute Linux system calls.
 
-The second decision was to structure testing around recording and replaying
-applications.  This was done to make tests repeatable and to ease
-the process of manipulating system calls.
-Replay makes tests repeatable by ensuring
-applications will always execute
-code paths and present opportunities to simulate anomalies.  In a similar
-fashion, it eases the process of manipulating system calls by guaranteeing
-an application's state is always the same at a given point in time.
-These features mean we can easily test multiple scenarios at a given point
-in execution without having to worry about the application's preceding
-activity.
-
-Recording and replay was
-achieved using the {\tt rr} debugger~\cite{rrwebsite}.
-Some modifications to {\tt rr} were required in order to
-tailor it more closely to our needs.
-These modifications allow
-a {\tt strace}-style
-system call recording to be output alongside {\tt rr's} normal recording
-format, providing
-a complete log of an application's system call activity.
-We chose to make this
+We also wanted any implementation of SEA to be repeatable, and to offer
+an easy way to manipulate system calls. For this task, we employed a
+modified {\tt rr} debugger~\cite{rrwebsite} to record and replay applications. The modifications permitted a {\tt strace}-style system call recording to be
+output alongside {\tt rr's} normal recording format, creating a complete log of an application’s system call activity. We chose to make this
 modification because
 while {\tt rr}'s recording contains the system call information we need,
 it is stored in an opaque format that changes frequently between versions.
@@ -312,16 +286,13 @@ this shortcoming and offers the advantage of being human readable.
 %to accept situations where they observed sequences indicative of such
 %behavior.
 
-Simulating anomalies
-is done using
-a technique
-we call {\it process set cloning}.
-The {\tt rr} debugger manages,
+Another challenge in implementing SEA was it required a method to simulate anomalies. During testing and early applications we introduced a new technique called {\it process set cloning}.  As noted above, 
+the {\tt rr} debugger manages,
 and can copy,
 the full set of processes underlying an application
 so that users can test debugging
 hypotheses without damaging the original.
-We extended this capability
+However, we extended this capability
 by liberating process set copies from {\tt rr}.
 This means that given application $Y$
 consisting of processes $a$, $b$, and $c$
