@@ -77,12 +77,12 @@ Though, in many cases, this operation can be handled
 atomically by the operating system
 through the {\tt rename()} system call, in situations where the source file and destination file are on different storage devices,
 the application must be done
-manually. 
+manually.
 This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
-{\bf Method.}  
+{\bf Method.}
 CrashSimulator was configured
 to test each of the applications listed in Table~\ref{table:crossdevice}
 to see which might fail to correctly move a file from one disk to another. The tests were completed using just the Null Mutator and a set of custom-constructed checkers that encoded the correct steps involved in moving a file from one
@@ -167,7 +167,7 @@ of an application.
 This introduces problematic scenarios
 so an application's response
 can be evaluated.
-For an effective test of the 
+For an effective test of the
 tool's capabilities to find bugs created from these function,
 we needed to pick an anomaly
 that would arise during a common situation,
@@ -205,13 +205,13 @@ interact inappropriately with a given file type.
 In order to confirm the accuracy of CrashSimulator's assessments, we
 exposed a subset of all the Coreutils applications tested to
 a simulation of the unusual file
-types to get an idea of how they would respond. 
+types to get an idea of how they would respond.
 Identifying these bugs involves changing an application's execution to induce its response to an unexpected file type. For
 example, the {\tt sed} application, which modifies the contents of a text
 file according to a provided command string, could instead be provided a symbolic
 link, a directory, or a character device.  CrashSimulator
 accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
-or {\tt lstat()} that an application makes to examine the file, and 
+or {\tt lstat()} that an application makes to examine the file, and
 changing the results to simulate
 one of the special file types.  If the application responds to
 this injected information, then its likely the special
@@ -221,10 +221,10 @@ being handled correctly.
 
 For each application,
 CrashSimulator was configured to simulate all of the non-standard file
-types.  The values inserted into the results of the {\tt stat()}-like calls made by the application are shown in 
+types.  The values inserted into the results of the {\tt stat()}-like calls made by the application are shown in
 Table~\ref{table:unexpectedtypes}.
 A result of ``Expected Type (ET)'' indicates
-that this is the file type the application was expecting, as it matches  what was provided when the application was initially recorded.  
+that this is the file type the application was expecting, as it matches  what was provided when the application was initially recorded.
 A result of ``\tickmark'' indicates that the application
 identified it was being provided with an unexpected file type and its
 execution diverged, a signal that it was potentially handling the
@@ -369,7 +369,7 @@ without actually spending any time waiting.
 
 An application's failure
 to time out responsibly
-is not just an inconvenience. Attackers can take advantage of this flaw 
+is not just an inconvenience. Attackers can take advantage of this flaw
 to consume resources and potentially cause a denial of service situation.
 This failure was exploited by the slowloris~\cite{Slowloris} tool
 to enhance the ability
@@ -495,10 +495,10 @@ an anomaly when, in reality, it does not.
 
 \textbf{False Positives.}
 The primary source of false positives in CrashSimulator is an application
-implementing a given operation with a different sequence of system calls 
+implementing a given operation with a different sequence of system calls
 than was expected by the mutator.
 Once identified, CrashSimulator's approach allows these
-situations to be easily corrected. 
+situations to be easily corrected.
 This is similar to the circumstance where an
 application's test suite is missing a test, necessitating that the
 developer construct it.
