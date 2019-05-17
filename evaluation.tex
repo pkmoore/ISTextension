@@ -41,15 +41,14 @@ to answer the following questions:
 environmental bugs?}
 \label{sec-env-bugs}
 
-The most crucial question to ask about CrashSimulator
-is how readily it can
+The most crucial question to ask about the SEA technique and the tool we implemented from it is can we
 identify bugs
-caused by a wide variety of environmental differences.
+caused by different types of problematic environmental features.
 We have already established
-that these bugs can arise from
+that such bugs can arise from
 unusual filesystem and network situations,
 so we configured the tool to look
-for bugs that could be triggered by these features.
+for bugs that could be triggered in this manner.
 We found the specific anomalies used for this evaluation
 by examining public bug trackers,
 the source code of major portable applications, and the capabilities of
@@ -68,33 +67,25 @@ by the GNU Coreutils project.
 \subsubsection{The simplest case - A Filesystem Bug Found With the Null Mutator}
 \label{sec-move-bugs}
 In our first test we decided to evaluate the tool in its simplest possible
-configuration -- employing the {\bf ``null mutator''}.
+configuration -- employing the {\bf ``null mutator.''}
 This mutator takes no action and simulates no anomalous conditions.
-It simply allows checkers
-a chance to evaluate an application's behavior
-as it carries out a potentially-buggy operation unhindered.
-To test CrashSimulator's ability to find bugs
-in this fashion, we decided to look at how applications
-move files about on the filesystem.
-In many cases this operation can be handled
+It simply allows checkers to evaluate an application's behavior
+as it carries out a potentially-buggy operation.
+We decided to look at how applications
+move files around on the filesystem.
+Though, in many cases, this operation can be handled
 atomically by the operating system
-through the {\tt rename()} system call.
-However,
-in situations where the source file and destination file
-are on different storage devices,
-the application must
-manually perform all of the required steps.
+through the {\tt rename()} system call, in situations where the source file and destination file are on different storage devices,
+the application must be done
+manually. 
 This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 
-{\bf Method.}  For this portion of our evaluation
+{\bf Method.}  
 CrashSimulator was configured
 to test each of the applications listed in Table~\ref{table:crossdevice}
-using the Null Mutator and a set of checkers constructed find applications
-that fail to correctly move a file from one disk to another.
-Catching this particular class of bugs requires
-checkers that encode the correct steps involved in moving a file from one
+to see which might fail to correctly move a file from one disk to another. The tests were completed using just the Null Mutator and a set of custom-constructed checkers that encoded the correct steps involved in moving a file from one
 storage device to another.
 After examining several libraries and applications,
 we found that
@@ -107,21 +98,20 @@ types of checks and operations:
 
 \begin{itemize}
     \item{{\it Source Replaced.} An application should make an effort
-to ensure that the file being copied is not replaced between the time it is initially examined and the time it is opened for copying.
-If these checks are not performed it
+to ensure that the file being copied is not replaced between the time it is initially examined and when it is opened for copying.
+If these checks are not performed, it
 means the application will proceed with its operations,
-        leaving open the possibility of file corruption~\cite{PythonShutilBug}}.
+        making file corruption~\cite{PythonShutilBug}} possible.
 
     \item{{\it Preserve Xattrs}
 When copying a file,
 an application should retrieve extended file attributes from the source
-file and, later, apply them to the destination file.  Failure to do so can
-        lead to security problems~\cite{AppleCodeSigning}.}
+file and, later, apply them to the destination file.  Failure to do so can lead to security problems~\cite{AppleCodeSigning}.}
 
     \item{{\it Preserve Timestamps}  It is important to ensure
 that time related metadata --
-such as creation, modification, and access times
-are preserved when copying a file as
+such as creation, modification, and access times  --
+are preserved when copying a file, as
 incorrect timestamps can impede applications like in {\tt make},
         archival programs, and similar software~\cite{NautilusTimestamps,
         SudoTimestamp}.}
@@ -131,7 +121,7 @@ Files of this variety must be moved
 by creating a new device of the same type at the destination,
 instead of exhaustively reading and writing its contents.
 In our experience, applications that fail to perform this check
-can end up completely filling a disks, exhausting available memory,
+can end up completely filling disks, exhausting available memory,
         or blocking forever, which can cause the system to become unresponsive.}
 
 \end{itemize}
@@ -163,28 +153,23 @@ applications tested fails to perform one or more of the steps required to
 successfully complete a cross-device move.  This is an unfortunate situation
 because a failure to perform any one of these steps can result in negative
 outcomes for the system as a whole.
-Our results indicate that CrashSimulator is able to identify whether complex
-operations are performed correctly in anomalous situations in
-an array of popular programs.
-This includes the standard libraries for the programming languages Python,
-Perl, and Rust, along with other widely used software.  This is true even
-when many libraries have correct behavior in some cases, but not others.
-
+Our results indicate that CrashSimulator is able to identify whether an array of popular programs, including the standard libraries for the programming languages Python, Perl, and Rust, can correctly perform complex
+operations in anomalous situations.
+This is true even
+when libraries are inconsistent, showing correct behavior in some cases, but not others.
 
 \subsubsection{A More Complex Case - The Unexpected File Types Mutator}
 \label{sec-file-type-bugs}
 
-Employing a mutator
-with more complexity than the null mutator
-allows CrashSimulator to inject anomalies into an execution
+If a more complex mutator is to be employed, then
+CrashSimulator will inject anomalies into an execution
 of an application.
 This introduces problematic scenarios
-so that the way an application responds
+so an application's response
 can be evaluated.
-To test
-the tool's capabilities
-at this point,
-we needed an anomaly
+For an effective test of the 
+tool's capabilities to find bugs created from these function,
+we needed to pick an anomaly
 that would arise during a common situation,
 such as when a Linux application retrieves
 and processes data from a file.
@@ -207,61 +192,52 @@ For example,
 that produces an infinite amount
 of pseudo-random data
 when read.
-If an application that reads the full
+If an application reads the full
 contents of a file before processing is provided {\tt /dev/urandom}, it
-will fill memory or disk space and could
+will fill memory or disk space, and could
 crash the system~\cite{YumAptEndless}.
 Correct execution in these situations
-requires applications
-to examine the files so they do not
+requires that applications
+examine the files, so they do not
 interact inappropriately with a given file type.
 
 {\bf Method.}
-In order to confirm the accuracy of CrashSimulator's assessments we
-exposed a subset of the Coreutils applications tested to
+In order to confirm the accuracy of CrashSimulator's assessments, we
+exposed a subset of all the Coreutils applications tested to
 a simulation of the unusual file
-types to get an idea of how they would respond.
-Identifying these bugs involves changing an application's
-execution to induce its response to an unexpected file type.  For
+types to get an idea of how they would respond. 
+Identifying these bugs involves changing an application's execution to induce its response to an unexpected file type. For
 example, the {\tt sed} application, which modifies the contents of a text
-file according to a provided command string, could be provided a symbolic
-link, a directory, or a character device instead.  CrashSimulator
+file according to a provided command string, could instead be provided a symbolic
+link, a directory, or a character device.  CrashSimulator
 accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
-or {\tt lstat()} that an application makes to examine the file, and then
-changing their results to simulate
+or {\tt lstat()} that an application makes to examine the file, and 
+changing the results to simulate
 one of the special file types.  If the application responds to
-this injected information then there is the possibility that the special
+this injected information, then its likely the special
 file will be handled correctly.  On the other hand, if there is no
-alteration in the behavior of the application,  then the condition is not
+alteration in the behavior of the application, the condition is not
 being handled correctly.
 
 For each application,
 CrashSimulator was configured to simulate all of the non-standard file
-types and
-Table~\ref{table:unexpectedtypes} shows the values that CrashSimulator
-inserted into the results of the {\tt stat()}-like calls made by the
-application.
+types.  The values inserted into the results of the {\tt stat()}-like calls made by the application are shown in 
+Table~\ref{table:unexpectedtypes}.
 A result of ``Expected Type (ET)'' indicates
-that this is the file type the application was provided
-when the application was initially recorded -- that is,
-a file of the type the application was expecting.
+that this is the file type the application was expecting, as it matches  what was provided when the application was initially recorded.  
 A result of ``\tickmark'' indicates that the application
 identified it was being provided with an unexpected file type and its
-execution diverged,
-indicating that it was potentially handling the
-unexpected file type correctly.
-A result of ``\xmark'' indicates that the
-application failed to recognize the presence of the unusual file type
-because execution never diverged from the trace being replayed.
-We manually examined a subset of the listed application behaviors simulated by
-CrashSimulator and verified they were consistent with the actual behavior
+execution diverged, a signal that it was potentially handling the
+file type correctly.
+A result of ``\xmark'' indicates that the execution never diverged from the trace being replayed, and thus failed to recognize the presence of an unusual file type. We manually examined a subset of the  application behaviors simulated by
+CrashSimulator, and verified they were consistent with the actual behavior
 on the given file type.
 
 {\bf Findings.}
 The frequency of failed executions in our results,
 which are shown in Table 2,
 indicates that many
-applications make the assumption that they will only be used to process
+applications assume they will only be used to process
 regular files.  When this assumption does not hold, execution results
 can be hard to predict.
 In many cases a denial of
@@ -274,8 +250,8 @@ or an application attempting
 to read in and process an
 ``infinitely large'' file.
 This situation is particularly dangerous as
-it can eventually lead to
-fill all available memory or disk space being filled~\cite{Cappos_CCS_08}.
+it can eventually
+fill all available memory or disk space~\cite{Cappos_CCS_08}.
 
 
 \begin{table*}[t]
@@ -342,20 +318,18 @@ fill all available memory or disk space being filled~\cite{Cappos_CCS_08}.
 \end{table*}
 
 
-In order to confirm the accuracy of CrashSimulator's assessment we manually
-exposed a subset of the Coreutils applications we tested to the unusual
+In order to confirm the accuracy of CrashSimulator's assessment, we manually
+exposed a subset of the Coreutils applications tested to the unusual
 file types to get an idea of how they would respond.
 Table~\ref{table:applicationresponses} contains the results of this test.
-CrashSimulator's evaluation of an application can map to real world bug behavior
+The tool's evaluation of an application can map to real world bug behavior
 in a few different combinations
-One
-possibility is that CrashSimulator asserts that the application will fail
-and in practice, it does.  This is the case when we evaluated
-the response of  {\tt install} being provided a character device
-rather than a regular file. CrashSimulator predicted failure and the
-application ended up filling the disk of the machine on which it was run.  The
-opposite can also occur.  That is, CrashSimulator reports that the
-application detected the anomalous condition and the application manages to
+One is that CrashSimulator asserts that the application will fail
+and in practice, it does.  We found this when we evaluated
+the response of  {\tt install} receiving a character device
+rather than a regular file. Our test predicted failure and the
+application ended up filling the disk of the machine on which it was run. In other cases, CrashSimulator reported that an
+application had detected the anomalous condition and the application managed to
 do so in practice,  as when we evaluated {\tt wc}'s successful response to
 being run on a directory.
 
@@ -380,34 +354,28 @@ takes too long and should time out.
 {\bf Method.}
 CrashSimulator can detect
 whether an application is vulnerable to this attack
-by employing the null mutator and a network timeout checker
-in order to determine if it makes any effort
+by employing the null mutator and a network timeout checker. The latter
+can determine if the application makes any effort
 to configure its network communications with a timeout value.
-This is done
-by examining the presence or absence of {\tt setsockopt()}, {\tt poll()}
-and {\tt select()} calls as well as the timeout values that may
+This is done by examining the presence or absence of {\tt setsockopt()}, {\tt poll()}
+and {\tt select()} calls, as well as the timeout values that may
 have been passed to them. Applications that do not set the timeout are
-subject to the operating system-defined protocol timeout value (19 minutes
-on Linux).
-CrashSimulator is able to take this analysis a step further by employing a
-Long Network Response Time mutator
+subject to the operating system-defined protocol timeout value (19 minutes on Linux).
+CrashSimulator is able to take this analysis a step further by employing a Long Network Response Time mutator
 that manipulates
 the results of all time-returning calls,
-simulating an execution where close
-to the maximum timeout value occurs,
-without actually spending any time
-waiting.
+simulating an execution where close to the maximum timeout value occurs,
+without actually spending any time waiting.
 
 An application's failure
 to time out responsibly
-is not just an inconvenience --
-it can be taken advantage of by attackers
+is not just an inconvenience. Attackers can take advantage of this flaw 
 to consume resources and potentially cause a denial of service situation.
 This failure was exploited by the slowloris~\cite{Slowloris} tool
 to enhance the ability
 of a small number of computers to prevent access
 to vulnerable web servers
-by opening and maintaining connections to the servers
+by opening and maintaining connections
 for extremely long periods of time.
 As these servers could only handle a set number of connections
 due to resource constraints,
@@ -446,7 +414,7 @@ could be vulnerable to this sort of attack.
 As Table~\ref{table:slowloris} shows, all of these
 applications were vulnerable to this sort of anomaly,
 and in some cases,
-the timeouts took hours to resolve.
+timeouts took hours to resolve.
 What's more, in the vast majority of
 cases, the problem occurs because the application makes no effort to
 specify a timeout value.  This means an attacker can transmit one byte of
@@ -457,14 +425,12 @@ allowing them to keep the application alive instead of quitting.
 
 Another topic of relevance
 in evaluating CrashSimulator
-is how well developers are able to use the tool
+is how well developers with various level of experience are able to use the tool
 to find bugs.
-To investigate this angle
+To investigate this angle,
 we conducted a user study
 with 12 undergraduate and graduate students.
-These students had varying levels
-of operating systems experience
-and minimal training with the tool.
+All of these students received only minimal training on the tool, and their overall familiarity with operating systems varied greatly.
 Still, study participants found a total of 11 bugs using CrashSimulator.
 Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
 Five of these bugs have since been reported to the appropriate maintainers,
@@ -473,8 +439,7 @@ that correct the bug.
 
 These results are important
 because they confirm
-users other than the original development team
-for CrashSimlator
+users other than the original development team for the tool
 can use it to find new bugs in real world applications.
 Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
@@ -493,24 +458,21 @@ the study did reveal
 some shortcomings
 of the tool.
 First,
-it revealed that the tool
+it became clear that the tool
 does not have a clear mechanism
 for determining
-what application behaviors constitute a bug.
-For example,
-it may be the intention of an application's developer
-to have the application run continuously
-until killed by an outside command
-when processing an ``infinitely long'' file,
-and therefore that behavior should not be classified as a bug.
+what application behaviors constitute a "bug."
+For example, an application's developer
+may have intended that an application processing an ``infinitely long'' file should run continuously
+until killed by an outside command.
+Therefore, that behavior should not be classified as a bug.
 Second,
 it demonstrated that
-simply reporting an application did or did not change its behavior
-in the presence of an anomaly is insufficient
-if CrashSimulator's user is unfamiliar
-with what each result indicates in terms of the presence of a bug.
+simply reporting that an application did or did not change its behavior
+in the presence of an anomaly is insufficient data
+if  what each result indicates in terms of the presence of a bug is unclear to the user.
 Both of these issues are being corrected
-by improving what the tool outputs.
+by improving the tool's outputs.
 By more clearly describing
 the nature of a given result,
 users can have a better idea
@@ -523,35 +485,30 @@ they should be concerned.
 \label{sec-sorts-errors}
 
 Like other testing tools, CrashSimulator occasionally makes mistakes.
-Our goal is to minimize these mistakes as incorrect reports can
-undermine a developer's confidence in a tool.  In this section we discuss
+Any such mistakes can
+undermine a developer's confidence in a tool, and thus one of our goals is to minimize these mistakes.   In this section, we discuss
 situations where CrashSimulator made either false positive or false
-negative reports.  False positive reports involve the tool reporting
+negative reports.  A false positive report means the tool reports
 a failure when the application actually handles an anomaly correctly.
-False negative reports happen when the tool reports an application handles
+On the opposite side, false negative reports happen when the tool indicates an application handles
 an anomaly when, in reality, it does not.
 
 \textbf{False Positives.}
-Like most other testing tools, CrashSimulator occasionally makes
-false positive reports.
-Because these errors waste developer time and effort,
-being able to adjust CrashSimulator to eliminate them when they are
-encountered is a key concern.
 The primary source of false positives in CrashSimulator is an application
-using a different sequence of system calls to implement a given operation
-than was expected by mutator.
-CrashSimulator's approach allows these
-situations to be easily corrected, once identified.
+implementing a given operation with a different sequence of system calls 
+than was expected by the mutator.
+Once identified, CrashSimulator's approach allows these
+situations to be easily corrected. 
 This is similar to the circumstance where an
-application's test suite is missing a test, necessitating action by the
-developer to construct it.
+application's test suite is missing a test, necessitating that the
+developer construct it.
 
 We encountered this situation when testing applications that used
 GNOME's {\tt glib} file handling functions.  When an
 application makes use of these facilities to move a file across storage
-devices the library itself correctly performs a
+devices, the library itself correctly performs a
 file move operation.  When we used CrashSimulator with
-checkers that expected a calls to {\tt read()} and {\tt write()}
+checkers that expected a call to {\tt read()} and {\tt write()}
 for a cross-device move, we got reports stating that the
 application {\em did not} perform the system calls necessary to inject
 an anomaly.  By manually
@@ -566,7 +523,7 @@ the pipe and into the destination file.
 Fortunately, as soon as issues like this are discovered,
 CrashSimulator's checkers can be modified to include the alternative
 sequence.
-Given the above example around moving
+Given the above example about moving
 files, consider the mapping from high level ``operation'' to the set of
 system calls that can implement it in Table~\ref{table:stepsandcalls}.
 Each of the steps in the operation map to a small number of system calls
@@ -692,7 +649,7 @@ Figure~\ref{figure:performance} shows these results.
     \end{tabular}
     \caption{This table contains the times required to execute several coreutils applications under different conditions.
              Native execution time is the time required to execute the application from the command line while
-             CrashSimulator Replay time is the time required to execute it under CrashSimulator using the null mutator with no checker configured.
+             CrashSimulator Replay time is the time required to execute it with the tool, using the null mutator with no checker configured.
              Initial recording time is the time required to create an initial recording with CrashSimulator.  rr replay time is the
              time required to replay an application using rr without CrashSimulator and is included to demonstrate the additional
              overhead added by CrashSimulator's other components.}
@@ -704,15 +661,15 @@ Figure~\ref{figure:performance} shows these results.
 Overall, the performance running an application
 under CrashSimulator is around
 two orders of magnitude slower
-than the original program being executed without it.
+than the original program executed without it.
 As can be seen table~\ref{table:performance}, around 20\%
 of this slow down is related to the additional overhead of {\tt rr}'s replay.
 An additional portion is caused by the need to spin up Python's interpreter
 before testing can begin.
 In most cases
 this slowdown is somewhat mitigated by CrashSimulator's ability to process
-tests asynchronously and in other situations it will be more efficient than
-running the program natively since {\tt rr's} replay does not require
+tests asynchronously and, in other situations, it will be more efficient than
+running the program natively, as {\tt rr's} replay does not require
 actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
 Even without these improvements, however, CrashSimulator's performance
