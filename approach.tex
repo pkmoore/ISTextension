@@ -42,22 +42,22 @@ we identify and ``trap'' the particular environmental feature
 (sec.~\ref{SUBSUB:IdentifyingAndEncoding}),
 that caused the failure,  which we call $X$.
 We verify that when $X$ is present,
-communication with the
-environment is different,
+the results of interactions with the
+environment are different,
 sometimes in a barely perceptible manner,
 and other times in a radically contrary manner.
 We call this difference $\Delta X$.
 $\Delta X$ can be extracted, preserved,
-and later used in testing other systems
+and later used in testing other applications
 thanks to a pair of components referred to as a mutator and a checker.
 The mutator, $mutX()$,
 is able to apply $\Delta X$
-to the appropriate places in an application's communications
+to the appropriate places in an application's interactions
 in order to simulate the presence of $X$.
 The checker, $checkX()$ describes how an
 application should respond once the $X$ has been encountered.
 To test if another application, $B$, also has a problem with $X$,
-$mutX(B)$ is used to apply $\Delta X$ to its communications
+$mutX(B)$ is used to apply $\Delta X$ to its interactions
 (sec.~\ref{SUBSUB:MutatingCommunications}).
 $checkX(B)$ is then used to determine whether
 $B$ has responded correctly to $X$(sec.~\ref{SUBSUB:CheckingResponse}).
@@ -163,7 +163,7 @@ As described in \ref{SUBSUB:CheckingResponse},
 an associated checker would be built to
 examine the application's behavior after a simulation and assess its
 correctness.
-Preserving the details of anomalies like this in the form of 
+Preserving the details of anomalies like this in the form of
 mutators and checkers
 allow them to be
 easily used
@@ -179,7 +179,7 @@ mutator.
 In practice,
 this means providing the system calls
 an application makes to the
-mutator 
+mutator
 so it can identify sequences
 indicative of such opportunities.
 At the appropriate time,
@@ -248,7 +248,7 @@ Turning SEA into the concrete implementation that we named CrashSimulator
 required making a few key design decisions. The first, as mentioned in
 Section 2, was choosing to operate at the system call level, rather than
 manipulating calls to library functions, memory accesses, or other points
-where we could influence an application’s communications. Functioning on
+where we could influence an application’s interactions. Functioning on
 a system call level allowed us to ignore low level details that could
 hurt usability, while still capturing the type of environmental anomalies
 we needed. The already robust tooling in the Linux kernel made the
@@ -286,21 +286,17 @@ this shortcoming and offers the advantage of being human readable.
 %to accept situations where they observed sequences indicative of such
 %behavior.
 
-Another challenge in implementing SEA was it required a method to simulate anomalies. During testing and early applications we introduced a new technique called {\it process set cloning}.  As noted above, 
-the {\tt rr} debugger manages,
-and can copy,
-the full set of processes underlying an application
-so that users can test debugging
-hypotheses without damaging the original.
-However, we extended this capability
-by liberating process set copies from {\tt rr}.
-This means that given application $Y$
-consisting of processes $a$, $b$, and $c$
-(written as $Y(a, b, c)$),
-we can generate cloned sets $Y_1(a_1, b_1, c_1)$,
-$Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b, c_n)$.
-$Y_1$, $Y_2$ ... $Y_n$ can then be used to test different scenarios leaving
-the original $Y$ to continue its execution unhindered.
+Another challenge in implementing SEA was it required a method to simulate
+anomalies. During testing and early applications we introduced a new
+technique called {\it process set cloning}.  As noted above, the {\tt rr}
+debugger manages, and can copy, the full set of processes underlying an
+application so that users can test debugging hypotheses without damaging
+the original.  However, we extended this capability by liberating process
+set copies from {\tt rr}.  This means that given application $Y$ consisting
+of processes $a$, $b$, and $c$ (written as $Y(a, b, c)$), we can generate
+cloned sets $Y_1(a_1, b_1, c_1)$, $Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b,
+c_n)$.  $Y_1$, $Y_2$ ... $Y_n$ can then be used to test different scenarios
+leaving the original $Y$ to continue its execution unhindered.
 
 Once generated, the cloned process sets are used
 for testing by the CrashSimulator process supervisor.

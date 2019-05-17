@@ -63,10 +63,11 @@ approach to finding and preserving bugs that we call \textit{Simulating
 Environmental Anomalies}(SEA). This technique is founded upon the key
 insight that problematic environmental properties can often be detected
 in the function calls, system
-calls, or other communications an application makes within an
-environment. When employing SEA, anomalies unique to a given environment
-can be inserted into the communications of
-an application under test in such a way that its responses will indicate
+calls, or other interactions an application makes within an
+environment. When employing SEA,
+an application under test is exposed
+to the anomalies unique to a given environment
+in such a way that its responses will indicate
 potential for failures upon deployment. In this way, developers are given
 an easy and inexpensive way to learn from the mistakes of others, and
 thus save money and programming hours that otherwise would be spent to
