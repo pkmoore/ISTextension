@@ -4,11 +4,11 @@
 
 No matter how well an application is tested before its release,
 new bugs always seem to emerge after deployment.
-In fact, Oracle estimates that 40\% of deployed applications
+Oracle estimates that 40\% of deployed applications
 contain critical defects -- a situation that is compounded
 by the fact that deployment
 increases the cost to fix these flaws by 100 times~\cite{OracleAppQuality}.
-One reason for this behavior
+One reason for this outcome
 is that these applications will operate within a diverse set of
 deployment \emph{environments},
 and variations between these environments tend to
@@ -54,12 +54,16 @@ in response to the Spectre Intel CPU vulnerability
 resulted in machines with certain hardware configurations
 being rendered unbootable~\cite{kb4056892}.
 
-What is needed is a methodical way to record and preserve specific features of any environment proven to have caused an incorrect response in applications. By recording,
-storing, and cataloging these features, which we call \textit{anomalies}, we offer developers a
-systematic and reproducible strategy for future application tests, without requiring per application effort. This is an improvement over current practices, where findings are often lost or, at best, preserved as institutional knowledge that may not survive developer turnover.
+What is needed is a methodical way to record, preserve, and test against
+specific features of any environment proven to have caused incorrect
+behavior in applications. We achieve this by cataloging these
+features, which we call \textit{anomalies}, and
+offering a systematic and reproducible strategy for
+future application tests, without
+requiring per application effort.
 
 In  this paper, we document the development and implementation of a new
-approach to finding and preserving bugs that we call \textit{Simulating
+approach to finding and preserving anomalies that we call \textit{Simulating
 Environmental Anomalies}(SEA). This technique is founded upon the key
 insight that problematic environmental properties can often be detected
 in the function calls, system
@@ -76,30 +80,30 @@ find and fix environmental bugs.
 We found SEA capable of finding bugs,
 both known and unknown,
 in Linux applications ranked
-highly on Debian’s popularity contest~\cite{DebPopCon}
-when we constructed a proof of construct tool
+highly on Debian's popularity contest
+by implementing it in a proof of construct tool
 called {\em CrashSimulator}\footnote{Our approach is
 loosely inspired by flight simulators, which test pilot aptitude under a
 variety of rare, adverse scenarios (water landings, engine failures,
 etc.) before the pilots are certified to work in practice.}
-and evaluated it.
+and evaluating it~\cite{DebPopCon}.
 These findings included bugs
 attributed to
 unanticipated file system configurations, file types, and network delays
 and resulted in a variety of failures, including hangs, crashes, and
 filesystem damage.  In total, the SEA technique was able to identify 65
-bugs.  Furthermore, we were able to identify these bugs with much less
+bugs with much less
 time and effort than would be required to set up real environments and
-execute the same applications within them, making SEA a more feasible
-approach for developers to use in real-world settings.
+execute the same applications within them -- illustrating SEA's
+usefulness for developers in a real-world setting.
 
-We were also able to affirm SEA's usefulness to developers.
-Using the CrashSimulator tool,
-12 undergraduate and graduate computer science
+The success developers unrelated to the project had in finding bugs
+with the tool underscores this usefulness.
+Twelve undergraduate and graduate computer science
 students were able to complete tests of the same type of applications
 evaluated in our initial experiments. The results show that the
 developers were able to find bugs that had been missed by the
-applications’ existing testing strategies. Additionally,
+applications' existing testing strategies. Additionally,
 they indicated that
 the participants were able to find environmental bugs in
 Linux applications in spite of the
