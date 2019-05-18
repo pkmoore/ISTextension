@@ -89,11 +89,6 @@ resulting in the ability to test new applications
 against an ever increasing
 set of problematic conditions.
 
-In this section, we discuss each of the components
-required to implement SEA
-and detail our concrete implementation,
-CrashSimulator~\ref{SUBSEC:ApproachCrashSim}.
-
 \subsection{Primary Operations}
 \label{SEC:PrimaryOperations}
 
@@ -107,8 +102,9 @@ and checking application responses.
 
 \subsubsection{Identifying and Encoding Anomalies}
 \label{SUBSUB:IdentifyingAndEncoding}
-Building this corpus is an ongoing process that improves the technique's
-effectiveness by extending the set of anomalies it can simulate.
+Building a corpus of anomalies
+is an ongoing process that improves the technique's
+effectiveness by extending the set of problematic features it can simulate.
 Anomalies can be sourced
 in a number of ways,
 such as
@@ -117,12 +113,13 @@ in a target deployment environment,
 or by using other tools that can identify
 potentially problematic behavior in other domains~\cite{Zhuang_NSDI_2014,
 rasley2015detecting}.
-Public bug trackers are an ideal source
+Another option is taking this information from
+public bug trackers, which is ideal
 if you wish to determine
 whether or not an application
 is vulnerable to a widely publicized bug.
 
-The chosen anomalies are then examined
+The chosen anomalies are examined
 to determine how they change the results
 of system calls an application makes as
 compared to a normal execution.
@@ -143,8 +140,7 @@ how the application should respond.
 Describing anomalies in this fashion
 allows them to be recorded systematically and cataloged for future use.
 
-Consider,
-for example,
+As an example of the above,
 an anomalous environment
 where access to a required file is denied because of
 the environment's file security configuration.
@@ -176,7 +172,7 @@ correct moments during an execution.
 These situations are identified
 with the help of the chosen anomaly's
 mutator.
-In practice,
+For our work,
 this means providing the system calls
 an application makes to the
 mutator
@@ -208,14 +204,14 @@ be modified to reflect the chosen aberration.
 SEA relies on checkers
 to provide a flexible approach to assess the way an application
 behaves after it has encountered an anomaly.
-A checker is constructed to store
-thw behavior an application should undertake
+A checker models
+the behavior an application should undertake
 in response to a simulated anomaly.
 It looks for this behavior by examining an application's system calls
 before, during, and after simulation.
 The checker then reports whether the application has handled
-the anomaly correctly, based on whether it observed the behavior for which it
-was built to look.
+the anomaly correctly
+based on whether it observed the behavior for which it was built to look.
 
 As an example, consider the ``default checker'' from CrashSimulator.
 It draws a conclusion based on
@@ -228,7 +224,7 @@ that such a response will yield
 different program paths, and therefore different system calls.
 If the application
 does not alter its behavior, it has not
-correctly handled this flaw.
+correctly handled the anomaly.
 Alternatively,
 if the application does deviate,
 it is likely
@@ -236,6 +232,8 @@ an action has occurred to handle the simulated condition.
 This simple yes or no approach
 is often sufficient
 to classify application behavior.
+
+We explore this, and other checkers in our evaluation~\ref{SEC:evaluation}.
 Section~\ref{sec-move-bugs} demonstrates finding bugs using the null
 mutator while Section~\ref{sec-file-type-bugs}
 illustrates how a more complex
@@ -244,54 +242,53 @@ mutator accomplishes the same by simulating unusual situations.
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
 \label{SUBSEC:ApproachCrashSim}
-Turning SEA into the concrete implementation that we named CrashSimulator
+Implementing SEA in CrashSimulator
 required making a few key design decisions. The first, as mentioned in
 Section 2, was choosing to operate at the system call level, rather than
 manipulating calls to library functions, memory accesses, or other points
-where we could influence an application’s interactions. Functioning on
-a system call level allowed us to ignore low level details that could
-hurt usability, while still capturing the type of environmental anomalies
-we needed. The already robust tooling in the Linux kernel made the
+where we could influence an application’s interactions.
+This allowed CrashSimulator
+to test applications written in any
+language that can execute Linux system calls -- a key feature given
+we want to test many applications without per application effort.
+Working with system calls is a good fit
+for simulating the file system,
+network, and operating system anomalies in which we were interested.
+An application normally queries these entities using system calls
+so we simply had to return modified responses in order to simulate an
+anomaly.
+Finally, robust tooling in the Linux kernel made the
 interception and modification of system call results and side effects a
-fairly simple process,  and the well-defined semantics in the Linux
-system call streamlined implementation. Finally, our decision to operate
-at this level would allow a tool to test applications written in any
-language that can execute Linux system calls.
-
-We also wanted any implementation of SEA to be repeatable, and to offer
-an easy way to manipulate system calls. For this task, we employed a
-modified {\tt rr} debugger~\cite{rrwebsite} to record and replay applications. The modifications permitted a {\tt strace}-style system call recording to be
-output alongside {\tt rr's} normal recording format, creating a complete log of an application’s system call activity. We chose to make this
-modification because
-while {\tt rr}'s recording contains the system call information we need,
-it is stored in an opaque format that changes frequently between versions.
-Storing a copy of this information as an {\tt strace} recording bypasses
-this shortcoming and offers the advantage of being human readable.
+fairly simple process,  and the well-defined semantics of Linux
+system calls streamlined implementation.
 
 
-%From these anomalies,
-%we constructed
-%checkers and mutators
-%using finite automata.
-%Mutators work by receiving the sequence of system calls
-%an application makes and accepting situations where the sequence indicates
-%it is appropriate to simulate an anomaly.
-%It then uses its stored
-%description of an anomaly
-%to carry out its simulation.
-%Checkers operate similarly,
-%but, because they encode what a
-%correct response by the application should look like,
-%they were constructed
-%to accept situations where they observed sequences indicative of such
-%behavior.
+In order to take advantage of our ability to simulate anomalies using
+system calls we needed to ensure that an application would reliably make
+the same set of
+system calls, and reach the same simulation opportunities,
+with every execution.
+To this end,
+we employed a modified
+{\tt rr} debugger~\cite{rrwebsite} to record and replay applications. Our
+first modification permitted a {\tt strace}-style system call recording
+to be output alongside {\tt rr's} normal recording format,
+creating a complete log of an application’s system call activity.
+We chose to make this
+modification because, while {\tt rr}'s recording contains the system call
+information we need, it is stored in an opaque format that changes
+frequently between versions.  Storing a copy of this information as an {\tt
+strace} recording bypasses this shortcoming and offers the advantage of
+being human readable.
 
-Another challenge in implementing SEA was it required a method to simulate
-anomalies. During testing and early applications we introduced a new
-technique called {\it process set cloning}.  As noted above, the {\tt rr}
+Our second modification parallelized our testing
+by allowing {\tt rr} to generate copies of a running application when
+it reaches our target simulation opportunities.
+We refer to this new technique as {\it process set cloning}.
+The {\tt rr}
 debugger manages, and can copy, the full set of processes underlying an
 application so that users can test debugging hypotheses without damaging
-the original.  However, we extended this capability by liberating process
+the original.  We extended this capability by liberating process
 set copies from {\tt rr}.  This means that given application $Y$ consisting
 of processes $a$, $b$, and $c$ (written as $Y(a, b, c)$), we can generate
 cloned sets $Y_1(a_1, b_1, c_1)$, $Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b,
@@ -312,14 +309,14 @@ on the log in order to alter it to include the responses
 necessary to simulate an anomaly.
 Once these alterations are in place,
 the supervisor is able to impose an anomaly
-on the application by returning the responses from the log.
+on the application by returning the now-modified responses from the log.
 
 During this process,
 a corresponding checker
 monitors the application's behavior,
 allowing it to report on the correctness of the response.
 For example, testing could proceed in the following way.
-At a given point in the execution of application $Y$,
+At a given simulation opportunity when executing application $Y$,
 cloned sets $Y_1$ and $Y_2$ are generated and
 used to test two scenarios where a file access could fail:
 \begin{enumerate}
@@ -334,7 +331,7 @@ high degree of speed and
 parallelism to the testing process.
 At the same time, the original $Y$ execution continues unhindered to the
 next simulation opportunity where this process repeats.
-Keeping $Y$ intact
+Keeping the original execution intact
 (as opposed to destroying it by introducing an error state)
 avoids the penalty
 of having to restart a new execution for each test.
