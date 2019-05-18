@@ -25,9 +25,8 @@ to answer the following questions:
 
 \begin{enumerate}
 
-\item{Is CrashSimulator able to identify a wide variety of environmental
-    bugs?
-(Subsection~\ref{sec-env-bugs})}
+\item{Is CrashSimulator able to identify bugs in real world applications?
+    (Subsection~\ref{sec-env-bugs})}
 
 \item{What Sorts of Errors Does CrashSimulator Make?
     (Subsection~\ref{sec-sorts-errors})}
@@ -37,16 +36,16 @@ to answer the following questions:
 
 \end{enumerate}
 
-\subsection{Is CrashSimulator able to identify a wide variety of
-environmental bugs?}
+\subsection{Is CrashSimulator able to identify bugs in real world
+applications?}
 \label{sec-env-bugs}
 
 The most crucial question to ask about the SEA technique and the tool we implemented from it is can we
 identify bugs
 caused by different types of problematic environmental features.
 We have already established
-that such bugs can arise from
-unusual filesystem and network situations,
+that
+unusual filesystem and network situations can cause an application to fail,
 so we configured the tool to look
 for bugs that could be triggered in this manner.
 We found the specific anomalies used for this evaluation
@@ -75,9 +74,10 @@ We decided to look at how applications
 move files around on the filesystem.
 Though, in many cases, this operation can be handled
 atomically by the operating system
-through the {\tt rename()} system call, in situations where the source file and destination file are on different storage devices,
-the application must be done
-manually.
+through the {\tt rename()} system call,
+in situations where
+the source file and destination file are on different storage devices,
+the operation must be performed manually by the application.
 This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
@@ -85,7 +85,9 @@ frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
 {\bf Method.}
 CrashSimulator was configured
 to test each of the applications listed in Table~\ref{table:crossdevice}
-to see which might fail to correctly move a file from one disk to another. The tests were completed using just the Null Mutator and a set of custom-constructed checkers that encoded the correct steps involved in moving a file from one
+to see which might fail to correctly move a file from one disk to another.
+The tests were completed using just the Null Mutator and a set of
+checkers that model the correct steps involved in moving a file from one
 storage device to another.
 After examining several libraries and applications,
 we found that
@@ -94,29 +96,29 @@ Therefore, we
 used its behavior as a template to create a set of checkers
 that evaluate whether or not
 the application correctly performs the following
-types of checks and operations:
+steps.
 
 \begin{itemize}
-    \item{{\it Source Replaced.} An application should make an effort
-to ensure that the file being copied is not replaced between the time it is initially examined and when it is opened for copying.
+    \item{{\it Confirm Source Not Replaced During Copy.} An application
+        should make an effort to ensure that the file being copied is not replaced between the time it is initially examined and when it is opened for copying.
 If these checks are not performed, it
 means the application will proceed with its operations,
         making file corruption~\cite{PythonShutilBug}} possible.
 
-    \item{{\it Preserve Xattrs}
+    \item{{\it Preserve Extended File Attributes.}
 When copying a file,
 an application should retrieve extended file attributes from the source
 file and, later, apply them to the destination file.  Failure to do so can lead to security problems~\cite{AppleCodeSigning}.}
 
-    \item{{\it Preserve Timestamps}  It is important to ensure
+    \item{{\it Preserve Timestamps.}  It is important to ensure
 that time related metadata --
 such as creation, modification, and access times  --
 are preserved when copying a file, as
-incorrect timestamps can impede applications like in {\tt make},
+incorrect timestamps can impede applications like {\tt make},
         archival programs, and similar software~\cite{NautilusTimestamps,
         SudoTimestamp}.}
 
-    \item{{\it Copying Devices}
+    \item{{\it Copy Devices Correctly.}
 Files of this variety must be moved
 by creating a new device of the same type at the destination,
 instead of exhaustively reading and writing its contents.
@@ -148,15 +150,19 @@ Incorrect entries are either missing the needed check or were ineffective.}
 \end{table}
 
 {\bf Findings.}
+CrashSimulator was able to identify whether an array of popular programs,
+including the standard libraries for the programming languages Python,
+Perl,
+and Rust,
+can correctly perform complex
+operations in anomalous situations.
 As can be seen from the results in Table~\ref{table:crossdevice}, each of the
 applications tested fails to perform one or more of the steps required to
 successfully complete a cross-device move.  This is an unfortunate situation
 because a failure to perform any one of these steps can result in negative
 outcomes for the system as a whole.
-Our results indicate that CrashSimulator is able to identify whether an array of popular programs, including the standard libraries for the programming languages Python, Perl, and Rust, can correctly perform complex
-operations in anomalous situations.
-This is true even
-when libraries are inconsistent, showing correct behavior in some cases, but not others.
+Further, these results demonstrate that even well-tested applications
+can miss one or more of the steps in a complicated operation.
 
 \subsubsection{A More Complex Case - The Unexpected File Types Mutator}
 \label{sec-file-type-bugs}
