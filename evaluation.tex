@@ -335,7 +335,8 @@ One is that CrashSimulator asserts that the application will fail
 and in practice, it does.  We found this when we evaluated
 the response of  {\tt install} receiving a character device
 rather than a regular file. Our test predicted failure and the
-application ended up filling the disk of the machine on which it was run. In other cases, CrashSimulator reported that an
+application ended up filling the disk of the machine on which it was run.
+In other cases, CrashSimulator reported that an
 application had detected the anomalous condition and the application managed to
 do so in practice,  as when we evaluated {\tt wc}'s successful response to
 being run on a directory.
@@ -344,7 +345,7 @@ being run on a directory.
 \label{sec-timeout-bugs}
 
 CrashSimulator is not limited
-to identifying filesystem-based anomalies.
+to identifying filesystem-based bugs.
 The third anomaly we examined
 involves an application's behavior
 when it attempts to communicate
@@ -360,7 +361,8 @@ takes too long and should time out.
 
 {\bf Method.}
 CrashSimulator can detect
-whether an application is vulnerable to this attack
+whether an application correctly times out when communications
+take too long
 by employing the null mutator and a network timeout checker. The latter
 can determine if the application makes any effort
 to configure its network communications with a timeout value.
@@ -429,16 +431,14 @@ data per timeout period (per Linux's value of 19 minutes for TCP sockets),
 allowing them to keep the application alive instead of quitting.
 
 \subsubsection{Bugs Found By Participants}
-
-Another topic of relevance
-in evaluating CrashSimulator
-is how well developers with various level of experience are able to use the tool
-to find bugs.
+Because the above tests were carried out by CrashSimulator's developers,
+who necessarily have a high degree of expertise in its operation,
+we felt it prudent to ensure the tool was useful
+to outside developers as well.
 To investigate this angle,
 we conducted a user study
-with 12 undergraduate and graduate students.
-All of these students received only minimal training on the tool, and their overall familiarity with operating systems varied greatly.
-Still, study participants found a total of 11 bugs using CrashSimulator.
+with 12 undergraduate and graduate students with varying backgrounds.
+Study participants found a total of 11 bugs using CrashSimulator.
 Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
 Five of these bugs have since been reported to the appropriate maintainers,
 and three of these reports included patches built by the reporting student
@@ -446,7 +446,7 @@ that correct the bug.
 
 These results are important
 because they confirm
-users other than the original development team for the tool
+users, other than the original development team for the tool,
 can use it to find new bugs in real world applications.
 Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
@@ -458,7 +458,6 @@ showed that familiarity with operating systems concepts
 made it easier to work with CrashSimulator,
 those without this background were still able to identify bugs using the
 built in anomalies.
-
 
 On a less positive note,
 the study did reveal
@@ -477,7 +476,7 @@ Second,
 it demonstrated that
 simply reporting that an application did or did not change its behavior
 in the presence of an anomaly is insufficient data
-if  what each result indicates in terms of the presence of a bug is unclear to the user.
+if what each result indicates in terms of the presence of a bug is unclear to the user.
 Both of these issues are being corrected
 by improving the tool's outputs.
 By more clearly describing
