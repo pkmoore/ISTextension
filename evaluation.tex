@@ -595,7 +595,7 @@ These false negatives can be addressed
 by performing a more detailed analysis
 of the application's post simulation behavior
 and ensuring the checker being used sufficiently models
-correct behavior.
+a correct response to the anomaly being tested.
 Before testing,
 a user must know
 what a correct response
@@ -620,12 +620,13 @@ and taking into account the correctness of retrying the call.
 One key attribute of successful testing tools is that they are able to
 complete their tests in a timely manner.  If a tool takes too long,
 users will be less likely to run it.
-To address this concern, the performance of CrashSimulator was
-evaluated in order to determine whether or not it was able to complete its
+To address this concern,
+we evaluated CrashSimulator's performance
+in order to determine whether or not it was able to complete its
 test executions in an acceptable time frame.
 
 {\bf Method.}
-We examined the completion
+To answer the question of performance, we examined the completion
 times for executions of the specified application in both
 native and under CrashSimulator configured to test using the ``Unusual File
 Types'' anomaly discussed earlier.
@@ -679,7 +680,7 @@ An additional portion is caused by the need to spin up Python's interpreter
 before testing can begin.
 In most cases
 this slowdown is somewhat mitigated by CrashSimulator's ability to process
-tests asynchronously and, in other situations, it will be more efficient than
+tests asynchronously. In other situations, it will be more efficient than
 running the program natively, as {\tt rr's} replay does not require
 actual execution of most system calls.  This means that CrashSimulator
 avoids the system call overheads, such as I/O.
