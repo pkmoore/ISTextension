@@ -492,7 +492,8 @@ they should be concerned.
 
 Like other testing tools, CrashSimulator occasionally makes mistakes.
 Any such mistakes can
-undermine a developer's confidence in a tool, and thus one of our goals is to minimize these mistakes.   In this section, we discuss
+undermine a developer's confidence in a tool, and thus one of our goals is
+to minimize them.   In this section, we discuss
 situations where CrashSimulator made either false positive or false
 negative reports.  A false positive report means the tool reports
 a failure when the application actually handles an anomaly correctly.
@@ -516,8 +517,9 @@ devices, the library itself correctly performs a
 file move operation.  When we used CrashSimulator with
 checkers that expected a call to {\tt read()} and {\tt write()}
 for a cross-device move, we got reports stating that the
-application {\em did not} perform the system calls necessary to inject
-an anomaly.  By manually
+application {\em did not} perform the system calls necessary to
+correctly move a file.
+By manually
 examining a system call trace, we found that, while {\tt glib} correctly
 performs the requested move operation,
 it does so using alternative system call
@@ -536,8 +538,9 @@ Each of the steps in the operation map to a small number of system calls
 and,
 in
 situations where two system call sequences can correctly implement the same
-operation, CrashSimulator simply runs two checkers in parallel resulting in a
-test executing for the one whose prerequisites are met.
+operation, CrashSimulator simply runs two checkers in parallel
+and accepts the execution if either checker detects the sequence it is
+looking for.
 
 \begin{table}[t]
     \scriptsize{}
@@ -590,7 +593,9 @@ when an application changes its behavior,
 but does not handle an anomaly correctly.
 These false negatives can be addressed
 by performing a more detailed analysis
-of the application's post simulation behavior.
+of the application's post simulation behavior
+and ensuring the checker being used sufficiently models
+correct behavior.
 Before testing,
 a user must know
 what a correct response
