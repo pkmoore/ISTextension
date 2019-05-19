@@ -301,12 +301,13 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 \end{table*}
 
 
-\begin{table*}[t]
+\begin{table}[t]
     \scriptsize{}
+    \scalebox{.82}{
     \begin{tabular}{l  l  l  l  l  l  l  l  l}
     \toprule{}
         Application         & Directory                 & Character Device & Block Device  & Named Pipe \\
-        Application         & (IFDIR)                   & (IFCHR) & (IFBLK) & (FIFO) \\
+                 & (IFDIR)                   & (IFCHR) & (IFBLK) & (FIFO) \\
 \hline
         {\tt wc}            & Error: Is a Directory     & hangs       & slowly process file  & Hangs\\
         {\tt install}       & Error: Omitting Directory & Fills disk  & slowly copies file   & Hangs\\
@@ -317,12 +318,12 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         {\tt pr}            & Error: Is a Directory     & hangs       & garbage output       & Hangs\\
 \hline
     \bottomrule{}
-    \end{tabular}
+    \end{tabular}}
     \caption{Responses of a sample of coreutils applications when exposed to
       anomalous conditions.  The character device used was the infinite-length {\tt
         /dev/urandom}.}
     \label{table:applicationresponses}
-\end{table*}
+\end{table}
 
 
 In order to confirm the accuracy of CrashSimulator's assessment, we manually
