@@ -3,7 +3,7 @@
 
 In constructing SEA and CrashSimulator, we examined a number of previous
 studies in bug detection, data mining, environmental influence on
-applications, and protocols for checking program responses to anomalous
+application behavior, and protocols for checking program responses to anomalous
 situations. This section
 summarizes a few earlier initiatives in each of these areas and discusses
 their relevance to the development of our tool.
@@ -19,10 +19,10 @@ their relevance to the development of our tool.
 
 
 \iffalse
-While there is a vast literature on test
+While there is a vast amount of literature on test
 generation~\cite{ammann2008introduction, mcminn2004search,
   puasuareanu2009survey, dias2007survey}, much less work
-has focused on issues of portability and testing whether software
+has focused on issues of portability, and tests of whether software
 behaves consistently in different environments.  Prior work on
 CheckAPI~\cite{rasley2015detecting} and
 NetCheck~\cite{Zhuang_NSDI_2014} begins to fill this gap and this paper
@@ -43,7 +43,7 @@ Crash reproduction by test case mutation~\cite{DBLP:conf/sigsoft/XuanXM15}.
 {\bf Static analysis. }
 \label{rel-static-analysis}
 Tools based on static analysis techniques, such as abstract interpretation,
-model checking, and symbolic execution have been successfully
+model checking, and symbolic execution, have been successfully
 used to
 detect bugs resulting from incorrect API usage. Examples of these tools
 include
@@ -59,13 +59,13 @@ approaches depend on the availability of source or byte code.
 
 Static analysis techniques have also been
 used to detect portability issues related to what happens when an
-applications encounters different
+application encounters different
 versions of the external components on which
 it depends~\cite{silakov2010improving, javacompliance-www}. Like
 CrashSimulator, these techniques
 address the application's interactions with its
 environment. However, these studies were focused on proving that the
-environments behave as expected.
+environments behaved as expected.
 CrashSimulator is only interested in the application's
 response to anomalies.
 
@@ -81,7 +81,7 @@ identifying network vulnerabilities~\cite{ritchey-sp00}.
 \noindent
 {\bf API protocol mining.}
 Extensive work has been done on mining source code to learn API protocols
-and use them to detect common usage violations such as missing method calls
+and use them to detect common usage violations, such as missing method calls
 (see, e.g.,~\cite{mariani2007compatibility,
 DBLP:journals/ase/WasylkowskiZ11, DBLP:conf/icse/PradelJAG12,
 DBLP:journals/tosem/MonperrusM13, DBLP:conf/icse/JamrozikSZ16}). These
@@ -114,9 +114,9 @@ are invisible to passive log mining.
 
 \noindent
 {\bf Environmental Influence and Cross-Platform Portability.}
-Negotiating the influence of the environment into which an
+Negotiating the influence of the environment in which an
 application is deployed has been investigated from several
-perspectives. One approach referred to previously
+perspectives. One approach, referred to previously,
 is to build ``portable'' systems
 that have cross-platform capabilities.
 Using wrapper subroutines
@@ -137,9 +137,9 @@ DBLP:conf/icst/DallmeierP0MZ14}.  Static analysis tools, such as those
 mentioned earlier in this section, have also been applied to
 detection of differences between versions of external components.
 
-Such studies have helped to define the influence of the environment on
-application and thus provide a background to our work.  Our tool applies
-the idea to testing of an application's response to anomalies.
+Such studies have helped to define the influence of an environment on
+applications and thus provide a background to our work.  Our tool applies
+these fundamental ideas to testing an application's response to anomalies.
 
 \noindent
 {\bf Testing exception handling and conformance.}
@@ -163,7 +163,7 @@ Additionally, it focuses on collecting and simulating
 problematic features of specific
 deployment environments.
 That said, such testing techniques
-can help identify anomalies that can be added to our repository.
+can help identify additional anomalies  to add to our repository.
 
 {\bf Smart Fuzzing.}
 Smart fuzzers monitor and guide executions to
@@ -171,15 +171,15 @@ trigger code paths that are unlikely to be reached
 otherwise~\cite{smartfuzzing, taintbasedfuzzing}.
 At this point, they make a binary decision about
 whether the application correctly handled the input or not.
-Typically, the application crashing is a determining factor.
-This is similar to SEA's use of checkers that decide whether
+Typically, a determining factor will be an actual crash by the application.
+This is similar to SEA's use of checkers to decide whether
 to accept or reject a given test
-execution based on whether or not it observed certain system call behavior.
+execution, based on whether or not it observed a specific system call behavior.
 In both cases, the tools can demonstrate whether a given code path handles a
-situation correctly but cannot prove that the code path is robust against
+situation correctly, but cannot prove that the code path is robust against
 other problematic inputs.  In the future, CrashSimulator could use smart
 fuzzing path exploration techniques to generate tests that reach relevant
-system calls apply SEA at that point.
+system calls and apply SEA at that point.
 
 %\noindent
 %{\bf Runtime verification:}
@@ -232,16 +232,16 @@ system calls apply SEA at that point.
 Pip~\cite{reynolds2006pip} and Coctail~\cite{xue2012using} are distributed
 frameworks that enable developers to construct application-specific models,
 which have proven effective at finding detailed application flaws. However,
-to utilize these methods, a knowledge of the nature of the failures needs
-to be acquired, and the specific system properties must be specified.
+utilizing these methods requires a knowledge of what failure needs must
+be acquired, and a specification of all relevant system properties. 
 NetCheck diagnoses application failures without application-specific
 models.  Khanna~\cite{khanna2007automated} identifies the source of
 failures using a rule base of allowed state transition paths.
 %However, it requires specialized human-generated rules for each
 %application.
 CrashSimulator leverages NetCheck's approach to simulate identified
-anomalies in network behavior, file system behavior, etc. to test
-applications other than the ones on which the anomalies were originally
+anomalies in network behavior, file system behavior, and other environmental-specific conditions. This enables the tool to test
+applications other than the ones with which the anomalies were originally
 discovered.
 \fi
 
@@ -266,31 +266,30 @@ code and symbolic execution of an application's code in order to
 generate inputs that optimally exercise the application's code paths.
 These techniques, while powerful, are not without their downsides.
 First, both techniques are computationally-expensive. Furthermore,
-symbolic execution can not always accurately represent actual execution
-and so there may be deviations in results. Similarly, efficiently
-solving a series of constraints in order to exercise a particular code
-path can be can be difficult to guarantee that a particular set of
-generated inputs will exercise the intended code path in many
-circumstances due to external dependencies that the tool cannot
+symbolic execution can not always accurately represent actual execution,
+and so there may be deviations in results. Similarly, it is difficult to efficiently
+solve a series of constraints in order to exercise a particular code.
+In many
+circumstances, a given set of
+generated inputs can exercise an intended code path  due to external dependencies that the tool cannot
 analyze. For example, a white-box testing tool cannot reliably generate
-inputs that are guaranteed to exercise a code path that relies on an
-operating system resource being available.  Finally, white-box tools
-typically require that an application's source code be available which
-is not always the case. Even advanced white-box tools that analyze an
-application's machine code can be stymied in situations where an
+inputs that are guaranteed to exercise a code path if they rely on the availability of an
+operating system resource.  Finally, white-box tools
+typically require that an application's source code be available, which
+is not always the case. Even advanced white-box tools that analyze machine code can be stymied in situations where an
 application's executable has been packed or encrypted.
 
 The alternative, black-box tools, have their own set of issues. They do
 not have an understanding of what an application is actually doing
-during execution which means they are only able to submit inputs and
+during execution, which means they are only able to submit inputs and
 observe outputs.  The upside of this technique is simplicity. Black-box
-tools do not need the capability to understand and analyze an
-application's code which reduces their complexity immensely. Also,
+tools do not need to understand and analyze an
+application's code, which reduces their complexity immensely. Also,
 their testing process, mutating inputs and observing outputs, is
-computationally inexpensive. The downside of simplicity is that they
+computationally inexpensive. The downside of this simplicity is that they
 cannot craft inputs with any sort of intelligence. This means that a
 great deal of time can be spent mutating inputs without much success in
-terms of bug identification. Also, they cannot identify specifically
+terms of bug identification. Also, they cannot specifically identify 
 the source of faults in an application. They can only signal that a
 fault has occurred at some point during a test run.  Furthermore, like
 white-box tools, these tools fail to take into account the environment
