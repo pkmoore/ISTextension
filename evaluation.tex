@@ -43,25 +43,38 @@ applications?}
 The most crucial question to ask about the SEA technique and the tool we implemented from it is can we
 identify bugs
 caused by different types of problematic environmental features.
-We have already established
-that
-unusual filesystem and network situations can cause an application to fail,
-so we configured the tool to look
-for bugs that could be triggered in this manner.
-We found the specific anomalies used for this evaluation
-by examining public bug trackers,
-the source code of major portable applications, and the capabilities of
-tools like NetCheck~\cite{Zhuang_NSDI_2014}
-and CheckAPI~\cite{rasley2015detecting}.
-As we wanted to test
-the most commonly used applications,
-our selections were made
+To perform this evaluation we needed both a set of applications to test
+and a set of anomalies against which to test them.
+In order to show that CrashSimulator
+can find bugs in even the most widely deployed
+and well tested applications,
+we chose our test candidates
 from among those deemed ``popular''
 by Debian's Popularity Contest~\cite{DebPopCon},
 or those used
 by many Linux distributions,
 such as ones provided
 by the GNU Coreutils project.
+
+To prove the breadth of CrashSimulator's capabilities we needed
+test applications
+using a diverse set of exemplar anomalies.
+We already established
+that
+unusual filesystem and network situations can cause an application to fail,
+so we identified many candidate anomalies
+by examining public bug trackers,
+the source code of major portable applications, and the capabilities of
+tools like NetCheck~\cite{Zhuang_NSDI_2014}
+and CheckAPI~\cite{rasley2015detecting}.
+From these candidates we
+chose to use a simple filesystem anomaly that relies on the null
+mutator,
+a more complex filesystem anomaly that simulates
+the presence of unusual file types,
+and a network anomaly that requires
+checking and mutating many values across a variety of system calls.
+Our experiences testing with these anomalies are detailed below.
 
 \subsubsection{The simplest case - A Filesystem Bug Found With the Null Mutator}
 \label{sec-move-bugs}
