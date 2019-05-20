@@ -10,18 +10,6 @@
   \label{figure:approach}
 \end{figure}
 
-\begin{figure}[t]
-  \center{}
-  \fbox{\includegraphics[scale=.37]{images/architecture}}
-  \caption{Diagram illustrating CrashSimulator's architecture.  During the
-    course of a single rr execution, clone process sets are generated at
-    specific rr events.  A CrashSimlator supervisor process attaches to
-    these process sets and uses an strace-style system call listing to feed
-    subsequent system call activity and inject unusual environmental
-    conditions.}
-  \label{figure:architecture}
-\end{figure}
-
 The Simulating Environmental Anomalies(SEA) technique
 offers a methodical way to
 capture, store, and utilize the insights gleaned from
@@ -243,6 +231,7 @@ mutator accomplishes the same by simulating unusual situations.
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
 \label{SUBSEC:ApproachCrashSim}
+
 Implementing SEA in CrashSimulator
 required making a few key design decisions. The first, as mentioned in
 Section 2, was choosing to operate at the system call level, rather than
@@ -288,7 +277,9 @@ being human readable.
 Our second modification parallelized our testing
 by allowing {\tt rr} to generate copies of a running application when
 it reaches our target simulation opportunities.
-We refer to this new technique as {\it process set cloning}.
+We refer to this new technique as {\it process set cloning}
+and it is illustrated
+in Figure~\ref{figure:architecture}.
 The {\tt rr}
 debugger manages, and can copy, the full set of processes underlying an
 application so that users can test debugging hypotheses without damaging
@@ -339,6 +330,18 @@ Keeping the original execution intact,
 as opposed to destroying it by introducing an error state,
 avoids the penalty
 of having to restart a new execution for each test.
+
+\begin{figure}[t]
+  \center{}
+  \fbox{\includegraphics[scale=.37]{images/architecture}}
+  \caption{Diagram illustrating CrashSimulator's architecture.  During the
+    course of a single rr execution, clone process sets are generated at
+    specific rr events.  A CrashSimlator supervisor process attaches to
+    these process sets and uses an strace-style system call listing to feed
+    subsequent system call activity and inject unusual environmental
+    conditions.}
+  \label{figure:architecture}
+\end{figure}
 
 The prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
 distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
