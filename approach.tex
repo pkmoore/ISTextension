@@ -232,7 +232,12 @@ mutator accomplishes the same by simulating unusual situations.
 \subsection{CrashSimulator: A Concrete SEA Implementation}
 \label{SUBSEC:ApproachCrashSim}
 
-Implementing SEA in CrashSimulator
+In order to correctly implement SEA, CrashSimulator
+must provide a framework
+by which the checkers and mutators
+constructed by its users can be used to
+test an application using the anomalies they represent.
+Building this capability
 required making a few key design decisions. The first, as mentioned in
 Section 2, was choosing to operate at the system call level, rather than
 manipulating calls to library functions, memory accesses, or other points
