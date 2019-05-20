@@ -72,7 +72,8 @@ but it will influence data retrieval.
 Any system calls that retrieve data from the buffer in which
 datagrams are
 stored will only return a number of bytes less than or equal to the
-buffer size at one time~\cite{Zhuang_NSDI_2014}.
+buffer size, requiring multiple calls
+to retrieve all the data.~\cite{Zhuang_NSDI_2014}.
 
 \item {\bf Processor.}  The processor used can also influence the
 behavior of an application.  This is very frequently
