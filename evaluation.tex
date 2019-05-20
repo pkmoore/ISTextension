@@ -90,7 +90,7 @@ atomically by the operating system
 through the {\tt rename()} system call,
 in situations where
 the source file and destination file are on different storage devices,
-the operation must be performed manually by the application.
+the application must perform the operation manually.
 This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
@@ -461,7 +461,7 @@ that correct the bug.
 These results are important
 because they confirm
 users, other than the original development team for the tool,
-can use it to find new bugs in real world applications.
+can find new bugs in real world applications.
 Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
 was helpful in identifying the area of
@@ -489,8 +489,7 @@ Therefore, that behavior should not be classified as a bug.
 Second,
 it demonstrated that
 simply reporting that an application did or did not change its behavior
-in the presence of an anomaly is insufficient data
-if what each result indicates in terms of the presence of a bug is unclear to the user.
+in the presence of an anomaly may not provide sufficient data to identify a bug. The results indicating the presence of a bug must be clear to the user.
 Both of these issues are being corrected
 by improving the tool's outputs.
 By more clearly describing
@@ -548,12 +547,11 @@ sequence.
 Given the above example about moving
 files, consider the mapping from high level ``operation'' to the set of
 system calls that can implement it in Table~\ref{table:stepsandcalls}.
-Each of the steps in the operation map to a small number of system calls
-and,
-in
+Each of the steps in the operation map to a small number of system calls.
+In
 situations where two system call sequences can correctly implement the same
 operation, CrashSimulator simply runs two checkers in parallel
-and accepts the execution if either checker detects the sequence it is
+and accepts the execution if either  detects the sequence it is
 looking for.
 
 \begin{table}[t]
@@ -609,7 +607,7 @@ These false negatives can be addressed
 by performing a more detailed analysis
 of the application's post simulation behavior
 and ensuring the checker being used sufficiently models
-a correct response to the anomaly being tested.
+a correct response to that anomaly. 
 Before testing,
 a user must know
 what a correct response
@@ -642,7 +640,7 @@ test executions in an acceptable time frame.
 {\bf Method.}
 To answer the question of performance, we examined the completion
 times for executions of the specified application in both
-native and under CrashSimulator configured to test using the ``Unusual File
+native conditions, and under CrashSimulator configured to test using the ``Unusual File
 Types'' anomaly discussed earlier.
 Table~\ref{table:performance} shows these results.
 

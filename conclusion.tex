@@ -16,17 +16,16 @@ to be preserved and reused programmatically to test whether
 future applications will also fail.
 As this process is repeated,
 a corpus of bug-causing aspects,
-known as ``anomalies'',
+known as ``anomalies,''
 along with mutators and checkers that characterize these anomalies,
-can be accumulated
-resulting in an ever-increasing capability
+can be accumulated. In doing so, developers have an ever-increasing capability
 to test applications in situations
 that proved problematic in the past.
 
 We built a concrete implementation of SEA
-called CrashSimulator which implements
+called CrashSimulator that implements
 the technique by simulating environmental
-anomalies visible in the system calls an application makes.
+anomalies extracted from the system calls an application makes.
 Operating on system calls gives the tool a ``universal'' way to
 encode and inject anomalies. Consequently, a set of mutations can be
 collected from existing applications for use in testing others.
@@ -40,15 +39,14 @@ could lead to effects ranging from simple program hangs
 to security vulnerabilities and data loss.
 
 Given that the technique has
-proven effective we will continue to improve upon it.
-We envision a public repository of anomalies
+proven effective, future work to expand its use is warranted. This work includes
+developing a public repository of anomalies
 that can be applied to new or existing applications.
 We are also exploring
 opportunities to further automate the discovery process
 and improve the way anomalies are specified using a
 domain specific language.
-Further future work
-will focus on analyzing how an
+As this research evolves, we will focus on analyzing how an
 application attempts
 to recover from the anomalies.  This would allow
 us to determine whether
