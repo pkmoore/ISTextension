@@ -175,7 +175,7 @@ In the simplest case,
 simulating an anomaly only requires
 the modification of a single value.
 We even found use for a ``null mutator''
-which performs no mutation.
+that performs no mutation, but gives other tools an opportunity to examine an execution.
 In more complex cases,
 large numbers of diverse system calls
 will need to be interdicted and altered
@@ -336,8 +336,8 @@ of having to restart a new execution for each test.
   \fbox{\includegraphics[scale=.37]{images/architecture}}
   \caption{Diagram illustrating CrashSimulator's architecture.  During the
     course of a single rr execution, clone process sets are generated at
-    specific rr events.  A CrashSimlator supervisor process attaches to
-    these process sets and uses an strace-style system call listing to feed
+    specific rr events.  A CrashSimulator supervisor process attaches to
+    these process sets and uses a strace-style system call listing to feed
     subsequent system call activity and inject unusual environmental
     conditions.}
   \label{figure:architecture}
