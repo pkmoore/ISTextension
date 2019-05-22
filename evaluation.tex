@@ -603,11 +603,13 @@ looking for.
 CrashSimulator occasionally registers  false negative reports
 when an application changes its behavior,
 but does not handle an anomaly correctly.
+In our evaluation we encountered ten false negative reports four
+occurring with one application, {\tt wc}.
 These false negatives can be addressed
 by performing a more detailed analysis
 of the application's post simulation behavior
 and ensuring the checker being used sufficiently models
-a correct response to that anomaly. 
+a correct response to that anomaly.
 Before testing,
 a user must know
 what a correct response
