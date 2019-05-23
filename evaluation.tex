@@ -515,7 +515,7 @@ an anomaly when, in reality, it does not.
 
 \textbf{False Positives.}
 The primary source of false positives in CrashSimulator is an application
-implementing a given operation with a different sequence of system calls
+responding to an anomaly with a different sequence of system calls
 than was expected by the checker.
 Once identified, CrashSimulator's approach allows these
 situations to be easily corrected.
@@ -603,17 +603,19 @@ looking for.
 CrashSimulator occasionally registers  false negative reports
 when an application changes its behavior,
 but does not handle an anomaly correctly.
-In our evaluation we encountered ten false negative reports four
+In our evaluation we encountered ten such reports, four
 occurring with one application, {\tt wc}.
-These false negatives can be addressed
-by performing a more detailed analysis
-of the application's post simulation behavior
-and ensuring the checker being used sufficiently models
+Because these reports occurred when using the default checker,
+they can be addressed by
+using a more elaborate checker that
+performs a detailed analysis
+of the application's post-simulation behavior.
+Such a checker would compare this behavior to a model of
 a correct response to that anomaly.
-Before testing,
-a user must know
+Creating this checker requires
+that a user know
 what a correct response
-to an anomaly looks like.
+to the anomaly looks like.
 This ``known good'' behavior can be found
 by looking at standards and documentation
 that describe best practices for handling an anomaly
