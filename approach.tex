@@ -292,8 +292,11 @@ the original.  We extended this capability by liberating process
 set copies from {\tt rr}.  This means that given application $Y$ consisting
 of processes $a$, $b$, and $c$ (written as $Y(a, b, c)$), we can generate
 cloned sets $Y_1(a_1, b_1, c_1)$, $Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b,
-c_n)$.  $Y_1$, $Y_2$ ... $Y_n$ can then be used to test different scenarios
-leaving the original $Y$ to continue its execution unhindered.
+c_n)$.  $Y_1$, $Y_2$ ... $Y_n$ can then be used to test different
+scenarios.  These clones can be run in parallel because they do not
+actually execute system calls or modify operating system state.
+Additionally,
+they allow the original $Y$ to continue its execution unhindered.
 
 Once generated, the cloned process sets are used
 for testing by the CrashSimulator process supervisor.
