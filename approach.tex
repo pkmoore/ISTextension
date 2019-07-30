@@ -128,7 +128,17 @@ how the application should respond.
 Describing anomalies in this fashion
 allows them to be recorded systematically and cataloged for future use.
 
-As an example of the above, consider
+Constructing new checkers and mutators is a creative process not unlike
+writing a unit test.  The writer must understand both the cause of
+misbehavior in a deployment environment and how it is visible in the
+results of the system calls an application makes.  Once they have this
+understanding, the actual construction boils down to building state
+machines that recognize the required patterns of system calls.  As a
+result, effort required by this process depends on the complexity of the
+anomaly being simulated and how proficient the writer is with the above
+concepts.
+
+As an example, consider
 an anomalous environment
 where access to a required file is denied because of
 the environment's file security configuration.
