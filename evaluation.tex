@@ -281,27 +281,27 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         Application       & Condition Tested           & Regular File & Directory & Character Device & Block Device & Named Pipe & Symbolic Link & Socket File (IFSOCK)\\
                           &                            &  (IFREG)     & (IFDIR)   & (IFCHR)          & (IFBLK)      & (IFIFO)    & (IFLNK)       & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt Aspell}      & File being checked         & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt gnu-gpg}     & secring.gpg                & ET        & \xmark     & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt vim}         & File being opened          & ET        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \xmark\\
-        {\tt nano}        & File being opened          & ET        & \tickmark  & \tickmark  & \tickmark & \xmark        & \xmark       & \xmark\\
-        {\tt sed}         & File being edited          & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt df}          & /proc                      & \xmark    & ET         & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt wc}          & File being checked         & ET        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
-        {\tt du}          & Directory being checked    & \tickmark & ET         & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
-        {\tt install}     & File being installed       & ET        & \tickmark  & \xmark     & \xmark    & \xmark        & \tickmark    & \xmark\\
-        {\tt fmt}         & File being formatted       & ET        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt od}          & File being dumped          & ET        & \tickmark  & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt ptx}         & File being read            & ET        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
-        {\tt comm}        & Second file being compared & ET        & \tickmark  & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt pr}          & File being read            & ET        & \tickmark  & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt Aspell}      & Dictionary File            & \APLminus        & \xmark: \textit{FP}      & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt Aspell}      & File being checked         & \APLminus        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt gnu-gpg}     & secring.gpg                & \APLminus        & \xmark     & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt vim}         & File being opened          & \APLminus        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \xmark\\
+        {\tt nano}        & File being opened          & \APLminus        & \tickmark  & \tickmark  & \tickmark & \xmark        & \xmark       & \xmark\\
+        {\tt sed}         & File being edited          & \APLminus        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt df}          & /proc                      & \xmark    & \APLminus         & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt wc}          & File being checked         & \APLminus        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
+        {\tt du}          & Directory being checked    & \tickmark & \APLminus         & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
+        {\tt install}     & File being installed       & \APLminus        & \tickmark  & \xmark     & \xmark    & \xmark        & \tickmark    & \xmark\\
+        {\tt fmt}         & File being formatted       & \APLminus        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt od}          & File being dumped          & \APLminus        & \tickmark  & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt ptx}         & File being read            & \APLminus        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
+        {\tt comm}        & Second file being compared & \APLminus        & \tickmark  & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt pr}          & File being read            & \APLminus        & \tickmark  & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
 \hline
         \multicolumn{9}{l}{\scriptsize{\tickmark  $=$ CrashSimulator
         predicts application will recognize anomaly}}\\
         \multicolumn{9}{l}{\scriptsize{\xmark  $=$ CrashSimulator predicts
         application will fail to recognize anomaly}}\\
-        \multicolumn{9}{l}{\scriptsize{ET (Expected Type)  $=$ File type expected by the
+        \multicolumn{9}{l}{\scriptsize{\APLminus $=$ File type expected by the
         application}}\\
     \bottomrule{}
     \end{tabular}
