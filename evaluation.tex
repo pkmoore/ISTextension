@@ -281,21 +281,21 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         Application       & Condition Tested           & Regular File & Directory & Character Device & Block Device & Named Pipe & Symbolic Link & Socket File (IFSOCK)\\
                           &                            &  (IFREG)     & (IFDIR)   & (IFCHR)          & (IFBLK)      & (IFIFO)    & (IFLNK)       & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & \APLminus        & \xmark: \textit{FP}      & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt Aspell}      & File being checked         & \APLminus        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt gnu-gpg}     & secring.gpg                & \APLminus        & \xmark     & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt vim}         & File being opened          & \APLminus        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \xmark\\
-        {\tt nano}        & File being opened          & \APLminus        & \tickmark  & \tickmark  & \tickmark & \xmark        & \xmark       & \xmark\\
-        {\tt sed}         & File being edited          & \APLminus        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt df}          & /proc                      & \xmark    & \APLminus         & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt wc}          & File being checked         & \APLminus        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
-        {\tt du}          & Directory being checked    & \tickmark & \APLminus         & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
-        {\tt install}     & File being installed       & \APLminus        & \tickmark  & \xmark     & \xmark    & \xmark        & \tickmark    & \xmark\\
-        {\tt fmt}         & File being formatted       & \APLminus        & \xmark     & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt od}          & File being dumped          & \APLminus        & \tickmark  & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt ptx}         & File being read            & \APLminus        & \tickmark  & \tickmark  & \tickmark & \tickmark     & \tickmark    & \tickmark\\
-        {\tt comm}        & Second file being compared & \APLminus        & \tickmark  & \tickmark  & \xmark    & \xmark        & \xmark       & \xmark\\
-        {\tt pr}          & File being read            & \APLminus        & \tickmark  & \xmark     & \xmark    & \xmark        & \xmark       & \xmark\\
+        {\tt Aspell}      & Dictionary File            & \APLminus        & \xmark: \textit{FP}      & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt Aspell}      & File being checked         & \APLminus        & \xmark: \textit{FP}     & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt gnu-gpg}     & secring.gpg                & \APLminus        & \xmark: \textit{FP}     & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt vim}         & File being opened          & \APLminus        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \xmark: \textit{FP}\\
+        {\tt nano}        & File being opened          & \APLminus        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt sed}         & File being edited          & \APLminus        & \xmark: \textit{FP}     & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt df}          & /proc                      & \xmark: \textit{FP}    & \APLminus         & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt wc}          & File being checked         & \APLminus        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \tickmark: \textit{FP}\\
+        {\tt du}          & Directory being checked    & \tickmark: \textit{FP} & \APLminus         & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \tickmark: \textit{FP}\\
+        {\tt install}     & File being installed       & \APLminus        & \tickmark: \textit{FP}  & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \tickmark: \textit{FP}    & \xmark: \textit{FP}\\
+        {\tt fmt}         & File being formatted       & \APLminus        & \xmark: \textit{FP}     & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt od}          & File being dumped          & \APLminus        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt ptx}         & File being read            & \APLminus        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \tickmark: \textit{FP}\\
+        {\tt comm}        & Second file being compared & \APLminus        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt pr}          & File being read            & \APLminus        & \tickmark: \textit{FP}  & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
 \hline
         \multicolumn{9}{l}{\scriptsize{\tickmark  $=$ CrashSimulator
         predicts application will recognize anomaly}}\\
@@ -309,7 +309,9 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
     result of ``\tickmark'' indicates that the application identified the
     presence of an unusual file and responded in some fashion.  A result of
     ``\xmark'' indicates that the application failed to recognize the presence of
-    an unusual file and attempted to process it.}
+    an unusual file and attempted to process it.  Cases where
+    CrashSimulator made an error are noted by a following FP (False
+    Positive) or FN (False Negative)}
     \label{table:unexpectedtypes}
 \end{table*}
 
@@ -338,12 +340,15 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
     \label{table:applicationresponses}
 \end{table}
 
-
 In order to confirm the accuracy of CrashSimulator's assessment, we manually
-exposed a subset of the Coreutils applications tested to the unusual
+exposed applications tested to the unusual
 file types to get an idea of how they would respond.
-Table~\ref{table:applicationresponses} contains the results of this test.
-The tool's evaluation of an application can map to real world bug behavior
+This allowed is to identify cases where CrashSimulator made errors and
+annotate Table~\ref{table:unexpectedtypes} with this information.  Further,
+we include a descriptions of a subset of application's behaviors in
+Table~\ref{applicationresponses}.
+These tables illustrate how the tool's
+evaluation of an application can map to real world bug behavior
 in a few different combinations
 One is that CrashSimulator asserts that the application will fail
 and in practice, it does.  We found this when we evaluated
