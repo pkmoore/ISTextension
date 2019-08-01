@@ -173,8 +173,11 @@ As can be seen from the results in Table~\ref{table:crossdevice}, each of the
 applications tested fails to perform one or more of the steps required to
 successfully complete a cross-device move.  This is an unfortunate situation
 because a failure to perform any one of these steps can result in negative
-outcomes for the system as a whole.
-Further, these results demonstrate that even well-tested applications
+outcomes for the system as a whole.  There was one case in which our
+checkers made a false positive report which prompted efforts to improve it.
+This is discussed further in
+Section~\ref{sec-sorts-errors}.
+Take as a whole, our results demonstrate that even well-tested applications
 can miss one or more of the steps in a complicated operation.
 
 \subsubsection{A More Complex Case - The Unexpected File Types Mutator}
@@ -242,7 +245,7 @@ types.
 The values inserted into results of the application's {\tt stat()}-like
 system calls are listed
 in Table~\ref{table:unexpectedtypes}.
-A value of ``Expected Type (ET)'' indicates
+A value of ``\APLminus'' indicates
 that this is the file type the application was expecting,
 as it matches what was provided when the application was initially recorded.
 A result of ``\tickmark'' indicates that the application
@@ -254,8 +257,11 @@ that the execution never diverged from the trace being replayed,
 and thus failed to recognize the presence of an unusual file type.
 
 {\bf Findings.}
-The frequency of failed executions in our results,
-which are shown in Table 2,
+The data in Table~\ref{table:unexpectedtypes} show that CrashSimulator
+correctly identified bugs in XX of the applications we tested
+and made errors in only YY cases.  We discuss the causes of these failures
+in Section~\ref{sec-sorts-errors}.
+The frequency of failed executions in our results
 indicates that many
 applications assume they will only be used to process
 regular files.  When this assumption does not hold, execution results
