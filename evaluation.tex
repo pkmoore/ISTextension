@@ -250,7 +250,7 @@ that this is the file type the application was expecting,
 as it matches what was provided when the application was initially recorded.
 A result of ``\tickmark'' indicates that the application
 identified it was being provided with an unexpected file type and its
-execution diverged, a signal that it was potentially handling the
+execution differs, a signal that it was potentially handling the
 file type correctly.
 A result of ``\xmark'' indicates
 that the execution never diverged from the trace being replayed,
@@ -293,7 +293,6 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         {\tt vim}         & File being opened          & --                     & \tickmark: \textit{FN}  & \tickmark: \textit{FN}  & \tickmark: \textit{FN} & \tickmark: \textit{FN}     & \tickmark: \textit{FN}    & \xmark    *\\
         {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark    *\\
         {\tt sed}         & File being edited          & --                     & \tickmark               & \tickmark: \textit{FN}  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt df}          & /proc                      & \xmark: \textit{*}     & --                      & \xmark: \textit{*}      & \xmark: \textit{*}     & \xmark: \textit{*}         & \xmark: \textit{*}        & \xmark    *\\
         {\tt wc}          & File being checked         & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
         {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
         {\tt install}     & File being installed       & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \tickmark                 & \xmark    *\\
@@ -349,10 +348,10 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 In order to confirm the accuracy of CrashSimulator's assessment, we manually
 exposed applications tested to the unusual
 file types to get an idea of how they would respond.
-This allowed is to identify cases where CrashSimulator made errors and
+This allowed us to identify cases where CrashSimulator made errors and
 annotate Table~\ref{table:unexpectedtypes} with this information.  Further,
 we include a descriptions of a subset of application's behaviors in
-Table~\ref{applicationresponses}.
+Table~\ref{table:applicationresponses}.
 These tables illustrate how the tool's
 evaluation of an application can map to real world bug behavior
 in a few different combinations
@@ -466,8 +465,9 @@ with 12 undergraduate and graduate students with varying backgrounds.
 Study participants found a total of 11 bugs using CrashSimulator.
 Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
 Five of these bugs have since been reported to the appropriate maintainers,
-and three of these reports included patches built by the reporting student
-that correct the bug.
+and three of these reports included patches
+that correct the bug
+built by the reporting student.
 
 These results are important
 because they confirm
@@ -492,7 +492,7 @@ First,
 it became clear that the tool
 does not have a clear mechanism
 for determining
-what application behaviors constitute a "bug."
+which application behaviors constitute a "bug".
 For example, an application's developer
 may have intended that an application processing an ``infinitely long'' file should run continuously
 until killed by an outside command.

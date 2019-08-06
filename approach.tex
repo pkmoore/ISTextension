@@ -10,7 +10,7 @@
   \label{figure:approach}
 \end{figure}
 
-The Simulating Environmental Anomalies(SEA) technique
+The Simulating Environmental Anomalies (SEA) technique
 offers a methodical way to
 capture, store, and utilize the insights gleaned from
 previous failures in a given environment.
@@ -135,7 +135,7 @@ results of the system calls an application makes.  Once they have this
 understanding, the actual construction boils down to building state
 machines that recognize the required patterns of system calls.  As a
 result, effort required by this process depends on the complexity of the
-anomaly being simulated and how proficient the writer is with the above
+anomaly being simulated and the proficiency of the writer with the above
 concepts.
 
 As an example, consider
@@ -304,7 +304,7 @@ of processes $a$, $b$, and $c$ (written as $Y(a, b, c)$), we can generate
 cloned sets $Y_1(a_1, b_1, c_1)$, $Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b,
 c_n)$.  $Y_1$, $Y_2$ ... $Y_n$ can then be used to test different
 scenarios.  These clones can be run in parallel because they do not
-actually execute system calls or modify operating system state.
+actually execute system calls or modify the operating system state.
 Additionally,
 they allow the original $Y$ to continue its execution unhindered.
 
