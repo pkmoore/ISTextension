@@ -27,6 +27,15 @@
 % every instance of \includegraphics
 \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@makecaption}
+  {\scshape}
+  {}
+  {}
+  {}
+\makeatother
+
 \hyphenation{WEB-rick op-tical net-works semi-conduc-tor}
 \newcommand{\CRASH}{{\sc \{CrashSim\}}\xspace}
 \hypersetup{%
