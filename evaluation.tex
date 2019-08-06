@@ -287,12 +287,12 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         Application       & Condition Tested           & Regular File           & Directory               & Character Device        & Block Device           & Named Pipe                 & Symbolic Link             & Socket File \\
                           &                            &  (IFREG)               & (IFDIR)                 & (IFCHR)                 & (IFBLK)                & (IFIFO)                    & (IFLNK)                   & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & --                     & \xmark: \textit{FP}     & \tickmark: \textit{FN}  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt Aspell}      & File being checked         & --                     & \xmark: \textit{FP}     & \tickmark:              & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt Aspell}      & Dictionary File            & --                     & \textit{FP}             & \textit{FN}             & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt Aspell}      & File being checked         & --                     & \textit{FP}             & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
         {\tt gnu-gpg}     & secring.gpg                & --                     & \xmark                  & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt vim}         & File being opened          & --                     & \tickmark: \textit{FN}  & \tickmark: \textit{FN}  & \tickmark: \textit{FN} & \tickmark: \textit{FN}     & \tickmark: \textit{FN}    & \xmark    *\\
-        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark    *\\
-        {\tt sed}         & File being edited          & --                     & \tickmark               & \tickmark: \textit{FN}  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt vim}         & File being opened          & --                     & \textit{FN}             & \textit{FN}             & \textit{FN}            & \textit{FN}                & \textit{FN}               & \xmark    *\\
+        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & \textit{FP}                & \textit{FP}               & \xmark    *\\
+        {\tt sed}         & File being edited          & --                     & \tickmark               & \textit{FN}             & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
         {\tt wc}          & File being checked         & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
         {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
         {\tt install}     & File being installed       & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \tickmark                 & \xmark    *\\
@@ -315,7 +315,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
     presence of an unusual file and responded in some fashion.  A result of
     ``\xmark'' indicates that the application failed to recognize the presence of
     an unusual file and attempted to process it.  Cases where
-    CrashSimulator made an error are noted by a following FP (False
+    CrashSimulator made an error are noted by FP (False
     Positive) or FN (False Negative)}
     \label{table:unexpectedtypes}
 \end{table*}
