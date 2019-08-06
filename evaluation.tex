@@ -284,24 +284,24 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
     \scriptsize{}
     \begin{tabular}{l  l  |  l  l  l  l  l  l  l}
     \toprule{}
-        Application       & Condition Tested           & Regular File & Directory & Character Device & Block Device & Named Pipe & Symbolic Link & Socket File \\
-                          &                            &  (IFREG)     & (IFDIR)   & (IFCHR)          & (IFBLK)      & (IFIFO)    & (IFLNK)       & (IFSOCK)\\
+        Application       & Condition Tested           & Regular File           & Directory               & Character Device        & Block Device           & Named Pipe                 & Symbolic Link             & Socket File \\
+                          &                            &  (IFREG)               & (IFDIR)                 & (IFCHR)                 & (IFBLK)                & (IFIFO)                    & (IFLNK)                   & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & --        & \xmark: \textit{FP}      & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt Aspell}      & File being checked         & --        & \xmark: \textit{FP}     & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt gnu-gpg}     & secring.gpg                & --        & \xmark: \textit{FP}     & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt vim}         & File being opened          & --        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \xmark: \textit{FP}\\
-        {\tt nano}        & File being opened          & --        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt sed}         & File being edited          & --        & \xmark: \textit{FP}     & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt df}          & /proc                      & \xmark: \textit{FP}    & --         & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt wc}          & File being checked         & --        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \tickmark: \textit{FP}\\
-        {\tt du}          & Directory being checked    & \tickmark: \textit{FP} & --         & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \tickmark: \textit{FP}\\
-        {\tt install}     & File being installed       & --        & \tickmark: \textit{FP}  & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \tickmark: \textit{FP}    & \xmark: \textit{FP}\\
-        {\tt fmt}         & File being formatted       & --        & \xmark: \textit{FP}     & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt od}          & File being dumped          & --        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt ptx}         & File being read            & --        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \tickmark: \textit{FP} & \tickmark: \textit{FP}     & \tickmark: \textit{FP}    & \tickmark: \textit{FP}\\
-        {\tt comm}        & Second file being compared & --        & \tickmark: \textit{FP}  & \tickmark: \textit{FP}  & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
-        {\tt pr}          & File being read            & --        & \tickmark: \textit{FP}  & \xmark: \textit{FP}     & \xmark: \textit{FP}    & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark: \textit{FP}\\
+        {\tt Aspell}      & Dictionary File            & --                     & \xmark: \textit{FP}     & \tickmark: \textit{FN}  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt Aspell}      & File being checked         & --                     & \xmark: \textit{FP}     & \tickmark:              & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt gnu-gpg}     & secring.gpg                & --                     & \xmark                  & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt vim}         & File being opened          & --                     & \tickmark: \textit{FN}  & \tickmark: \textit{FN}  & \tickmark: \textit{FN} & \tickmark: \textit{FN}     & \tickmark: \textit{FN}    & \xmark    *\\
+        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & \xmark: \textit{FP}        & \xmark: \textit{FP}       & \xmark    *\\
+        {\tt sed}         & File being edited          & --                     & \tickmark               & \tickmark: \textit{FN}  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt df}          & /proc                      & \xmark: \textit{*}     & --                      & \xmark: \textit{*}      & \xmark: \textit{*}     & \xmark: \textit{*}         & \xmark: \textit{*}        & \xmark    *\\
+        {\tt wc}          & File being checked         & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
+        {\tt install}     & File being installed       & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \tickmark                 & \xmark    *\\
+        {\tt fmt}         & File being formatted       & --                     & \xmark                  & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt od}          & File being dumped          & --                     & \tickmark               & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt ptx}         & File being read            & --                     & \tickmark               & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
+        {\tt comm}        & Second file being compared & --                     & \tickmark               & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt pr}          & File being read            & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
 \hline
         \multicolumn{9}{l}{\scriptsize{\tickmark  $=$ CrashSimulator
         predicts application will recognize anomaly}}\\
