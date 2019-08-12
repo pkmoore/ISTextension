@@ -6,7 +6,7 @@ as a way to reduce the considerable effort
 required of developers to test an application
 against the environments it will encounter once deployed.
 Therefore,
-we needed to prove its effectiveness in ``the wild.''
+we needed to demonstrate its effectiveness in ``the wild.''
 To this end,
 we carried out two rounds of
 evaluation for CrashSimulator.
@@ -40,8 +40,9 @@ to answer the following questions:
 applications?}
 \label{sec-env-bugs}
 
-The most crucial question to ask about the SEA technique and the tool we implemented from it is can we
-identify bugs
+The most crucial question to ask about the SEA technique and the tool we
+implemented is:
+can it identify bugs
 caused by different types of problematic environmental features.
 To perform this evaluation we needed both a set of applications to test
 and a set of anomalies against which to test them.
@@ -69,9 +70,9 @@ tools like NetCheck~\cite{Zhuang_NSDI_2014}
 and CheckAPI~\cite{rasley2015detecting}.
 From these candidates we
 chose to use a simple filesystem anomaly that relies on the null
-mutator,
+mutator;
 a more complex filesystem anomaly that simulates
-the presence of unusual file types,
+the presence of unusual file types;
 and a network anomaly that requires
 checking and mutating many values across a variety of system calls.
 Our experiences testing applications with these anomalies are detailed below.
@@ -90,7 +91,7 @@ atomically by the operating system
 through the {\tt rename()} system call,
 in situations where
 the source file and destination file are on different storage devices,
-the application must perform the operation manually.
+the application must perform the operation in a more complex way.
 This is a process
 that even well-tested applications
 frequently get wrong~\cite{PHPRenameBug,PythonShutilBug,NodejsCopyBug}.
@@ -177,7 +178,7 @@ outcomes for the system as a whole.  There was one case in which our
 checkers made a false positive report which prompted efforts to improve it.
 This is discussed further in
 Section~\ref{sec-sorts-errors}.
-Take as a whole, our results demonstrate that even well-tested applications
+Taken as a whole, our results demonstrate that even well-tested applications
 can miss one or more of the steps in a complicated operation.
 
 \subsubsection{A More Complex Case - The Unexpected File Types Mutator}
@@ -234,8 +235,8 @@ accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
 or {\tt lstat()} that an application makes to examine the file, and
 changing the results to simulate
 one of the special file types.  If the application responds to
-this injected information, then its likely the special
-file will be handled correctly.  On the other hand, if there is no
+this injected information, then the special
+file might be handled correctly.  On the other hand, if there is no
 alteration in the behavior of the application, the condition is not
 being handled correctly.
 
@@ -252,14 +253,17 @@ A result of ``\tickmark'' indicates that the application
 identified it was being provided with an unexpected file type and its
 execution differs, a signal that it was potentially handling the
 file type correctly.
-A result of ``\xmark'' indicates
+A result of ``X'' indicates
 that the execution never diverged from the trace being replayed,
 and thus failed to recognize the presence of an unusual file type.
 
 {\bf Findings.}
-The data in Table~\ref{table:unexpectedtypes} show that CrashSimulator
-correctly identified bugs in XX of the applications we tested
-and made errors in only YY cases.  We discuss the causes of these errors
+The data in Table~\ref{table:unexpectedtypes} show that of the 87 cases we
+tested, CrashSimulator identified 47 bugs,
+predicted 26 instances of correct application behavior,
+and made 11 errors,
+the majority of which were false negatives.
+We discuss the causes of these errors
 in Section~\ref{sec-sorts-errors}.
 The frequency of failed executions in our results
 indicates that many
@@ -287,24 +291,24 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         Application       & Condition Tested           & Regular File           & Directory               & Character Device        & Block Device           & Named Pipe                 & Symbolic Link             & Socket File \\
                           &                            &  (IFREG)               & (IFDIR)                 & (IFCHR)                 & (IFBLK)                & (IFIFO)                    & (IFLNK)                   & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & --                     & \textit{FP}             & \textit{FN}             & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt Aspell}      & File being checked         & --                     & \textit{FP}             & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt gnu-gpg}     & secring.gpg                & --                     & \xmark                  & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt vim}         & File being opened          & --                     & \textit{FN}             & \textit{FN}             & \textit{FN}            & \textit{FN}                & \textit{FN}               & \xmark    *\\
-        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & \textit{FP}                & \textit{FP}               & \xmark    *\\
-        {\tt sed}         & File being edited          & --                     & \tickmark               & \textit{FN}             & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt wc}          & File being checked         & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt Aspell}      & Dictionary File            & --                     & \textit{FP}             & \textit{FN}             & X                      & X                          & X                         & X         *\\
+        {\tt Aspell}      & File being checked         & --                     & \textit{FP}             & \tickmark               & X                      & X                          & X                         & X         *\\
+        {\tt gnu-gpg}     & secring.gpg                & --                     & X                       & X                       & X                      & X                          & X                         & X         *\\
+        {\tt vim}         & File being opened          & --                     & \textit{FN}             & \textit{FN}             & \textit{FN}            & \textit{FN}                & \textit{FN}               & X         *\\
+        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & \textit{FP}                & \textit{FP}               & X         *\\
+        {\tt sed}         & File being edited          & --                     & \tickmark               & \textit{FN}             & X                      & X                          & X                         & X         *\\
+        {\tt wc}          & File being checked         & --                     & \tickmark               & X                       & X                      & X                          & X                         & X         *\\
         {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
-        {\tt install}     & File being installed       & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \tickmark                 & \xmark    *\\
-        {\tt fmt}         & File being formatted       & --                     & \xmark                  & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt od}          & File being dumped          & --                     & \tickmark               & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt install}     & File being installed       & --                     & \tickmark               & X                       & X                      & X                          & \tickmark                 & X         *\\
+        {\tt fmt}         & File being formatted       & --                     & X                       & \tickmark               & X                      & X                          & X                         & X         *\\
+        {\tt od}          & File being dumped          & --                     & \tickmark               & \tickmark               & X                      & X                          & X                         & X         *\\
         {\tt ptx}         & File being read            & --                     & \tickmark               & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
-        {\tt comm}        & Second file being compared & --                     & \tickmark               & \tickmark               & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
-        {\tt pr}          & File being read            & --                     & \tickmark               & \xmark                  & \xmark                 & \xmark                     & \xmark                    & \xmark    *\\
+        {\tt comm}        & Second file being compared & --                     & \tickmark               & \tickmark               & X                      & X                          & X                         & X         *\\
+        {\tt pr}          & File being read            & --                     & \tickmark               & X                       & X                      & X                          & X                         & X         *\\
 \hline
         \multicolumn{9}{l}{\scriptsize{\tickmark  $=$ CrashSimulator
         predicts application will recognize anomaly}}\\
-        \multicolumn{9}{l}{\scriptsize{\xmark  $=$ CrashSimulator predicts
+        \multicolumn{9}{l}{\scriptsize{X $=$ CrashSimulator predicts
         application will fail to recognize anomaly}}\\
         \multicolumn{9}{l}{\scriptsize{-- $=$ File type expected by the
         application}}\\
@@ -313,7 +317,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
     \caption{Applications tested for their handling of unexpected file types.  A
     result of ``\tickmark'' indicates that the application identified the
     presence of an unusual file and responded in some fashion.  A result of
-    ``\xmark'' indicates that the application failed to recognize the presence of
+    ``X'' indicates that the application failed to recognize the presence of
     an unusual file and attempted to process it.  Cases where
     CrashSimulator made an error are noted by FP (False
     Positive) or FN (False Negative)}
@@ -346,16 +350,16 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 \end{table}
 
 In order to confirm the accuracy of CrashSimulator's assessment, we manually
-exposed applications tested to the unusual
+exposed the applications tested to the unusual
 file types to get an idea of how they would respond.
 This allowed us to identify cases where CrashSimulator made errors and
 annotate Table~\ref{table:unexpectedtypes} with this information.  Further,
 we include a descriptions of a subset of application's behaviors in
 Table~\ref{table:applicationresponses}.
 These tables illustrate how the tool's
-evaluation of an application can map to real world bug behavior
-in a few different combinations
-One is that CrashSimulator asserts that the application will fail
+evaluation of an application can map to real world bug behavior.
+One possibility is that CrashSimulator asserts
+that the application will fail
 and in practice, it does.  We found this when we evaluated
 the response of  {\tt install} receiving a character device
 rather than a regular file. Our test predicted failure and the
@@ -393,7 +397,7 @@ to configure its network communications with a timeout value.
 This is done by examining the presence or absence of {\tt setsockopt()}, {\tt poll()}
 and {\tt select()} calls, as well as the timeout values that may
 have been passed to them. Applications that do not set the timeout are
-subject to the operating system-defined protocol timeout value (19 minutes on Linux).
+subject to the operating system-defined protocol timeout value.
 CrashSimulator is able to take this analysis a step further by employing a Long Network Response Time mutator
 that manipulates
 the results of all time-returning calls,
@@ -492,7 +496,7 @@ First,
 it became clear that the tool
 does not have a clear mechanism
 for determining
-which application behaviors constitute a "bug".
+which application behaviors constitute a ``bug''.
 For example, an application's developer
 may have intended that an application processing an ``infinitely long'' file should run continuously
 until killed by an outside command.
@@ -530,9 +534,11 @@ responding to an anomaly with a different sequence of system calls
 than was expected by the checker.
 Once identified, CrashSimulator's approach allows these
 situations to be easily corrected.
-This is similar to the circumstance where an
-application's test suite is missing a test, necessitating that the
-developer construct it.
+This is similar to a situation
+where an application's test suite
+has a test with an over-constrained ``oracle''
+(e.g. an oracle that ensure a returned value is $>0$ when, in reality,
+$0$ is acceptable).
 
 We encountered this situation when testing applications that used
 GNOME's {\tt glib} file handling functions.  When an
