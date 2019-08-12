@@ -43,7 +43,7 @@ is able to apply $\Delta X$
 to the appropriate places in an application's interactions
 in order to simulate the presence of $X$.
 The checker, $checkX()$ describes how an
-application should respond once the $X$ has been encountered.
+application should respond once $X$ has been encountered.
 To test if another application, $B$, also has a problem with $X$,
 $mutX(B)$ is used to apply $\Delta X$ to its interactions
 (sec.~\ref{SUBSUB:MutatingCommunications}).
@@ -128,24 +128,14 @@ how the application should respond.
 Describing anomalies in this fashion
 allows them to be recorded systematically and cataloged for future use.
 
-Constructing new checkers and mutators is a creative process not unlike
-writing a unit test.  The writer must understand both the cause of
-misbehavior in a deployment environment and how it is visible in the
-results of the system calls an application makes.  Once they have this
-understanding, the actual construction boils down to building state
-machines that recognize the required patterns of system calls.  As a
-result, effort required by this process depends on the complexity of the
-anomaly being simulated and the proficiency of the writer with the above
-concepts.
-
 As an example, consider
 an anomalous environment
 where access to a required file is denied because of
 the environment's file security configuration.
 With this anomaly,
 attempts to access the file,
-such as calls to {\tt fread()},
-or the {\tt read()} system call,
+such as
+the {\tt read()} system call,
 will fail with an error stating that access to the file is denied.
 The mutator derived from this issue would be constructed to
 identify similar accesses as opportunities
@@ -161,6 +151,16 @@ mutators and checkers
 allow them to be
 easily used
 to test responses of future applications.
+
+Constructing new checkers and mutators is a creative process not unlike
+writing a unit test.  The writer must understand both the cause of
+misbehavior in a deployment environment and how it is visible in the
+results of the system calls an application makes.  Once they have this
+understanding, the actual construction boils down to building state
+machines that recognize the required patterns of system calls.  As a
+result, effort required by this process depends on the complexity of the
+anomaly being simulated and the proficiency of the writer with the above
+concepts.
 
 \subsubsection{Mutating System Call Results}
 \label{SUBSUB:MutatingCommunications}
@@ -183,7 +183,8 @@ make the modifications necessary
 to simulate the anomaly.
 In the simplest case,
 simulating an anomaly only requires
-the modification of a single value.
+the modification of a single value
+(e.g. {\tt read()} returning -1 rather than the number of bytes read).
 We even found use for a ``null mutator''
 that performs no mutation, but gives other tools an opportunity to examine an execution.
 In more complex cases,
@@ -293,7 +294,7 @@ Our second modification parallelized our testing
 by allowing {\tt rr} to generate copies of a running application when
 it reaches our target simulation opportunities.
 We refer to this new technique as {\it process set cloning}
-and it is illustrated
+and illustrate it
 in Figure~\ref{figure:architecture}.
 The {\tt rr}
 debugger manages, and can copy, the full set of processes underlying an
@@ -305,6 +306,7 @@ cloned sets $Y_1(a_1, b_1, c_1)$, $Y_2(a_2, b_2, c_2)$ ... $Y_n(a_n, b_b,
 c_n)$.  $Y_1$, $Y_2$ ... $Y_n$ can then be used to test different
 scenarios.  These clones can be run in parallel because they do not
 actually execute system calls or modify the operating system state.
+Instead, they are simulated as described below.
 Additionally,
 they allow the original $Y$ to continue its execution unhindered.
 
@@ -337,7 +339,7 @@ used to test two scenarios where a file access could fail:
     \item{For $Y_2$, access fails because of an I/O error}
 \end{enumerate}
 The simulations for both $Y_1$ and $Y_2$ are handled asynchronously and
-the results reported.
+the results are recorded.
 This approach allows many tests to be run independently of one another,
 which lends a
 high degree of speed and
@@ -367,5 +369,5 @@ explained in this section, were carried out in C++ and the CrashSimulator
 supervisor was implemented in 6260 lines of Python 2.7 code with a 2125
 line C extension that allows it to interact with processes using the Ptrace
 API.
-This version of CrashSimulator is available as a Docker container, which
-can be found at: {\tt Link Removed for Blinding Purposes}.
+This version of CrashSimulator is available at:
+https://github.com/pkmoore/rrapper.
