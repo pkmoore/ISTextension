@@ -54,7 +54,7 @@ from among those deemed ``popular''
 by Debian's Popularity Contest~\cite{DebPopCon},
 or those used
 by many Linux distributions,
-such as ones provided
+such as the ones provided
 by the GNU coreutils project.
 
 To prove the breadth of CrashSimulator's capabilities we needed
@@ -449,7 +449,7 @@ could be vulnerable to this sort of attack.
 
 {\bf Findings.}
 As Table~\ref{table:slowloris} shows, all of these
-applications were vulnerable to this sort of anomaly,
+applications were vulnerable to this anomaly,
 and in some cases,
 timeouts took hours to resolve.
 What's more, in the vast majority of
@@ -710,7 +710,7 @@ Overall, the performance running an application
 under CrashSimulator is around
 two orders of magnitude slower
 than the original program executed without it.
-As can be seen table~\ref{table:performance}, around 20\%
+As can be seen in Table~\ref{table:performance}, around 20\%
 of this slow down is related to the additional overhead of {\tt rr}'s replay.
 An additional portion is caused by the need to spin up Python's interpreter
 before testing can begin.
