@@ -170,9 +170,10 @@ These situations are identified
 with the help of the chosen anomaly's
 mutator.
 For our work,
-this means providing the system calls
-an application makes to the
-mutator
+this means providing
+the mutator
+with the system calls
+an application makes
 so it can identify sequences
 indicative of such opportunities.
 At the appropriate time,
@@ -233,11 +234,13 @@ This simple yes or no approach
 is often sufficient
 to classify application behavior.
 
-We explore this, and other checkers in our evaluation~\ref{SEC:evaluation}.
-Section~\ref{sec-move-bugs} demonstrates finding bugs using the null
-mutator while Section~\ref{sec-file-type-bugs}
+We explore this, and other checkers in our
+Evaluation section (Section VI)~\ref{SEC:evaluation}.
+Section~\ref{sec-move-bugs} demonstrates how to find bugs using the null
+mutator, while Section~\ref{sec-file-type-bugs}
 illustrates how a more complex
-mutator accomplishes the same by simulating unusual situations.
+mutator can simulate specific scenarios to see if unexpected problems
+emerge.
 
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
@@ -252,7 +255,7 @@ Building this capability
 required making a few key design decisions. The first, as mentioned in
 Section 2, was choosing to operate at the system call level, rather than
 manipulating calls to library functions, memory accesses, or other points
-where we could influence an application’s interactions.
+where we could influence an application's interactions.
 This allowed CrashSimulator
 to test applications written in any
 language that can execute Linux system
@@ -280,13 +283,13 @@ with every execution.
 To this end,
 we employed a modified
 {\tt rr} debugger~\cite{rrwebsite} to record and replay applications. Our
-first modification permitted an {\tt strace}-style system call recording
+first modification permitted a {\tt strace}-style system call recording
 to be output alongside {\tt rr's} normal recording format,
 creating a complete log of an application’s system call activity.
 We chose to make this
 modification because, while {\tt rr}'s recording contains the system call
 information we need, it is stored in an opaque format that changes
-frequently between versions.  Storing a copy of this information as an {\tt
+frequently between versions.  Storing a copy of this information as a {\tt
 strace} recording bypasses this shortcoming and offers the advantage of
 being human readable.
 
@@ -356,7 +359,7 @@ of having to restart a new execution for each test.
   \fbox{\includegraphics[scale=.37]{images/architecture}}
   \caption{Diagram illustrating CrashSimulator's architecture.  During the
     course of a single rr execution, clone process sets are generated at
-    specific rr events.  A CrashSimulator supervisor process attaches to
+    specific rr events.  A CrashSimulator process supervisor attaches to
     these process sets and uses a strace-style system call listing to feed
     subsequent system call activity and inject unusual environmental
     conditions.}
@@ -364,8 +367,8 @@ of having to restart a new execution for each test.
 \end{figure}
 
 The prototype was built on rr version 5.2.0 running on a 32-bit Linux kernel
-distributed with Ubuntu 16.04 LTS.  The modifications to rr, which are
-explained in this section, were carried out in C++ and the CrashSimulator
+distributed with Ubuntu 16.04 LTS.  The modifications to rr described above
+were carried out in C++, and the CrashSimulator
 supervisor was implemented in 6260 lines of Python 2.7 code with a 2125
 line C extension that allows it to interact with processes using the Ptrace
 API.

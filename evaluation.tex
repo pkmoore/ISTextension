@@ -42,8 +42,8 @@ applications?}
 
 The most crucial question to ask about the SEA technique and the tool we
 implemented is:
-can it identify bugs
-caused by different types of problematic environmental features.
+can we use them to identify bugs
+caused by different types of problematic environmental features?
 To perform this evaluation we needed both a set of applications to test
 and a set of anomalies against which to test them.
 In order to show that CrashSimulator
@@ -62,14 +62,14 @@ to test applications
 using a diverse set of exemplar anomalies.
 We already established
 that
-unusual filesystem and network situations can cause an application to fail,
-so we identified many candidate anomalies
+unusual filesystem and network situations can cause an application to fail.
+So we identified a number of candidate anomalies
 by examining public bug trackers,
 the source code of major portable applications, and the capabilities of
-tools like NetCheck~\cite{Zhuang_NSDI_2014}
+bug finder tools like NetCheck~\cite{Zhuang_NSDI_2014}
 and CheckAPI~\cite{rasley2015detecting}.
 From these candidates we
-chose to use a simple filesystem anomaly that relies on the null
+chose to three test scenarios: a simple filesystem anomaly that relies on the null
 mutator;
 a more complex filesystem anomaly that simulates
 the presence of unusual file types;
@@ -159,7 +159,8 @@ can end up completely filling disks, exhausting available memory,
     \end{tabular}
     \caption{Applications and libraries analyzed to determine whether or not
       they are able to correctly move a file from one device to another.
-Incorrect entries are either missing the needed check or were ineffective.}
+Incorrect entries are either missing the needed check to ensure correct
+     behavior or their implementation of the behavior was ineffective.}
     \label{table:crossdevice}
 \end{table}
 
@@ -171,10 +172,10 @@ and Rust,
 can correctly perform complex
 operations in anomalous situations.
 As can be seen from the results in Table~\ref{table:crossdevice}, each of the
-applications tested fails to perform one or more of the steps required to
+applications tested failed to perform one or more of the steps required to
 successfully complete a cross-device move.  This is an unfortunate situation
 because a failure to perform any one of these steps can result in negative
-outcomes for the system as a whole.  There was one case in which our
+outcomes for the system as a whole.  There was one case where our
 checkers made a false positive report which prompted efforts to improve it.
 This is discussed further in
 Section~\ref{sec-sorts-errors}.
@@ -185,9 +186,8 @@ can miss one or more of the steps in a complicated operation.
 \label{sec-file-type-bugs}
 
 If a more complex mutator is to be employed, then
-CrashSimulator will  simulate anomalies during execution
-of an application.
-This introduces problematic scenarios
+CrashSimulator will simulate anomalies as an application is executed.
+This simulation introduces problematic scenarios
 so an application's response
 can be evaluated.
 For an effective test of the
@@ -215,9 +215,9 @@ For example,
 that produces an infinite amount
 of pseudo-random data
 when read.
-If an application
+If {\tt /dev/urandom} is provided to an application
 that relies on exhaustively reading the full
-contents of a file before processing is provided {\tt /dev/urandom}, it
+contents of a file before processing, it
 will fill memory or disk space, and could
 crash the system~\cite{YumAptEndless}.
 Correct execution in these situations
@@ -231,7 +231,7 @@ execution to induce its response to an unexpected file type. For
 example, the {\tt sed} application, which modifies the contents of a text
 file according to a provided command string, could instead be provided a symbolic
 link, a directory, or a character device.  CrashSimulator
-accomplishes this by identifying the calls to {\tt stat()}, {\tt fstat()},
+tests these alternatives by identifying the calls to {\tt stat()}, {\tt fstat()},
 or {\tt lstat()} that an application makes to examine the file, and
 changing the results to simulate
 one of the special file types.  If the application responds to
@@ -296,7 +296,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         {\tt gnu-gpg}     & secring.gpg                & --                     & X                       & X                       & X                      & X                          & X                         & X         *\\
         {\tt vim}         & File being opened          & --                     & \tickmark: \textit{FN}             & \tickmark: \textit{FN}             & \tickmark: \textit{FN}            & \tickmark: \textit{FN}                & \tickmark: \textit{FN}               & X         *\\
         {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & X: \textit{FP}                & X: \textit{FP}               & X         *\\
-        {\tt sed}         & File being edited          & --                     & \tickmark               & X: \textit{FN}             & X                      & X                          & X                         & X         *\\
+        {\tt sed}         & File being edited          & --                     & \tickmark               & X: \textit{FP}             & X                      & X                          & X                         & X         *\\
         {\tt wc}          & File being checked         & --                     & \tickmark               & X                       & X                      & X                          & X                         & X         *\\
         {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
         {\tt install}     & File being installed       & --                     & \tickmark               & X                       & X                      & X                          & \tickmark                 & X         *\\
@@ -350,24 +350,25 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 \end{table}
 
 In order to confirm the accuracy of CrashSimulator's assessment, we manually
-exposed the applications tested to the unusual
-file types to get an idea of how they would respond.
+exposed the applications listed in Table~\ref{table:unexpectedtypes} to
+each of the unusual file types to get an idea of how they would respond.
 This allowed us to identify cases where CrashSimulator made errors and
-annotate Table~\ref{table:unexpectedtypes} with this information.  Further,
-we include a descriptions of a subset of application's behaviors in
+note this information in Table~\ref{table:unexpectedtypes}.  Further,
+we include descriptions of a subset of the applications' behaviors in
 Table~\ref{table:applicationresponses}.
-These tables illustrate how the tool's
-evaluation of an application can map to real world bug behavior.
-One possibility is that CrashSimulator asserts
-that the application will fail
-and in practice, it does.  We found this when we evaluated
-the response of  {\tt install} receiving a character device
-rather than a regular file. Our test predicted failure and the
-application ended up filling the disk of the machine on which it was run.
-In other cases, CrashSimulator reported that an
-application had detected the anomalous condition and the application managed to
-do so in practice,  as when we evaluated {\tt wc}'s successful response to
-being run on a directory.
+These tables serve to document the accuracy of the tool's
+evaluation of application behavior and illustrate what misbehavior occurs
+when applications are actually exposed to problematic scenarios.
+%One possibility is that CrashSimulator asserts
+%that the application will fail
+%and in practice, it does.  We found this when we evaluated
+%the response of  {\tt install} receiving a character device
+%rather than a regular file. Our test predicted failure and the
+%application ended up filling the disk of the machine on which it was run.
+%In other cases, CrashSimulator reported that an
+%application had detected the anomalous condition and the application managed to
+%do so in practice,  as when we evaluated {\tt wc}'s successful response to
+%being run on a directory.
 
 \subsubsection{Beyond Filesystem Bugs - Poorly Configured Network Timeouts}
 \label{sec-timeout-bugs}
@@ -475,8 +476,8 @@ built by the reporting student.
 
 These results are important
 because they confirm
-users, other than the original development team for the tool,
-can find new bugs in real world applications.
+users, other than the original development team,
+can use the tool to find bugs in real world applications.
 Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
 was helpful in identifying the area of
@@ -496,7 +497,7 @@ First,
 it became clear that the tool
 does not have a clear mechanism
 for determining
-which application behaviors constitute a ``bug''.
+which application behaviors constitute a ``bug.''
 For example, an application's developer
 may have intended that an application processing an ``infinitely long'' file should run continuously
 until killed by an outside command.
@@ -537,7 +538,7 @@ situations to be easily corrected.
 This is similar to a situation
 where an application's test suite
 has a test with an over-constrained ``oracle''
-(e.g. an oracle that ensure a returned value is $>0$ when, in reality,
+(e.g. an oracle that ensures a returned value is $>0$ when, in reality,
 $0$ is acceptable).
 
 We encountered this situation when testing applications that used
@@ -556,7 +557,7 @@ it does so using alternative system call
 sequences.  Rather than using a sequence of {\tt read()} and {\tt write()}
 calls, as our checker expected, {\tt glib} creates a pipe and uses the {\tt
 splice()} system call to copy the contents out of the source file, through
-the pipe and into the destination file.
+the pipe, and into the destination file.
 
 Fortunately, as soon as issues like this are discovered,
 CrashSimulator's checkers can be modified to include the alternative
@@ -568,8 +569,7 @@ Each of the steps in the operation map to a small number of system calls.
 In
 situations where two system call sequences can correctly implement the same
 operation, CrashSimulator simply runs two checkers in parallel
-and accepts the execution if either  detects the sequence it is
-looking for.
+and accepts the execution if either detects the expected sequence.
 
 \begin{table}[t]
     \scriptsize{}
@@ -634,8 +634,8 @@ Such a checker would compare this behavior to a model of
 a correct response to that anomaly.
 Creating this checker requires
 that a user know
-what a correct response
-to the anomaly looks like.
+what a ``correct response''
+looks like.
 This ``known good'' behavior can be found
 by looking at standards and documentation
 that describe best practices for handling an anomaly
