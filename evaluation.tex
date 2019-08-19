@@ -258,10 +258,10 @@ that the execution never diverged from the trace being replayed,
 and thus failed to recognize the presence of an unusual file type.
 
 {\bf Findings.}
-The data in Table~\ref{table:unexpectedtypes} show that of the 87 cases we
-tested, CrashSimulator identified 47 bugs,
-predicted 26 instances of correct application behavior,
-and made 11 errors,
+The data in Table~\ref{table:unexpectedtypes} show that of the 84 cases we
+tested, CrashSimulator identified 46 bugs,
+predicted 25 instances of correct application behavior,
+and made 13 errors,
 the majority of which were false negatives.
 We discuss the causes of these errors
 in Section~\ref{sec-sorts-errors}.
@@ -291,20 +291,20 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         Application       & Condition Tested           & Regular File           & Directory               & Character Device        & Block Device           & Named Pipe                 & Symbolic Link             & Socket File \\
                           &                            &  (IFREG)               & (IFDIR)                 & (IFCHR)                 & (IFBLK)                & (IFIFO)                    & (IFLNK)                   & (IFSOCK)\\
 \hline
-        {\tt Aspell}      & Dictionary File            & --                     & X: \textit{FP}             & \tickmark: \textit{FN}             & X                      & X                          & X                         & X         *\\
-        {\tt Aspell}      & File being checked         & --                     & X: \textit{FP}             & \tickmark               & X                      & X                          & X                         & X         *\\
-        {\tt gnu-gpg}     & secring.gpg                & --                     & X                       & X                       & X                      & X                          & X                         & X         *\\
-        {\tt vim}         & File being opened          & --                     & \tickmark: \textit{FN}             & \tickmark: \textit{FN}             & \tickmark: \textit{FN}            & \tickmark: \textit{FN}                & \tickmark: \textit{FN}               & X         *\\
-        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & X: \textit{FP}                & X: \textit{FP}               & X         *\\
-        {\tt sed}         & File being edited          & --                     & \tickmark               & X: \textit{FP}             & X                      & X                          & X                         & X         *\\
-        {\tt wc}          & File being checked         & --                     & \tickmark               & X                       & X                      & X                          & X                         & X         *\\
-        {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
-        {\tt install}     & File being installed       & --                     & \tickmark               & X                       & X                      & X                          & \tickmark                 & X         *\\
-        {\tt fmt}         & File being formatted       & --                     & X                       & \tickmark               & X                      & X                          & X                         & X         *\\
-        {\tt od}          & File being dumped          & --                     & \tickmark               & \tickmark               & X                      & X                          & X                         & X         *\\
-        {\tt ptx}         & File being read            & --                     & \tickmark               & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark *\\
-        {\tt comm}        & Second file being compared & --                     & \tickmark               & \tickmark               & X                      & X                          & X                         & X         *\\
-        {\tt pr}          & File being read            & --                     & \tickmark               & X                       & X                      & X                          & X                         & X         *\\
+        {\tt Aspell}      & Dictionary File            & --                     & X: \textit{FP}          & \tickmark: \textit{FN}  & X                      & X                          & X                         & X          \\
+        {\tt Aspell}      & File being checked         & --                     & X: \textit{FP}          & \tickmark               & X                      & X                          & X                         & X          \\
+        {\tt gnu-gpg}     & secring.gpg                & --                     & X                       & X                       & X                      & X                          & X                         & X          \\
+        {\tt vim}         & File being opened          & --                     & \tickmark: \textit{FN}  & \tickmark: \textit{FN}  & \tickmark: \textit{FN} & \tickmark: \textit{FN}     & \tickmark: \textit{FN}    & X          \\
+        {\tt nano}        & File being opened          & --                     & \tickmark               & \tickmark               & \tickmark              & X: \textit{FP}             & X: \textit{FP}            & X: \textit{FP} \\
+        {\tt sed}         & File being edited          & --                     & \tickmark               & X: \textit{FP}          & X                      & X                          & X                         & X          \\
+        {\tt wc}          & File being checked         & --                     & \tickmark               & X                       & X                      & X                          & X                         & X          \\
+        {\tt du}          & Directory being checked    & \tickmark              & --                      & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark  \\
+        {\tt install}     & File being installed       & --                     & \tickmark               & X                       & X                      & X                          & \tickmark                 & X          \\
+        {\tt fmt}         & File being formatted       & --                     & X                       & \tickmark               & X                      & X                          & X                         & X          \\
+        {\tt od}          & File being dumped          & --                     & \tickmark               & \tickmark               & X                      & X                          & X                         & X          \\
+        {\tt ptx}         & File being read            & --                     & \tickmark               & \tickmark               & \tickmark              & \tickmark                  & \tickmark                 & \tickmark: \textit{FN} \\
+        {\tt comm}        & Second file being compared & --                     & \tickmark               & \tickmark               & X                      & X                          & X                         & X          \\
+        {\tt pr}          & File being read            & --                     & \tickmark               & X                       & X                      & X                          & X                         & X          \\
 \hline
         \multicolumn{9}{l}{\scriptsize{\tickmark  $=$ CrashSimulator
         predicts application will recognize anomaly}}\\
