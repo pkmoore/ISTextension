@@ -157,6 +157,7 @@ can end up completely filling disks, exhausting available memory,
         {\tt boost::copyfile} & {\bf Corrupt}	      & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
     \bottomrule{}
     \end{tabular}
+    \setlength{\belowcaptionskip}{-16pt}
     \caption{Applications and libraries analyzed to determine whether or not
       they are able to correctly move a file from one device to another.
 Incorrect entries are either missing the needed check to ensure correct
@@ -314,6 +315,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         application}}\\
     \bottomrule{}
     \end{tabular}
+    \setlength{\belowcaptionskip}{-13pt}
     \caption{Applications tested for their handling of unexpected file types.  A
     result of ``\tickmark'' indicates that the application identified the
     presence of an unusual file and responded in some fashion.  A result of
@@ -343,6 +345,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 \hline
     \bottomrule{}
     \end{tabular}}
+    \setlength{\belowcaptionskip}{-10pt}
     \caption{Responses of a sample of coreutils applications when exposed to
       anomalous conditions.  The character device used was the infinite-length {\tt
         /dev/urandom}.}
@@ -442,6 +445,7 @@ could be vulnerable to this sort of attack.
     {\tt python-websocket-client}  & No {\tt poll()} or {\tt select()}, no timeout set \\
     \bottomrule{}
   \end{tabular}
+  \setlength{\belowcaptionskip}{-11pt}
   \caption{Applications tested for their handling of extremely slow response
     times from the host with which they are communicating }
   \label{table:slowloris}
@@ -695,6 +699,7 @@ Table~\ref{table:performance} shows these results.
         {\tt pr}        & 0m0.135s              & 0m0.888s               & 0m1.017s                   & 0m0.141s        \\
     \bottomrule{}
     \end{tabular}
+    \setlength{\belowcaptionskip}{-16pt}
     \caption{This table contains the times required to execute several coreutils applications under different conditions.
              Native execution time is the time required to execute the application from the command line while
              CrashSimulator Replay time is the time required to execute it with the tool, using the null mutator with no checker configured.
