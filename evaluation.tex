@@ -112,35 +112,102 @@ that evaluate whether or not
 the application correctly performs the following
 steps.
 
-\begin{itemize}
-    \item{{\it Confirm Source Not Replaced During Copy.} An application
-        should make an effort to ensure that the file being copied is not replaced between the time it is initially examined and when it is opened for copying.
-If these checks are not performed, it
+\preston{I put these more detailed descriptions back}
+{\it Source Replaced.} An application should make an effort
+to ensure that the file being copied
+is not replaced between the time it is initially examined
+and the time it is opened for copying.
+Otherwise,
+it could have been replaced by a file of a different type,
+such as a character device.
+To test whether applications are robust
+to anomalies involving source file replacement,
+we developed a checker that monitors whether a series of safety checks
+are performed.
+If these checks are not performed it
 means the application will proceed with its operations,
-        making file corruption~\cite{PythonShutilBug}} possible.
+leaving open the possibility of file corruption~\cite{PythonShutilBug}.
 
-    \item{{\it Preserve Extended File Attributes.}
+{\it Preserve Xattrs} Extended file attributes
+are used by modern operating systems
+to store descriptive information
+that the strictly defined and limited structure
+of normal filesystem fields cannot hold.
+For example,
+an operating system can use extended file attributes
+to record whether or not a file was downloaded from the Internet.
+This is important security information
+that is used to warn users
+if they are about to open a potentially unsafe file.
+Apple's Gatekeeper relies on extended file attributes
+to prevent the execution of applications downloaded from
+untrusted developers without explicit user action~\cite{AppleCodeSigning}.
 When copying a file,
 an application should retrieve extended file attributes from the source
-file and, later, apply them to the destination file.  Failure to do so can lead to security problems~\cite{AppleCodeSigning}.}
+file and, later, apply them to the destination file.
+In this case, CrashSimulator used a checker
+that watches for the application to make system calls
+that read the extended file attributes from the source file (i.e. {\tt
+  getxattr()}, {\tt lgetxattr()}, or {\tt fgetxattr()}) followed by system calls
+that re-apply the attributes to the destination file (i.e. {\tt setxattr()},
+{\tt lsetxattr()}, or {\tt fsetxattr()}).
 
-    \item{{\it Preserve Timestamps.}  It is important to ensure
+{\it Preserve Timestamps} Incorrect timestamps can impede applications like
+in {\tt make}, archival programs, and similar
+software~\cite{NautilusTimestamps, SudoTimestamp}.
+As a result, it is important to ensure
 that time related metadata --
-such as creation, modification, and access times  --
-are preserved when copying a file, as
-incorrect timestamps can impede applications like {\tt make},
-        archival programs, and similar software~\cite{NautilusTimestamps,
-        SudoTimestamp}.}
+such as creation, modification, and access times
+are preserved when copying a file.
+To evaluate failures on this front,
+we used a checker that determines
+whether the application applies
+the appropriate timestamps to the destination file
+by monitoring for system calls from the {\tt stat()}
+and {\tt utime()} families used to retrieve and apply timestamps.
 
-    \item{{\it Copy Devices Correctly.}
+{\it Copying Devices} It is also important to check if a move
+would attempt to copy a special
+device file, such as a named pipe, across disks.
 Files of this variety must be moved
 by creating a new device of the same type at the destination,
 instead of exhaustively reading and writing its contents.
 In our experience, applications that fail to perform this check
-can end up completely filling disks, exhausting available memory,
-        or blocking forever, which can cause the system to become unresponsive.}
+can end up completely filling a disks, exhausting available memory,
+or blocking forever, which can cause the system to become unresponsive.
 
-\end{itemize}
+% Temporarily commented out in favor of more detailed versions that were
+% cut for length
+
+% \begin{itemize}
+%     \item{{\it Confirm Source Not Replaced During Copy.} An application
+%         should make an effort to ensure that the file being copied is not replaced between the time it is initially examined and when it is opened for copying.
+% If these checks are not performed, it
+% means the application will proceed with its operations,
+%         making file corruption~\cite{PythonShutilBug}} possible.
+% 
+%     \item{{\it Preserve Extended File Attributes.}
+% When copying a file,
+% an application should retrieve extended file attributes from the source
+% file and, later, apply them to the destination file.  Failure to do so can lead to security problems~\cite{AppleCodeSigning}.}
+% 
+%     \item{{\it Preserve Timestamps.}  It is important to ensure
+% that time related metadata --
+% such as creation, modification, and access times  --
+% are preserved when copying a file, as
+% incorrect timestamps can impede applications like {\tt make},
+%         archival programs, and similar software~\cite{NautilusTimestamps,
+%         SudoTimestamp}.}
+% 
+%     \item{{\it Copy Devices Correctly.}
+% Files of this variety must be moved
+% by creating a new device of the same type at the destination,
+% instead of exhaustively reading and writing its contents.
+% In our experience, applications that fail to perform this check
+% can end up completely filling disks, exhausting available memory,
+%         or blocking forever, which can cause the system to become unresponsive.}
+% 
+% \end{itemize}
 
  \begin{table}[t]
     \scriptsize{}
