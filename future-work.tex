@@ -1,10 +1,7 @@
 \section{Future Work}
 
-\preston{This is taken from the proposal.  Mostly unchanged except for fixing
-parts that refer to the proposal itself.}
-
 The ultimate goal of our future work on SEA and CrashSimulator is to build
-a large, self-sustaining community of users.  
+a large, self-sustaining community of users around this technique and tool.
 %To achieve this we have a
 %plan that focuses on both improving the tool and making specific
 %community building efforts.  In this section we detail what specifically
@@ -12,8 +9,8 @@ a large, self-sustaining community of users.
 %
 %
 %In addition to new feature additions, CrashSimulator requires some updates to
-%replace soon-to-be unsupported components.  This includes migration from 
-%Python 2 to Python 3.  We have migrated several widely used projects that have 
+%replace soon-to-be unsupported components.  This includes migration from
+%Python 2 to Python 3.  We have migrated several widely used projects that have
 %successfully migrated from Python 2 to 3, including TUF~\cite{TUFwebpage}.
 %While this will take time, it does not pose substantial risk.
 %\cappos{Python 2-3 is optional, cut if the space is needed.}
@@ -34,14 +31,18 @@ a large, self-sustaining community of users.
 %
 %
 %
-There are three areas of improvement we propose in this work.  First, we
-will work on the {\bf usability} of CrashSimulator, in both standalone 
-applications and in integrations into common toolchains.  This is needed to 
-make the tool more useful to developers.  Second, we will add {\bf security}
-mechanisms to make it possible to safely execute mutators and checkers from 
-untrusted sources.  Third,
-we will build a website with mechanisms that share mutators and checkers in a 
-{\bf community} manner.  We describe each of these in more detail below.
+We propose three areas of improvement in this work.  First, we
+will work on enhancing the {\bf usability} of CrashSimulator, in both stand-alone
+applications and in integrations into common toolchains.
+This is needed
+to make the tool more accessible to developers with differing levels of
+expertise.
+Second, we will address {\bf security} issues by creating
+mechanisms that can safely execute mutators and checkers from
+untrusted sources.
+Third, we will build a website that will facilitate sharing mutators and
+checkers with the larger {\bf community}.
+We describe each of these in more detail below.
 
 
 %\subsubsection{Tool Improvements and New Features}
@@ -89,17 +90,18 @@ we will build a website with mechanisms that share mutators and checkers in a
 
 Not every flaw found by CrashSimulator is equivalent.  An issue that only
 impacts an obsolete, rarely used file system is much less impactful than
-one that impacts the most popular file system.  Prioritizing anomalies
-can be accomplished by grouping them into sets that representing each 
-environments in which an application is expected to run. The more popular
+one that makes the most popular file system vulnerable.
+Anomalies
+can be prioritized by grouping them into sets representing each
+environment in which an application is expected to run. The more popular
 the environment, the more the developer may want to be aware of the issue.
-It may also be the case that developers want to prioritize fixing all 
+It may also be the case that developers want to prioritize fixing all
 critical issues for one environment over another.  For example a piece
 of software used in the cloud may not need to worry about issues that will only
 occur behind the great firewall of China, if no cloud environments are deployed in this location.
 
 
-%Grouping by environment and letting the developer prioritize and filter 
+%Grouping by environment and letting the developer prioritize and filter
 %environments enables much better developer control and increases the useful
 %true positive rate of CrashSimulator.
 %For example, the corpus of anomalies included with a future version of CrashSimulator
@@ -113,47 +115,56 @@ occur behind the great firewall of China, if no cloud environments are deployed 
 %
 %
 
-\subsubsection{Usability: Integration into CI platforms}
+\subsubsection{Improving Usability via Integration into CI platforms}
 
-As with other tools, CrashSimulator is only effective when used.  Modern 
-development processes include a continuous integration system, such as TravisCI
-and CircleCI, to run tests automatically.  CI systems are popular because they
+As with other tools, CrashSimulator can only be effective if it is used.
+Modern development processes include a continuous integration system,
+such as TravisCI
+and CircleCI, that run tests automatically.
+CI systems are popular because they
 ensure that applications are continually and thoroughly tested as new code
-contributions are submitted.  Given the ``universal'' nature of
-CrashSimulator's testing process, the tool is a perfect fit for this
-scenario.  Our goal is to provide a configuration of CrashSimulator,
+contributions are submitted.  Given the CrashSimulator's ability to test
+applications regardless of how they were constructed,
+the tool is a perfect fit for
+automatically testing numerous applications as part of a CI pipeline.
+Our goal is to provide a configuration of CrashSimulator,
 suitable for unattended execution, to which test jobs can be submitted
-automatically, as part of a continuous integration pipeline.  Once created,
-this configuration would allow for testing with a
-pre-selected set of anomalies by simply checking a box in the projects
+automatically as part of a continuous integration pipeline.  Once created,
+this enhanced version of CrashSimulator would allow a user to test
+applications against
+a pre-selected set of anomalies by simply checking a box in the project's
 testing configuration.
 
-We believe this setup could drive rapid growth in CrashSimulator's
+We believe this setup could drive rapid growth in the CrashSimulator
 community because it removes most of the friction associated with adopting
 a new tool.  Once the ``automated'' version of the tool is in place, it is a
-natural next step for users to move into more advanced use cases and,
-ideally, contribute to the tool as their needs expand.  Further, by
+natural next step for users to move into more advanced use cases.
+With increased ease of use, these users will be more inclined
+to contribute to the tool to meet their expanding needs.
+Further, by
 integrating with existing continuous integration infrastructure,
-CrashSimulator gains access to those platforms' communities, giving the tool access to users who might not have otherwise found it.  The end result of all this is a new, expanded, set of community
-members that can contribute to its continued improvement.
+CrashSimulator gains access to those platforms' communities,
+opening access to the tool to users who might not otherwise have found it.
+The end result of all this could be a new, expanded, set of community
+members that can contribute to the tool's continued improvement.
 
 
-\subsubsection{Security: Sandboxing}
+\subsubsection{Security via Sandboxing}
 
 One of our main goals is to have a
 CrashSimulator's community contribute to the corpus of anomalies the tool
 can simulate.  In order to do this safely, the tool needs to be able to
 take code from unknown, potential untrusted developers and execute it
 without the possibility of negative effects on the host system, whether its unintentional bugs or
-malicious actions.  
+malicious actions.
 
 Our approach to offering this capability is
 to execute checkers and mutators written in our description language in a
-sandbox, which isolates Python code.  We propose to use the Python-Based Repy 
-sandbox~\cite{Cappos_CCS_2010}, which was used in the 
+sandbox, which isolates Python code.  We propose to use the Python-Based Repy
+sandbox~\cite{Cappos_CCS_2010}, which was used in the
 Seattle testbed across tens of thousands of devices.  The Repy sandbox
 has been designed to execute a minimal subset of Python in a secure manner.
-Additionally, the Repy sandbox was designed expressly to integrate into 
+Additionally, the Repy sandbox was designed expressly to integrate into
 existing programs like CrashSimulator, and has a proven track record of integrations into several
 other large software projects.
 
@@ -166,11 +177,11 @@ calls.  The mutator or checker may respond with either the {\tt accept} or
 dramatically reduce the ability of third-party checkers and mutators to
 interact with the host system in unintended ways.
 
-Repy can also offer further protection by enforcing resource limitations on 
+Repy can also offer further protection by enforcing resource limitations on
 the checkers and mutators running within it.  For example,
 it may be useful to impose memory or processing limits in order to prevent
 long running or poorly implemented checkers and mutators from harming the
-stability of the host system.  Repy already has these 
+stability of the host system.  Repy already has these
 capabilities~\cite{Li_USENIX_2015}, which will both improve the
 tool's safety and ease of use on the small scale, and help speed
 community building by reducing the effort required to vet
@@ -186,11 +197,11 @@ community submissions.
 %%description language description language.  As we have discussed in more
 %%detail elsewhere in this document, our plans consists of a language akin to
 %%regular expressions focusing on sequences of system calls and their
-%%arguments rather than the contents of strings.  
+%%arguments rather than the contents of strings.
 %Proof of concept
 %experiments with this design have shown promise both in terms of
 %feasibility of implementation and in real benefits to the anomaly encoding
-%process.  
+%process.
 
 
 
@@ -215,7 +226,7 @@ CrashSimulator and SEA.  The community that grows around a tool or
 technique is likely an even bigger contributor to its long term success
 than its technical merits.  This is especially true in the case of SEA and
 CrashSimulator due to the way the tool and technique become more effective
-as users contribute to the corpus of anomalies that can be simulated.  
+as users contribute to the corpus of anomalies that can be simulated.
 
 One of the primary advantages offered by SEA and CrashSimulator is the way
 their effectiveness and capabilities can be augmented by the addition of
@@ -225,7 +236,7 @@ fashion.  In the simplest case, this involves supplying a set of
 straightforward anomalies that are known to be useful in testing a wide
 variety of applications directly with the tool.
 However, as the number of anomalies being contributed grows, this approach
-will not scale.  Shipping a large number of anomalies, including some 
+will not scale.  Shipping a large number of anomalies, including some
 which will likely be useful only in specific situations, will harm the
 tool's performance and user experience.  To address this problem, we
 propose establishing an online anomaly repository.
@@ -246,11 +257,11 @@ Index.  Users can quickly like or dislike
 checkers and mutators that work for them to help the community find effective
 tools.
 
-The community repository will also have potential remediations linked to  
+The community repository will also have potential remediations linked to
 the CrashSimulator tool.  For example, when a bug report about a
 socket {\tt O\_NONBLOCK} flag inheritence is received, the user would be linked to the Python
 bug tracker's detailed report of the issue, along with the example fix that
-patches the bug.  This information helps developers fix the 
+patches the bug.  This information helps developers fix the
 bugs that CrashSimulator finds in a more timely manner.
 
 
