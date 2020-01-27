@@ -151,39 +151,42 @@ members that can contribute to the tool's continued improvement.
 
 \subsubsection{Security via Sandboxing}
 
-One of our main goals is to have a
-CrashSimulator's community contribute to the corpus of anomalies the tool
-can simulate.  In order to do this safely, the tool needs to be able to
-take code from unknown, potential untrusted developers and execute it
-without the possibility of negative effects on the host system, whether its unintentional bugs or
-malicious actions.
+There are several reasons behind our desire to build a CrashSimulator community,
+but one of the more important ones
+is to build a corpus of anomalies for the tool to simulate.
+In order to do this safely, the tool needs to be able to
+take code from unknown and untrusted developers and execute it
+without any negative effects to the host system.
 
 Our approach to offering this capability is
-to execute checkers and mutators written in our description language in a
-sandbox, which isolates Python code.  We propose to use the Python-Based Repy
-sandbox~\cite{Cappos_CCS_2010}, which was used in the
-Seattle testbed across tens of thousands of devices.  The Repy sandbox
+to execute checkers and mutators, written in our description language in a
+sandbox that isolates Python code.  The Python-Based Repy
+sandbox~\cite{Cappos_CCS_2010} we propose to use
+has already been tested across thousands of devices as a component of
+the Seattle testbed.  The Repy sandbox
 has been designed to execute a minimal subset of Python in a secure manner.
-Additionally, the Repy sandbox was designed expressly to integrate into
-existing programs like CrashSimulator, and has a proven track record of integrations into several
-other large software projects.
+Additionally, it is constructed expressly to integrate into
+existing programs like CrashSimulator
 
-
-The API provided in the sandbox will provide the
-stream of system calls from the application being tested to the mutators and checker.  This includes
-a native ability to traverse backwards through some guaranteed number of prior
-calls.  The mutator or checker may respond with either the {\tt accept} or
-{\tt reject} result of the state it perceives and keeps.  These limitations
+The API provided in the sandbox will provide a
+stream of system calls from the application under test
+to the mutators and checkers along with the ability
+to traverse backwards through some guaranteed number of prior
+calls.  The mutator or checker may respond with either an ``{\tt accept}'' or
+``{\tt reject}'' result based on this stream.  These limitations
 dramatically reduce the ability of third-party checkers and mutators to
 interact with the host system in unintended ways.
 
 Repy can also offer further protection by enforcing resource limitations on
-the checkers and mutators running within it.  For example,
-it may be useful to impose memory or processing limits in order to prevent
+the checkers and mutators running within it.
+By imposing memory or processing limits, Repy can prevent
 long running or poorly implemented checkers and mutators from harming the
-stability of the host system.  Repy already has these
-capabilities~\cite{Li_USENIX_2015}, which will both improve the
-tool's safety and ease of use on the small scale, and help speed
+stability of the host system.
+As these
+capabilities~\cite{Li_USENIX_2015} are already available through Repy,
+the pairing will improve
+not only the tool's ease of use, but also security.
+These enhancements can help speed
 community building by reducing the effort required to vet
 community submissions.
 
@@ -219,31 +222,31 @@ community submissions.
 
 %\subsubsection{Updating components}
 
-\subsubsection{Community: Building a Community Repository}
+\subsubsection{Facilitating Access by Building a Community Repository}
 
 As was mentioned previously, our main goal is to foster a community around
 CrashSimulator and SEA.  The community that grows around a tool or
 technique is likely an even bigger contributor to its long term success
 than its technical merits.  This is especially true in the case of SEA and
-CrashSimulator due to the way the tool and technique become more effective
-as users contribute to the corpus of anomalies that can be simulated.
+CrashSimulator since the effectiveness of the tool and technique
+become more effective
+as the corpus of anomalies grows.
 
 One of the primary advantages offered by SEA and CrashSimulator is the way
 their effectiveness and capabilities can be augmented by the addition of
-new anomalies.  To best take advantage of this fact it makes sense to
-provide to users as many anomalies as is feasible in an easily accessible
+new anomalies.  To best take advantage of this fact, it makes sense to
+provide users as many anomalies as is feasible in an easily accessible
 fashion.  In the simplest case, this involves supplying a set of
-straightforward anomalies that are known to be useful in testing a wide
+straightforward anomalies known to be useful in testing a wide
 variety of applications directly with the tool.
 However, as the number of anomalies being contributed grows, this approach
 will not scale.  Shipping a large number of anomalies, including some
 which will likely be useful only in specific situations, will harm the
 tool's performance and user experience.  To address this problem, we
-propose establishing an online anomaly repository.
-
-An online anomaly repository can act as a centralized location for anomaly
-metadata, such as
-the operating systems on which they appear,
+propose establishing an online repository
+that can act as a centralized location for anomalies
+and their related metadata,
+such as the operating systems on which they appear,
 their performance characteristics, and the sorts of applications
 with which they are likely to be useful.  Additionally, it could also
 act as centralized location for community-driven anomaly documentation
@@ -251,15 +254,16 @@ and discussion.  This information would allow users to be informed enough
 to download the individual anomalies or sets of anomalies that are most
 useful for their specific use case.
 
-Users will also be able to rate checkers and mutators, and report instances
-of false positives to developers.  This is modeled after the Python Package
-Index.  Users can quickly like or dislike
-checkers and mutators that work for them to help the community find effective
-tools.
+Users will also be able to quickly like or dislike checkers and mutators,
+and report instances of false positives to developers.
+This is modeled after the Python Package Index,
+such a work can help the community find the most appropriate
+anomalies for their particular applications.
 
 The community repository will also have potential remediations linked to
 the CrashSimulator tool.  For example, when a bug report about a
-socket {\tt O\_NONBLOCK} flag inheritence is received, the user would be linked to the Python
+socket {\tt O\_NONBLOCK} flag inheritence is received, the user would be linked
+to the Python
 bug tracker's detailed report of the issue, along with the example fix that
 patches the bug.  This information helps developers fix the
 bugs that CrashSimulator finds in a more timely manner.
