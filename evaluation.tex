@@ -185,12 +185,12 @@ or blocking forever, which can cause the system to become unresponsive.
 % If these checks are not performed, it
 % means the application will proceed with its operations,
 %         making file corruption~\cite{PythonShutilBug}} possible.
-% 
+%
 %     \item{{\it Preserve Extended File Attributes.}
 % When copying a file,
 % an application should retrieve extended file attributes from the source
 % file and, later, apply them to the destination file.  Failure to do so can lead to security problems~\cite{AppleCodeSigning}.}
-% 
+%
 %     \item{{\it Preserve Timestamps.}  It is important to ensure
 % that time related metadata --
 % such as creation, modification, and access times  --
@@ -198,7 +198,7 @@ or blocking forever, which can cause the system to become unresponsive.
 % incorrect timestamps can impede applications like {\tt make},
 %         archival programs, and similar software~\cite{NautilusTimestamps,
 %         SudoTimestamp}.}
-% 
+%
 %     \item{{\it Copy Devices Correctly.}
 % Files of this variety must be moved
 % by creating a new device of the same type at the destination,
@@ -206,7 +206,7 @@ or blocking forever, which can cause the system to become unresponsive.
 % In our experience, applications that fail to perform this check
 % can end up completely filling disks, exhausting available memory,
 %         or blocking forever, which can cause the system to become unresponsive.}
-% 
+%
 % \end{itemize}
 
  \begin{table}[t]
