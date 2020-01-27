@@ -242,7 +242,7 @@ illustrates how a more complex
 mutator can simulate specific scenarios to see if unexpected problems
 emerge.
 
-\subsection{An Example}
+\subsection{Building Checkers and Mutators: A Real-World Example}
 \label{SUBSEC:Example}
 
 \begin{figure*}[t]
@@ -262,37 +262,44 @@ emerge.
   regular files curl handles must identify a call from the {\tt stat} family
   operating on the {\tt stderr} or {\tt stdout} file descriptor.  It
   can then modify the returned structure to simulate a given combination.}
-  \label{figure:curlflow}
+  \label{figure:statidentify}
 \end{figure}
 
-As a concrete example of the above step consider the measures {\tt curl} takes
-to ensure it properly handles the data its user requests.  By default, curl
-outputs the contents of the requested url to the terminal.  In cases where {\tt
-stdout} to a file, curl instead outputs a progress bar to the terminal by
+As a real-world example
+of building checkers and mutators
+consider the measures {\tt curl} takes
+to ensure it properly outputs the data it retrieves from a url.
+By default,
+curl outputs the contents of the requested url to the terminal.
+In cases where {\tt stdout}
+refers to a file, curl instead outputs a progress bar to the terminal by
 writing to {\tt stderr}.  In a third case where both {\tt stdout} and {\tt
 stderr} are redirected to files curl omits this progress bar entirely, as it could
-interfere with the data being retrieved from the specified url should both file
-descriptors refer to the same file.
+interfere with the data being retrieved from the url should curl's
+user specify a configuration where both {\tt stdout} and {\tt stderr} are
+redirected to the file.
 
-The checks that drive this flow are accomplished by using a system call from the
+{\tt Curl} determines the configuration of {\tt stdout} and {\tt stderr}
+by using a system call from the
 {\tt stat} family.  Specifically, calls from this family return a structure that
 contains, among other information, a bitmap that denotes the Linux file type of
 the file being examined.  Evaluating this bitmap allows an application to
-determine whether a file descriptor points to a data file (the file descriptor
-refers to a regular file) or the terminal (the file descriptor refers to a
-character device).  Well-behaved applications should make these checks and alter
+determine whether a file descriptor points to a data file
+(a regular file) or the terminal (a character device).  Well-behaved applications should make these checks and alter
 their output accordingly.
 
 Figure~\ref{figure:curlflow} illustrates the combinations of regular files and character devices
 that curl looks out for.  SEA allows for the construction of a mutator and
-checker with which other applications can be tested against the same set of
+a checker that can test other applications against the same set of
 combinations.  Such a mutator would identify {\tt stat}-family system calls
 performed upon the {\tt stdout} and {\tt stderr} file descriptors and alter
-their results to simulate the desired combination.  See figure YYY for a diagram
-of a potential underlying automaton for this mutator.  Some indication of the
+their results to simulate the desired combination.
+See figure~\ref{figure:statidentify}
+for a diagram of a potential underlying automaton for this mutator.
+Some indication of the
 correctness of an application's response to the simulation could be gained by a
 checker that simply looks for the application to change its behavior in
-unexpected cases (i.e. the default checker).  
+unexpected cases (i.e. the default checker).
 
 
 \subsection{CrashSimulator: A Concrete SEA Implementation}
