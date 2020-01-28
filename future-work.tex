@@ -96,7 +96,7 @@ can be prioritized by grouping them into sets representing each
 environment in which an application is expected to run. The more popular
 the environment, the more the developer may want to be aware of the issue.
 It may also be the case that developers want to prioritize fixing all
-critical issues for one environment over another.  For example a piece
+critical issues for one environment over another.  For example, a piece
 of software used in the cloud may not need to worry about issues that will only
 occur behind the great firewall of China, if no cloud environments are deployed in this location.
 
@@ -123,7 +123,7 @@ such as TravisCI
 and CircleCI, that run tests automatically.
 CI systems are popular because they
 ensure that applications are continually and thoroughly tested as new code
-contributions are submitted.  Given the CrashSimulator's ability to test
+contributions are submitted.  Given CrashSimulator's ability to test
 applications regardless of how they were constructed,
 the tool is a perfect fit for
 automatically testing numerous applications as part of a CI pipeline.
@@ -238,7 +238,7 @@ new anomalies.  To best take advantage of this fact, it makes sense to
 provide users as many anomalies as is feasible in an easily accessible
 fashion.  In the simplest case, this involves supplying a set of
 straightforward anomalies known to be useful in testing a wide
-variety of applications directly with the tool.
+variety of applications with the tool.
 However, as the number of anomalies being contributed grows, this approach
 will not scale.  Shipping a large number of anomalies, including some
 which will likely be useful only in specific situations, will harm the
@@ -249,14 +249,14 @@ and their related metadata,
 such as the operating systems on which they appear,
 their performance characteristics, and the sorts of applications
 with which they are likely to be useful.  Additionally, it could also
-act as centralized location for community-driven anomaly documentation
+act as a centralized location for community-driven anomaly documentation
 and discussion.  This information would allow users to be informed enough
 to download the individual anomalies or sets of anomalies that are most
 useful for their specific use case.
 
 Users will also be able to quickly like or dislike checkers and mutators,
 and report instances of false positives to developers.
-This is modeled after the Python Package Index,
+Modeled after the Python Package Index,
 such a work can help the community find the most appropriate
 anomalies for their particular applications.
 
@@ -264,7 +264,7 @@ The community repository will also have potential remediations linked to
 the CrashSimulator tool.  For example, when a bug report about a
 socket {\tt O\_NONBLOCK} flag inheritence is received, the user would be linked
 to the Python
-bug tracker's detailed report of the issue, along with the example fix that
+bug tracker's detailed report on the issue, along with the fix that
 patches the bug.  This information helps developers fix the
 bugs that CrashSimulator finds in a more timely manner.
 
