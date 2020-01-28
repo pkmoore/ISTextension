@@ -251,7 +251,8 @@ emerge.
   \caption{Curl examines the {\tt stdout} and {\tt stderr} file descriptors
   and alters the format of its output based on what it finds.  It does this
   to improve usability by outputting a progress bar while being careful to
-  avoid corrupting the data it is downloading under certain configurations.}
+  avoid corrupting the data it is downloading when both {\tt stdout} and
+  {\tt stderr} refer to the same file.}
   \label{figure:curlflow}
 \end{figure*}
 
@@ -268,15 +269,16 @@ emerge.
 As a real-world example
 of building checkers and mutators
 consider the measures {\tt curl} takes
-to ensure it properly outputs the data it retrieves from a url.
+to ensure it properly outputs the data it retrieves from a URL.
 By default,
-curl outputs the contents of the requested url to the terminal.
+{\tt curl} outputs the contents of the requested URL to the terminal.
 In cases where {\tt stdout}
-refers to a file, curl instead outputs a progress bar to the terminal by
+refers to a file, {\tt curl} instead outputs a progress bar to the terminal by
 writing to {\tt stderr}.  In a third case where both {\tt stdout} and {\tt
-stderr} are redirected to files curl omits this progress bar entirely, as it could
-interfere with the data being retrieved from the url should curl's
-user specify a configuration where both {\tt stdout} and {\tt stderr} are
+stderr} are redirected to files, {\tt curl} omits this progress bar entirely.
+This is to prevent interference
+interfere with the data being retrieved from the URL if {\tt curl}'s
+user specifies a configuration in which both {\tt stdout} and {\tt stderr} are
 redirected to the file.
 
 {\tt Curl} determines the configuration of {\tt stdout} and {\tt stderr}
@@ -285,16 +287,16 @@ by using a system call from the
 contains, among other information, a bitmap that denotes the Linux file type of
 the file being examined.  Evaluating this bitmap allows an application to
 determine whether a file descriptor points to a data file
-(a regular file) or the terminal (a character device).  Well-behaved applications should make these checks and alter
-their output accordingly.
+(a regular file) or the terminal (a character device).
+Well-behaved applications should make these checks and alter their output accordingly.
 
 Figure~\ref{figure:curlflow} illustrates the combinations of regular files and character devices
-that curl looks out for.  SEA allows for the construction of a mutator and
+that {\tt curl} looks out for.  SEA allows for the construction of a mutator and
 a checker that can test other applications against the same set of
 combinations.  Such a mutator would identify {\tt stat}-family system calls
 performed upon the {\tt stdout} and {\tt stderr} file descriptors and alter
 their results to simulate the desired combination.
-See figure~\ref{figure:statidentify}
+See Figure~\ref{figure:statidentify}
 for a diagram of a potential underlying automaton for this mutator.
 Some indication of the
 correctness of an application's response to the simulation could be gained by a
