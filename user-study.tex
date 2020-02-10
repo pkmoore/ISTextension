@@ -1,0 +1,57 @@
+\section{User Study}
+
+Because the previous evaluation was carried out by CrashSimulator's developers,
+who necessarily have a high degree of expertise in its operation,
+we felt it prudent to ensure the tool was useful
+to outside developers as well.
+To investigate this angle,
+we conducted a user study
+with 12 undergraduate and graduate students with varying backgrounds.
+Study participants found a total of 11 bugs using CrashSimulator.
+Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
+Five of these bugs have since been reported to the appropriate maintainers,
+and three of these reports included patches
+that correct the bug
+built by the reporting student.
+
+These results are important
+because they confirm
+users, other than the original development team,
+can use the tool to find bugs in real world applications.
+Participants commented that narrowing the source of a bug
+down to a particular sequence of system calls
+was helpful in identifying the area of
+code responsible for the bug -- a feature
+that decreased the time required to produce a fix.
+Though observation of study participants
+showed that familiarity with operating systems concepts
+made it easier to work with CrashSimulator,
+those without this background were still able to identify bugs using the
+built in anomalies.
+
+On a less positive note,
+the study did reveal
+some shortcomings
+of the tool.
+First,
+it became clear that the tool
+does not have a clear mechanism
+for determining
+which application behaviors constitute a ``bug.''
+For example, an application's developer
+may have intended that an application processing an ``infinitely long'' file should run continuously
+until killed by an outside command.
+Therefore, that behavior should not be classified as a bug.
+Second,
+it demonstrated that
+simply reporting that an application did or did not change its behavior
+in the presence of an anomaly may not provide sufficient data to identify a bug. The results indicating the presence of a bug must be clear to the user.
+Both of these issues are being corrected
+by improving the tool's outputs.
+By more clearly describing
+the nature of a given result,
+users can have a better idea
+if,
+and why,
+they should be concerned.
+
