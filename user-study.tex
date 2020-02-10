@@ -7,6 +7,27 @@ to outside developers as well.
 To investigate this angle,
 we conducted a user study
 with 12 undergraduate and graduate students with varying backgrounds.
+This study took place over the course of 6 \preston{check this number} sessions
+of a mixed graduate and undergraduate Application Security class.  The first 20
+minutes of each lecture consisted of instruction on aspects of using the tool
+and the remaining 70 minutes were used as work time during which students could
+use CrashSimulator to find bugs in applications and construct patches to fix
+them.  In addition to this time, students were encouraged to spend time outside
+of class furthering their efforts.  They were asked to record their progress
+using a provided work log template.
+
+We discuss the outcomes of this study in the following subsections:
+In~\ref{subsec:bugs-by-participants} we discuss
+the bugs the students found using CrashSimulator
+and patches they were able to submit.
+Due to CrashSimulator's collaborative nature we encouraged students to submit
+bug reports and patches regarding the tool itself.
+We discuss these contributions in~\ref{subsec:crashsim-patches}.
+Finally, we cover our observations of the students as they used the
+tool in~\ref{subsec:tool-shortcomings}.
+
+\subsection{Bugs Found by Participants}
+\label{subsec:bugs-by-participants}
 Study participants found a total of 11 bugs using CrashSimulator.
 Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
 Five of these bugs have since been reported to the appropriate maintainers,
@@ -29,6 +50,18 @@ made it easier to work with CrashSimulator,
 those without this background were still able to identify bugs using the
 built in anomalies.
 
+\subsection{Crash Simulator Patches}
+\label{subsec:crashsim-patches}
+
+
+identified the need to support 16 new system calls.
+registered 17 bugs in CrashSimulator itself
+
+3 documentation related pull requests
+2 pull requests related to docker build
+
+\subsection{Tool Shortcomings}
+\label{subsec:tool-shortcomings}
 On a less positive note,
 the study did reveal
 some shortcomings
