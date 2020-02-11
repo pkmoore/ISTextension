@@ -53,12 +53,27 @@ built in anomalies.
 \subsection{Crash Simulator Patches}
 \label{subsec:crashsim-patches}
 
+Another important aspect of CrashSimulator's success is the ability of its
+community to improve it.
+We can get an idea of how well the tool does in this regard by looking at how
+students were able to contribute to the tool itself.
+In terms of direct contributions, students submitted five patches over the
+course of the study period.  Three of these patches fixed or enhanced areas of
+the tool's documentation while the remaining two patches fixed issues with the
+Dockerfile used to build a container with CrashSimulator installed.
 
-identified the need to support 16 new system calls.
-registered 17 bugs in CrashSimulator itself
-
-3 documentation related pull requests
-2 pull requests related to docker build
+The students also submitted 33 reports pertaining to bugs in CrashSimulator
+itself.  Of these, 16 specifically requested support for a new system call that
+CrashSimulator had not handled before.  The remaining 17 reported bugs in
+existing system call handlers or test orchestration code.
+On one hand this is encouraging.  The necessity of adding
+support for new system calls
+indicates that the students were
+using CrashSimulator against a wide variety of new applications.
+On the other hand, the number of bug reports not related to system call support
+indicates there is still work to be done on the tool.
+It is our goal that progress on both of these fronts will be driven by
+CrashSimulator's community.
 
 \subsection{Tool Shortcomings}
 \label{subsec:tool-shortcomings}
