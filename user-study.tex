@@ -1,34 +1,37 @@
-\section{User Study}
+\section{Testing Usability and Effectiveness on a Wider Audience}
 
-Because the previous evaluation was carried out by CrashSimulator's developers,
-who necessarily have a high degree of expertise in its operation,
-we felt it prudent to ensure the tool was useful
-to outside developers as well.
+While the results documented in the previous section suggest that CrashSimulator
+is effective at finding environmental bugs, we acknowledge that the evaluation
+was conducted by developers with a high degree of expertise in its operation,
+namely the people who developed it.  We felt it would be prudent to ensure it
+would be equally effective when employed by outside developers.
 To investigate this angle,
 we conducted a user study
-with 12 undergraduate and graduate students with varying backgrounds.
+with 12 undergraduate and graduate students from with varying experience levels.
 This study took place over the course of 6 \preston{check this number} sessions
-of a mixed graduate and undergraduate Application Security class.  The first 20
-minutes of each lecture consisted of instruction on aspects of using the tool
+of an Application Security class attended by both undergraduate and graduate
+students.  Each class began with 20
+minutes of of instruction on aspects of using the tool
 and the remaining 70 minutes were used as work time during which students could
 use CrashSimulator to find bugs in applications and construct patches to fix
 them.  In addition to this time, students were encouraged to spend time outside
 of class furthering their efforts.  They were asked to record their progress
 using a provided work log template.
 
-We discuss the outcomes of this study in the following subsections:
-In~\ref{subsec:bugs-by-participants} we discuss
-the bugs the students found using CrashSimulator
-and patches they were able to submit.
-Due to CrashSimulator's collaborative nature we encouraged students to submit
-bug reports and patches regarding the tool itself.
-We discuss these contributions in~\ref{subsec:crashsim-patches}.
-Finally, we cover our observations of the students as they used the
-tool in~\ref{subsec:tool-shortcomings}.
+
+Our goal for this user study was two-fold.  First and foremost,
+we wanted to see if the students wereable to use it to find bugs,
+even with only limited instruction and experience witht he tool.
+We discuss these results in~\ref{subsec:bugs-by-participants}.
+Second, we wanted the students to help us identify usability issues
+or flaws within the tool itself.  We summarize what the students found
+in~\ref{subsec:crashsim-patches}.  Finally, we share our observations
+of how students interacted with the tool an what shortcomings
+it revealed in~\ref{subsec:tool-shortcomings}.
 
 \subsection{Bugs Found by Participants}
 \label{subsec:bugs-by-participants}
-Study participants found a total of 11 bugs using CrashSimulator.
+Study participants using CrashSimulator found a total of 11 bugs.
 Of these bugs, nine were found using the ``Unusual Filetype'' mutator.
 Five of these bugs have since been reported to the appropriate maintainers,
 and three of these reports included patches
@@ -37,7 +40,7 @@ built by the reporting student.
 
 These results are important
 because they confirm
-users, other than the original development team,
+users other than the original development team,
 can use the tool to find bugs in real world applications.
 Participants commented that narrowing the source of a bug
 down to a particular sequence of system calls
@@ -50,23 +53,24 @@ made it easier to work with CrashSimulator,
 those without this background were still able to identify bugs using the
 built in anomalies.
 
-\subsection{Crash Simulator Patches}
+\subsection{Tool Limitations Identified by Participants}
 \label{subsec:crashsim-patches}
 
-Another important aspect of CrashSimulator's success is the ability of its
-community to improve it.
-We can get an idea of how well the tool does in this regard by looking at how
-students were able to contribute to the tool itself.
-In terms of direct contributions, students submitted five patches over the
-course of the study period.  Three of these patches fixed or enhanced areas of
-the tool's documentation while the remaining two patches fixed issues with the
+As we will explain in more detail in our Future Work section,
+we believe building a community around CrahSimulator is essential to its
+continued development and adpotion.  Our user study proved the correctness
+of this assumption.
+Students submitted five patches over the
+course of the study period to the tool's code.
+Three of these patches fixed or enhanced areas of
+the tool's documentation, while the remaining two patches fixed issues with the
 Dockerfile used to build a container with CrashSimulator installed.
 
-The students also submitted 33 reports pertaining to bugs in CrashSimulator
-itself.  Of these, 16 specifically requested support for a new system call that
+The students also submitted 33 reports pertaining to bugs in CrashSimulator.
+Of these, 16 specifically requested support for a new system call that
 CrashSimulator had not handled before.  The remaining 17 reported bugs in
 existing system call handlers or test orchestration code.
-On one hand this is encouraging.  The necessity of adding
+On the one hand this is encouraging.  The necessity of adding
 support for new system calls
 indicates that the students were
 using CrashSimulator against a wide variety of new applications.
@@ -75,12 +79,9 @@ indicates there is still work to be done on the tool.
 It is our goal that progress on both of these fronts will be driven by
 CrashSimulator's community.
 
-\subsection{Tool Shortcomings}
+\subsection{Tool Shortcomings Identified by Observation of Participants}
 \label{subsec:tool-shortcomings}
-On a less positive note,
-the study did reveal
-some shortcomings
-of the tool.
+Observations of the students as they used the tool were also revealing.
 First,
 it became clear that the tool
 does not have a clear mechanism
@@ -103,3 +104,7 @@ if,
 and why,
 they should be concerned.
 
+{\textbf To Conclude}, our user study has revealed both strengths and weakness
+with CrashSimulator.  Our future work section~\ref{sec:future-work}
+discusses our plans to improve
+these weak areas and capitalize on the tool's strengths.
