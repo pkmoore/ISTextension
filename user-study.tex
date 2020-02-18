@@ -7,26 +7,28 @@ namely the people who developed it.  We felt it would be prudent to ensure it
 would be equally effective when employed by outside developers.
 To investigate this angle,
 we conducted a user study
-with 12 undergraduate and graduate students from with varying experience levels.
+with 12 undergraduate and graduate students with varying experience levels.
 This study took place over the course of 6 \preston{check this number} sessions
 of an Application Security class attended by both undergraduate and graduate
 students.  Each class began with 20
-minutes of of instruction on aspects of using the tool
-and the remaining 70 minutes were used as work time during which students could
-use CrashSimulator to find bugs in applications and construct patches to fix
-them.  In addition to this time, students were encouraged to spend time outside
-of class furthering their efforts.  They were asked to record their progress
+minutes of instruction on aspects of using the tool
+and the remaining 70 minutes were used as work time. Students then used
+CrashSimulator to find bugs in applications and construct patches to fix
+them.  They were also encouraged to spend time outside
+of class on these efforts.  They were asked to record their progress
 using a provided work log template.
+
+\preston{Sample of work log template}
 
 
 Our goal for this user study was two-fold.  First and foremost,
-we wanted to see if the students wereable to use it to find bugs,
-even with only limited instruction and experience witht he tool.
+we wanted to see if the students were able to use it to find bugs,
+even with only limited instruction and experience with the tool.
 We discuss these results in~\ref{subsec:bugs-by-participants}.
 Second, we wanted the students to help us identify usability issues
 or flaws within the tool itself.  We summarize what the students found
 in~\ref{subsec:crashsim-patches}.  Finally, we share our observations
-of how students interacted with the tool an what shortcomings
+of how students interacted with the tool and what shortcomings
 it revealed in~\ref{subsec:tool-shortcomings}.
 
 \subsection{Bugs Found by Participants}
@@ -60,10 +62,12 @@ As we will explain in more detail in our Future Work section,
 we believe building a community around CrahSimulator is essential to its
 continued development and adpotion.  Our user study proved the correctness
 of this assumption.
-Students submitted five patches over the
-course of the study period to the tool's code.
-Three of these patches fixed or enhanced areas of
-the tool's documentation, while the remaining two patches fixed issues with the
+Students submitted five patches
+to the tool's code over the
+course of the study period.
+Three of these reports included patches built by the reporting student that
+correct the bug.
+The remaining two patches fixed issues with the
 Dockerfile used to build a container with CrashSimulator installed.
 
 The students also submitted 33 reports pertaining to bugs in CrashSimulator.
@@ -104,7 +108,8 @@ if,
 and why,
 they should be concerned.
 
+% Put some whitespace here
 {\textbf To Conclude}, our user study has revealed both strengths and weakness
-with CrashSimulator.  Our future work section~\ref{sec:future-work}
+with the CrashSimulator tool.  Our Future Work section (\ref{sec:future-work})
 discusses our plans to improve
 these weak areas and capitalize on the tool's strengths.

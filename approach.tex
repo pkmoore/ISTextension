@@ -277,7 +277,7 @@ refers to a file, {\tt curl} instead outputs a progress bar to the terminal by
 writing to {\tt stderr}.  In a third case where both {\tt stdout} and {\tt
 stderr} are redirected to files, {\tt curl} omits this progress bar entirely.
 This is to prevent interference
-interfere with the data being retrieved from the URL if {\tt curl}'s
+with the data being retrieved from the URL if {\tt curl}'s
 user specifies a configuration in which both {\tt stdout} and {\tt stderr} are
 redirected to the file.
 
@@ -299,8 +299,8 @@ their results to simulate the desired combination.
 See Figure~\ref{figure:statidentify}
 for a diagram of a potential underlying automaton for this mutator.
 Some indication of the
-correctness of an application's response to the simulation could be gained by a
-checker that simply looks for the application to change its behavior in
+correctness of an application's response to the simulation could be gained
+if a checker simply looks for the application to change its behavior in
 unexpected cases (i.e. the default checker).
 
 
