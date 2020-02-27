@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[final,twocolumn]{elsarticle}
 \usepackage{booktabs}
 \usepackage[hyphens]{url}
 \usepackage[usenames,dvipsnames]{color}
@@ -19,7 +19,7 @@
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
-\usepackage[pdftex]{graphicx}
+% \usepackage[pdftex]{graphicx}
 % declare the path(s) where your graphic files are
 \graphicspath{{./images/}}
 % and their extensions so you won't have to specify these with
@@ -61,31 +61,27 @@
 
 \begin{document}
 
+\begin{frontmatter}
+
 \title{Charting a Course Through Uncertain Environments: SEA Uses Past Problems to Avoid Future Failures}
 
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Preston Moore}
-\IEEEauthorblockA{New York University\\
-pkm266@nyu.edu}
-\and
-\IEEEauthorblockN{Justin Cappos}
-\IEEEauthorblockA{New York University\\
-jcappos@nyu.edu}
-\and
-\IEEEauthorblockN{Phyllis Frankl}
-\IEEEauthorblockA{New York University\\
-pfrankl@nyu.edu}
-\and
-\IEEEauthorblockN{Thomas Wies}
-\IEEEauthorblockA{New York University\\
-wies@cs.nyu.edu}
-}
+\address[add1]{New York University}
+\author[add1]{Preston Moore}
+\ead{pkm266@nyu.edu}
+\author[add1]{Justin Cappos}
+\ead{jcappos@nyu.edu}
+\author[add1]{Phyllis Frankl}
+\ead{pfrankl@nyu.edu}
+\author[add1]{Thomas Wies}
+\ead{wies@cs.nyu.edu}
 
-\maketitle
-\thispagestyle{plain}
-\pagestyle{plain}
+\end{frontmatter}
+%\maketitle
+%\thispagestyle{plain}
+%\pagestyle{plain}
 
 \input{abstract}
 \input{introduction}
