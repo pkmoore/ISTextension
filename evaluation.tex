@@ -349,9 +349,9 @@ This situation is particularly dangerous as
 it can eventually
 fill all available memory or disk space~\cite{Cappos_CCS_08}.
 
-
 \begin{table*}[t]
     \scriptsize{}
+    \resizebox{16cm}{!}{
     \begin{tabular}{l  l  |  l  l  l  l  l  l  l}
     \toprule{}
         Application       & Condition Tested           & Regular File           & Directory               & Character Device        & Block Device           & Named Pipe                 & Symbolic Link             & Socket File \\
@@ -379,7 +379,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
         \multicolumn{9}{l}{\scriptsize{-- $=$ File type expected by the
         application}}\\
     \bottomrule{}
-    \end{tabular}
+    \end{tabular}}
     \caption{Applications tested for their handling of unexpected file types.  A
     result of ``\tickmark'' indicates that the application identified the
     presence of an unusual file and responded in some fashion.  A result of
@@ -393,7 +393,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 
 \begin{table}[t]
     \scriptsize{}
-    \scalebox{.82}{
+    \scalebox{.65}{
     \begin{tabular}{l  l  l  l  l  l  l  l  l}
     \toprule{}
         Application         & Directory                 & Character Device & Block Device  & Named Pipe \\
@@ -409,7 +409,7 @@ fill all available memory or disk space~\cite{Cappos_CCS_08}.
 \hline
     \bottomrule{}
     \end{tabular}}
-    \caption{Responses of a sample of coreutils applications when exposed to
+    \caption{Res65nses of a sample of coreutils applications when exposed to
       anomalous conditions.  The character device used was the infinite-length {\tt
         /dev/urandom}.}
     \label{table:applicationresponses}
@@ -495,7 +495,7 @@ could be vulnerable to this sort of attack.
   \scriptsize{}
   \begin{tabular}{l | l}
     \toprule{}
-    {\bf Application}              & {\bf Analysis Result}\\
+    Application              & Analysis Result \\
     {\tt wget}                     & Overly long timeout supplied to {\tt select()} \\
     {\tt ftp}                      & No {\tt poll()} or {\tt select()}, no timeout set \\
     {\tt telnet}                   & {\tt select()} specifies no timeout \\
@@ -583,6 +583,7 @@ and accepts the execution if either detects the expected sequence.
 
 \begin{table}[t]
     \scriptsize{}
+    \scalebox{.75}{
     \begin{tabular}{l | l }
     \toprule{}
       {\bf Operation}                                               & {\bf Potential System calls}\\
@@ -602,7 +603,7 @@ and accepts the execution if either detects the expected sequence.
       Close the source file                                   & close()\\
       Close the destination file                              & close()\\
     \bottomrule{}
-    \end{tabular}
+    \end{tabular}}
     \caption{Each step of a successful cross-disk file move operation mapped to
       the system call or calls that can implement it}
     \label{table:stepsandcalls}
