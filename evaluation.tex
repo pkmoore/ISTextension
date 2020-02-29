@@ -152,7 +152,7 @@ that re-apply the attributes to the destination file (i.e. {\tt setxattr()},
 {\tt lsetxattr()}, or {\tt fsetxattr()}).
 
 {\it Preserve Timestamps} Incorrect timestamps can impede applications like
-in {\tt make}, archival programs, and similar
+{\tt make}, archival programs, and similar
 software~\cite{NautilusTimestamps, SudoTimestamp}.
 As a result, it is important to ensure
 that time related metadata --
@@ -215,12 +215,12 @@ or blocking forever, which can cause the system to become unresponsive.
         Application     & Source Replaced & Preserve Xattrs & Preserve Timestamps & Copying Devices\\
 \hline
         {\tt mv}              & Correct             & Correct         & Correct             & Correct\\
-        {\tt mmv}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & Correct\\
-        {\tt install}         & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-        {\tt perl File::Copy} & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-        {\tt shutils}         & {\bf Corrupt}	& {\bf Sec. Flaw} 	& Correct             & Correct\\
-        {\tt rust}             & Correct             & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
-        {\tt boost::copyfile} & {\bf Corrupt}	      & {\bf Sec. Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt mmv}             & Correct             & {\bf Security Flaw} & {\bf Time Loss} & Correct\\
+        {\tt install}         & Correct             & {\bf Security Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt perl File::Copy} & Correct             & {\bf Security Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt shutils}         & {\bf Corrupt}	& {\bf Security Flaw} 	& Correct             & Correct\\
+        {\tt rust}             & Correct             & {\bf Security Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
+        {\tt boost::copyfile} & {\bf Corrupt}	      & {\bf Security Flaw} & {\bf Time Loss} & {\bf Fill Disk} \\
     \bottomrule{}
     \end{tabular}
     \caption{Applications and libraries analyzed to determine whether or not
